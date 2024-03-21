@@ -159,9 +159,7 @@ public class CustomList<T> implements List<T> {
 
     private void reduce() {
         listSize = listSize / 2;
-        T[] newList = (T[]) new Object[listSize];
-        System.arraycopy(list, 0, newList, 0, size);
-        list = newList;
+        System.arraycopy(list, 0, list, 0, size);
     }
 
     private void shift() {
