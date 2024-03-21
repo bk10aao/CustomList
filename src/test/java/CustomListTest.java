@@ -36,6 +36,12 @@ class CustomListTest {
         customList.add(1);
         assertEquals(1, customList.size());
     }
+    @Test
+    public void givenListOfSize_32_whenAddingValue_null_throws_NullPointerException() {
+        CustomList customList = new CustomList(32);
+        assertThrows(NullPointerException.class,
+                ()-> customList.add(null));
+    }
 
     @Test
     public void givenListOfSize_32_whenAddingValue_1_returnsSizeOf_1() {

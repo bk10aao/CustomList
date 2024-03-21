@@ -25,6 +25,7 @@ public class CustomList<T> implements List<T> {
     }
 
     public boolean add(T item) {
+        if(item == null) throw new NullPointerException();
         try {
             list[nextIndex++] = item;
             size++;
@@ -49,6 +50,7 @@ public class CustomList<T> implements List<T> {
     }
 
     public boolean contains(T item) {
+        if(item == null) throw new NullPointerException();
         for (int i = 0; i < size; i++)
             if (list[i] != null && list[i].equals(item)) return true;
         return false;
