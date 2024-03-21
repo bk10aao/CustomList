@@ -175,7 +175,6 @@ public class CustomList<T> implements List<T> {
         if(nextIndex < listSize / 2 && listSize > 32) reduce();
     }
 
-    //TODO: fix Arrays.equals();
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
