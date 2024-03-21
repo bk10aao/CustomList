@@ -2,13 +2,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.stream.IntStream;
 
 @SuppressWarnings("unchecked")
 public class CustomList<T> implements List<T> {
 
     public int listSize = 32;
-    public int size = 0;
+    private int size = 0;
     private int nextIndex = 0;
 
     private T[] list;
@@ -37,8 +36,10 @@ public class CustomList<T> implements List<T> {
     }
 
     public boolean addAll(Collection<T> values) {
-        IntStream.range(0, values.size()).mapToObj(i -> values.iterator().next()).forEach(this::add);
-        return true;
+        Object[] temp = new Object[listSize];
+        System.arraycopy(list, 0, temp, 0, listSize);
+        for (T value : values) add(value);
+        return !Arrays.equals(temp, list);
     }
 
     public void clear() {
@@ -60,17 +61,13 @@ public class CustomList<T> implements List<T> {
         return true;
     }
 
-    public Iterator iterator() {
-        return Arrays.stream(list).filter(Objects::nonNull).iterator();
-    }
-
-    public T[] toArray() {
-        return (T[]) Arrays.stream(list).filter(Objects::nonNull).toArray();
-    }
-
     public T get(int index) {
         if(index > size || index < 0) throw new IndexOutOfBoundsException();
         return list[index];
+    }
+
+    public Iterator iterator() {
+        return Arrays.stream(list).filter(Objects::nonNull).iterator();
     }
 
     public int indexOf(Object o) {
@@ -102,26 +99,33 @@ public class CustomList<T> implements List<T> {
     }
 
     public boolean removeAll(Collection<T> c) {
-        if(c.equals(null))
-            throw new NullPointerException();
-        boolean changed = false;
+        if(c.equals(null)) throw new NullPointerException();
+        if(c.isEmpty()) return false;
         int nextCheckIndex = 0;
         for(T item: c) {
-            if(item.equals(null))
-                throw new NullPointerException();
-            if(contains(item)) {
-                nextCheckIndex = removeObjectCollection(item, nextCheckIndex);
-                changed = true;
-            } else {
-                return false;
-            }
+            if(item.equals(null)) throw new NullPointerException();
+            if(contains(item)) nextCheckIndex = removeObjectCollection(item, nextCheckIndex);
+            else return false;
         }
-        if(changed) shift();
-        return changed;
+        shift();
+        return true;
+    }
+
+    public T set(int index, T item) {
+        if(item.equals(null)) throw new NullPointerException();
+        if(index < 0 || index >= nextIndex) throw new IndexOutOfBoundsException();
+        T replaced = list[index];
+        list[index] = item;
+        return replaced;
+
     }
 
     public int size() {
         return size;
+    }
+
+    public T[] toArray() {
+        return (T[]) Arrays.stream(list).filter(Objects::nonNull).toArray();
     }
 
     private void removeObject(T object) {

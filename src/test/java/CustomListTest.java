@@ -386,7 +386,7 @@ class CustomListTest {
         boolean removed = customList.remove(2);
         assertTrue(removed);
         assertTrue(customList.equals(expected));
-        assertEquals(4, customList.size);
+        assertEquals(4, customList.size());
     }
 
     @Test
@@ -400,7 +400,7 @@ class CustomListTest {
             removed = customList.remove(i);
         }
         assertTrue(removed);
-        assertEquals(8, customList.size);
+        assertEquals(8, customList.size());
         assertEquals(32, customList.listSize);
     }
 
@@ -479,6 +479,15 @@ class CustomListTest {
     }
 
     @Test
+    public void whenRemovingEmptyList_returns_false() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 5; i++) {
+            customList.add(new Integer(i * 10));
+        }
+        assertFalse(customList.removeAll(new ArrayList<>()));
+    }
+
+    @Test
     public void whenRemovingListWithThreeIntegersPresentInCollection_returns_true() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
@@ -506,5 +515,55 @@ class CustomListTest {
         }
 
         assertFalse(customList.removeAll(items));
+    }
+
+    @Test
+    public void whenRemovingListWithThreeIntegersPresentInCollection_withGaps_returns_true() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 5; i++) {
+            customList.add(new Integer(i * 10));
+        }
+
+        Collection<Integer> items = new ArrayList<>();
+        items.add(0);
+        items.add(30);
+        items.add(10);
+        assertTrue(customList.removeAll(items));
+    }
+
+    @Test
+    public void whenSettingItemInList_withIndexof_negative_1_returns_IndexOutOfBoundsException() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 5; i++) {
+            customList.add(new Integer(i * 10));
+        }
+
+        assertThrows(IndexOutOfBoundsException.class,
+                ()-> customList.set(-1, 1000));
+    }
+
+    @Test
+    public void whenSettingItemInList_withIndexLargerThanSize_returns_IndexOutOfBoundsException() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 5; i++) {
+            customList.add(new Integer(i * 10));
+        }
+
+        assertThrows(IndexOutOfBoundsException.class,
+                ()-> customList.set(100, 1000));
+    }
+
+    @Test
+    public void whenSettingItemInList_withIndexof_3_andValueOf_100_returns_30() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 5; i++) {
+            customList.add(i * 10);
+        }
+
+        assertEquals(5, customList.size());
+        Integer result = (Integer) customList.set(3, 100);
+        assertEquals(30, result);
+        assertEquals(100, customList.get(3));
+        assertEquals(5, customList.size());
     }
 }
