@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("ALL")
-class CustomListTest {
+class ListTest {
 
     @Test
     public void givenDefaultConstructor_returnsListSizeOf_32() {
@@ -155,7 +156,7 @@ class CustomListTest {
     @Test
     public void givenAListOf_0_to_32_ints_onContainsAllOf_5_10_and_20_returns_true() {
         CustomList customList = new CustomList();
-        CustomList<Integer> collection = new CustomList<>();
+        List<Integer> collection = new ArrayList<>();
         collection.add(5);
         collection.add(10);
         collection.add(20);
@@ -168,7 +169,7 @@ class CustomListTest {
     @Test
     public void givenAListOf_0_to_32_ints_onContainsAllOf_5_10_and_200_returns_false() {
         CustomList customList = new CustomList();
-        CustomList<Integer> collection = new CustomList<>();
+        List<Integer> collection = new ArrayList<>();
         collection.add(5);
         collection.add(10);
         collection.add(200);
@@ -643,5 +644,57 @@ class CustomListTest {
         CustomList subList = customList.subList(2, 8);
 
         assertTrue(subList.equals(expected));
+    }
+
+    @Test
+    public void whenRetainingElements_whereNullListIsProvided_throws_NullPointerException() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 10; i++) {
+            customList.add(i * 10);
+        }
+
+        assertThrows(NullPointerException.class, ()-> customList.retainAll(null));
+    }
+
+    @Test
+    public void whenRetainingElements_whereListToRetainIsEmpty_throws_NullPointerException() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 10; i++) {
+            customList.add(i * 10);
+        }
+        List<Integer> emptyList = new ArrayList<>();
+        assertThrows(NullPointerException.class, ()-> customList.retainAll(emptyList));
+    }
+
+    @Test
+    public void whenRetainingElements_whereNoMatch_returns_false() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 10; i++) {
+            customList.add(i * 10);
+        }
+
+        List<Integer> retainList = new ArrayList<>();
+        for(int i = 2; i < 8; i++) {
+            retainList.add(i * 100);
+        }
+
+        boolean result = customList.retainAll(retainList);
+        assertFalse(result);
+    }
+
+    @Test
+    public void whenRetainingElements_whereFiveMatch_returns_true() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 10; i++) {
+            customList.add(i * 10);
+        }
+
+        List<Integer> retainList = new ArrayList<>();
+        for(int i = 2; i < 4; i++) {
+            retainList.add(i * 10);
+        }
+
+        boolean result = customList.retainAll(retainList);
+        assertTrue(result);
     }
 }

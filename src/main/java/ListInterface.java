@@ -1,7 +1,8 @@
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
-public interface List<T> {
+public interface ListInterface<T> {
 
     /**
      * Add item to List.
@@ -99,6 +100,14 @@ public interface List<T> {
     boolean removeAll(Collection<T> c);
 
     /**
+     * Remove all Objects in Collection except those in list.
+     * @param c - collection to be kept in List.
+     * @return true if successful, else false.
+     * @throws NullPointerException on null List.
+     */
+    boolean retainAll(Collection<T> c);
+
+    /**
      * Set object at index to new Object.
      * @param index - index of item to be set to.
      * @param item - item to be added to index.
@@ -134,8 +143,8 @@ public interface List<T> {
 
     /**
      * Compares two Lists.
-     * @param o - List to compare.
+     * @param list - List to compare.
      * @return true if equal.
      */
-    boolean equals(Object o);
+    boolean equals(Object list);
 }

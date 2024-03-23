@@ -1,10 +1,11 @@
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("unchecked")
-public class CustomList<T> implements List<T> {
+public class CustomList<T> implements ListInterface<T> {
 
     public int listSize = 32;
     private int size = 0;
@@ -62,7 +63,7 @@ public class CustomList<T> implements List<T> {
 
     public boolean containsAll(List<T> collection) {
         if(collection == null) throw new NullPointerException();
-        for(T i : collection.toArray()) {
+        for(T i : collection) {
             if (i.equals(null)) throw new NullPointerException();
             if (!contains(i)) return false;
         }
@@ -92,11 +93,8 @@ public class CustomList<T> implements List<T> {
 
     public int lastIndexOf(Object o) {
         if(o.equals(null)) throw new NullPointerException();
-        for(int i = size - 1; i >= 0; i--) {
-            if(list[i].equals(o)) {
-                return i;
-            }
-        }
+        for(int i = size - 1; i >= 0; i--)
+            if (list[i].equals(o)) return i;
 
         return -1;
     }
@@ -118,7 +116,7 @@ public class CustomList<T> implements List<T> {
     }
 
     public boolean removeAll(Collection<T> c) {
-        if(c.equals(null)) throw new NullPointerException();
+        if (c == null) throw new NullPointerException();
         if(c.isEmpty()) return false;
         int nextCheckIndex = 0;
         for(T item: c) {
@@ -130,8 +128,15 @@ public class CustomList<T> implements List<T> {
         return true;
     }
 
-    public void retainAll() {
+    public boolean retainAll(Collection<T> collection) {
+        if (collection == null || size == 0) throw new NullPointerException();
+        boolean changed = false;
+        if(collection.isEmpty()) throw new NullPointerException();
+        if(containsAll(collection.stream().toList()))
+            for (T t : collection)
+                if (remove(t)) changed = true;
 
+        return changed;
     }
 
     public T set(int index, T item) {
@@ -150,9 +155,7 @@ public class CustomList<T> implements List<T> {
         if(firstIndex < 0 || firstIndex > size) throw new IndexOutOfBoundsException();
         if(secondIndex < firstIndex || secondIndex > size) throw new IndexOutOfBoundsException();
         CustomList subList = new CustomList(size);
-        for(int i = firstIndex; i < secondIndex; i++) {
-            subList.add(list[i]);
-        }
+        Arrays.stream(list, firstIndex, secondIndex).forEach(subList::add);
         return subList;
     }
 
