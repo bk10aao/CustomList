@@ -37,9 +37,13 @@ public class CustomList<T> implements List<T> {
     }
 
     public boolean addAll(Collection<T> values) {
+        if(values.equals(null)) throw new NullPointerException();
         Object[] temp = new Object[listSize];
         System.arraycopy(list, 0, temp, 0, listSize);
-        for (T value : values) add(value);
+        for (T value : values) {
+            if(value.equals(null)) throw new NullPointerException();
+            add(value);
+        }
         return !Arrays.equals(temp, list);
     }
 
@@ -58,8 +62,10 @@ public class CustomList<T> implements List<T> {
 
     public boolean containsAll(CustomList<T> collection) {
         if(collection == null) throw new NullPointerException();
-        for(T i : collection.toArray())
+        for(T i : collection.toArray()) {
+            if (i.equals(null)) throw new NullPointerException();
             if (!contains(i)) return false;
+        }
         return true;
     }
 
@@ -82,6 +88,17 @@ public class CustomList<T> implements List<T> {
 
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public int lastIndexOf(Object o) {
+        if(o.equals(null)) throw new NullPointerException();
+        for(int i = size - 1; i >= 0; i--) {
+            if(list[i].equals(o)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public boolean remove(int index) {
@@ -119,14 +136,24 @@ public class CustomList<T> implements List<T> {
         T replaced = list[index];
         list[index] = item;
         return replaced;
-
     }
 
     public int size() {
         return size;
     }
 
+    public CustomList subList(int firstIndex, int secondIndex) {
+        if(firstIndex < 0 || firstIndex > size) throw new IndexOutOfBoundsException();
+        if(secondIndex < firstIndex || secondIndex > size) throw new IndexOutOfBoundsException();
+        CustomList subList = new CustomList(size);
+        for(int i = firstIndex; i < secondIndex; i++) {
+            subList.add(list[i]);
+        }
+        return subList;
+    }
+
     public T[] toArray() {
+        if(list == null) throw new NullPointerException();
         return (T[]) Arrays.stream(list).filter(Objects::nonNull).toArray();
     }
 

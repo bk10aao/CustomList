@@ -67,6 +67,14 @@ public interface List<T> {
      */
     boolean isEmpty();
 
+
+    /**
+     * Get last Index of Object in List
+     * @return last Index of object if present, else -1
+     * @throws NullPointerException on null object
+     */
+    int lastIndexOf(Object o);
+
     /**
      * Remove object by index.
      * @param index - index of object to be removed.
@@ -104,6 +112,19 @@ public interface List<T> {
      * @return Integer size of list.
      */
     int size();
+
+    /**
+     * Get subList of List
+     * @param firstIndex start index of List to generate subList
+     * @param secondIndex end index of List to generate subList
+     * @throws IndexOutOfBoundsException if first index is smaller than 0
+     * @throws IndexOutOfBoundsException if secondIndex if smaller than 0
+     * @throws IndexOutOfBoundsException if first index is larger than list size
+     * @throws IndexOutOfBoundsException if second index is bigger than list size
+     * @throws IndexOutOfBoundsException if first index is larger than second index
+     * @return new CustomList sublist of CustomList
+     */
+    CustomList subList(int firstIndex, int secondIndex);
 
     /**
      * Get List as Array.

@@ -572,4 +572,77 @@ class CustomListTest {
         assertEquals(100, customList.get(3));
         assertEquals(5, customList.size());
     }
+
+    @Test
+    public void whenGettingLastIndexOfObjectThatDoesNotExist_throws_NullPointerException() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 5; i++) {
+            customList.add(i * 10);
+        }
+
+        assertThrows(NullPointerException.class,
+                ()-> customList.lastIndexOf(null));
+    }
+
+    @Test
+    public void whenGettingLastIndexOfObject_20_returns_2() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 5; i++) {
+            customList.add(i * 10);
+        }
+
+        assertEquals(2, customList.lastIndexOf(20));
+    }
+
+    @Test
+    public void whenGettingLastIndexOfObject_20_returns_7() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 5; i++) {
+            customList.add(i * 10);
+        }
+
+        for(int i = 0; i < 5; i++) {
+            customList.add(i * 10);
+        }
+
+        assertEquals(7, customList.lastIndexOf(20));
+    }
+
+    @Test
+    public void whenGettingLastIndexOfObjectThatDoesNotExistInList_1000_returns_negative_1() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 5; i++) {
+            customList.add(i * 10);
+        }
+
+        assertEquals(-1, customList.lastIndexOf(1000));
+    }
+
+    @Test
+    public void whenGettingSubList_withFirstIndexSmallerThan_0_returns_IndexOutOfBoundsException() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 5; i++) {
+            customList.add(i * 10);
+        }
+
+        assertThrows(IndexOutOfBoundsException.class,
+                ()-> customList.subList(-1, 10));
+    }
+    @Test
+    public void whenGettingSubList_withIndexsOf_2_8_returnsCorrectSublistOf_size_8() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 10; i++) {
+            customList.add(i * 10);
+        }
+
+        CustomList expected = new CustomList();
+        for(int i = 2; i < 8; i++) {
+            expected.add(i * 10);
+        }
+
+        CustomList subList = customList.subList(2, 8);
+
+        assertTrue(subList.equals(expected));
+    }
+
 }
