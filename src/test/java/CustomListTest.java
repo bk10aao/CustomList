@@ -179,7 +179,7 @@ class CustomListTest {
     }
 
     @Test
-    public void givenAListOf_0_to_32_ints_onContainsAllOf_nullCollection_returns_NullPointerException() {
+    public void givenAListOf_0_to_32_ints_onContainsAllOf_nullCollection_throws_NullPointerException() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 33; i++) {
             customList.add(i);
@@ -297,7 +297,7 @@ class CustomListTest {
     }
 
     @Test
-    public void givenListOf_5_values_of_0_10_20_30_40_onGettingIndex_null_returns_nullPointerException() {
+    public void givenListOf_5_values_of_0_10_20_30_40_onGettingIndex_null_throws_NullPointerException() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 6; i++) {
             customList.add(i * 10);
@@ -358,7 +358,7 @@ class CustomListTest {
     }
 
     @Test
-    public void givenIndexToRemove_whichIsLargerThanSize_returns_IndexOutOfBoundsException() {
+    public void givenIndexToRemove_whichIsLargerThanSize_throws_IndexOutOfBoundsException() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
             customList.add(i * 10);
@@ -368,7 +368,7 @@ class CustomListTest {
     }
 
     @Test
-    public void givenNegativeIndexOf_minus_1_onRemove_returns_IndexOutOfBoundsException() {
+    public void givenNegativeIndexOf_minus_1_onRemove_throws_IndexOutOfBoundsException() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
             customList.add(i * 10);
@@ -451,7 +451,7 @@ class CustomListTest {
     }
 
     @Test
-    public void whenRemovingListWithOnlyNullItems_returns_NullPointerException() {
+    public void whenRemovingListWithOnlyNullItems_throws_NullPointerException() {
         CustomList customList = new CustomList();
         Collection<Integer> items = new ArrayList<>();
         items.add(null);
@@ -463,7 +463,7 @@ class CustomListTest {
     }
 
     @Test
-    public void whenRemovingListWithANullItem_returns_NullPointerException() {
+    public void whenRemovingListWithANullItem_throws_NullPointerException() {
         CustomList customList = new CustomList();
         Collection<Integer> items = new ArrayList<>();
         items.add(10);
@@ -475,7 +475,7 @@ class CustomListTest {
     }
 
     @Test
-    public void whenRemovingNullList_returns_NullPointerException() {
+    public void whenRemovingNullList_throws_NullPointerException() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
             customList.add(new Integer(i * 10));
@@ -538,7 +538,7 @@ class CustomListTest {
     }
 
     @Test
-    public void whenSettingItemInList_withIndexof_negative_1_returns_IndexOutOfBoundsException() {
+    public void whenSettingItemInList_withIndexof_negative_1_throws_IndexOutOfBoundsException() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
             customList.add(new Integer(i * 10));
@@ -549,7 +549,7 @@ class CustomListTest {
     }
 
     @Test
-    public void whenSettingItemInList_withIndexLargerThanSize_returns_IndexOutOfBoundsException() {
+    public void whenSettingItemInList_withIndexLargerThanSize_throws_IndexOutOfBoundsException() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
             customList.add(new Integer(i * 10));
@@ -619,7 +619,7 @@ class CustomListTest {
     }
 
     @Test
-    public void whenGettingSubList_withFirstIndexSmallerThan_0_returns_IndexOutOfBoundsException() {
+    public void whenGettingSubList_withFirstIndexSmallerThan_0_throws_IndexOutOfBoundsException() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
             customList.add(i * 10);
@@ -644,5 +644,4 @@ class CustomListTest {
 
         assertTrue(subList.equals(expected));
     }
-
 }

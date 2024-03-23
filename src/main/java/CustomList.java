@@ -60,7 +60,7 @@ public class CustomList<T> implements List<T> {
         return false;
     }
 
-    public boolean containsAll(CustomList<T> collection) {
+    public boolean containsAll(List<T> collection) {
         if(collection == null) throw new NullPointerException();
         for(T i : collection.toArray()) {
             if (i.equals(null)) throw new NullPointerException();
@@ -128,6 +128,10 @@ public class CustomList<T> implements List<T> {
         }
         shift();
         return true;
+    }
+
+    public void retainAll() {
+
     }
 
     public T set(int index, T item) {

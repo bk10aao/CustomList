@@ -37,7 +37,7 @@ public interface List<T> {
      * @return boolean true if contains all items, else false.
      * @throws NullPointerException on null collection.
      */
-    boolean containsAll(CustomList<T> collection);
+    boolean containsAll(List<T> collection);
 
     /**
      * Get Object by index.
@@ -138,5 +138,4 @@ public interface List<T> {
      * @return true if equal.
      */
     boolean equals(Object o);
-
 }
