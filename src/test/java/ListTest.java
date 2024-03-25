@@ -697,4 +697,24 @@ class ListTest {
         boolean result = customList.retainAll(retainList);
         assertTrue(result);
     }
+
+    @Test
+    public void givenListOfNoValues_returnstoString_withEmptyArray() {
+        CustomList customList = new CustomList();
+
+        String result = customList.toString();
+        System.out.println(result);
+        assertEquals("CustomList{size=0, list=[]}", result);
+    }
+
+    @Test
+    public void givenListOf_0_1_2_3_4_returnstoString() {
+        CustomList customList = new CustomList();
+        for(int i = 0; i < 5; i++) {
+            customList.add(i);
+        }
+
+        String result = customList.toString();
+        assertEquals("CustomList{size=5, list=[0, 1, 2, 3, 4]}", result);
+    }
 }
