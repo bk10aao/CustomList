@@ -223,4 +223,12 @@ public class CustomList<T> implements ListInterface<T> {
         result = 31 * result + Arrays.hashCode(list);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "CustomList{" +
+                "size=" + size +
+                ", list=" + Arrays.toString(toArray()) +
+                '}';
+    }
 }
