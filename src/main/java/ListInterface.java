@@ -127,7 +127,7 @@ public interface ListInterface<T> {
      * @param firstIndex start index of List to generate subList
      * @param secondIndex end index of List to generate subList
      * @throws IndexOutOfBoundsException if first index is smaller than 0
-     * @throws IndexOutOfBoundsException if secondIndex if smaller than 0
+     * @throws IndexOutOfBoundsException if secondIndex is smaller than 0
      * @throws IndexOutOfBoundsException if first index is larger than list size
      * @throws IndexOutOfBoundsException if second index is bigger than list size
      * @throws IndexOutOfBoundsException if first index is larger than second index
@@ -147,4 +147,16 @@ public interface ListInterface<T> {
      * @return true if equal.
      */
     boolean equals(Object list);
+
+    /**
+     * Get HashCode for List Object
+     * @return hashcode for List
+     */
+    int hashCode();
+
+    /**
+     * Get List object as String
+     * @return String representation of List
+     */
+    String toString();
 }

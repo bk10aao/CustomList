@@ -31,4 +31,4 @@ Implementation of a List using an array
 19. toArray() - returns list without null elements.
 19. equals(Object o) - returns boolean comparing List instances.
 20. hashCode() - returns Integer HashCode.
-21. toString = returns String representation of List.
+21. toString() = returns String representation of List.
