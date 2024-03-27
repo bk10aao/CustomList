@@ -75,10 +75,6 @@ public class CustomList<T> implements ListInterface<T> {
         return list[index];
     }
 
-    public Iterator iterator() {
-        return Arrays.stream(list).filter(Objects::nonNull).iterator();
-    }
-
     public int indexOf(Object o) {
         if(o == null)
             throw new NullPointerException();
@@ -90,6 +86,11 @@ public class CustomList<T> implements ListInterface<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
+    public Iterator iterator() {
+        return Arrays.stream(list).filter(Objects::nonNull).iterator();
+    }
+
 
     public int lastIndexOf(Object o) {
         if(o.equals(null)) throw new NullPointerException();
