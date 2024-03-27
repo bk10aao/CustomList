@@ -165,6 +165,18 @@ public class CustomList<T> implements ListInterface<T> {
         return (T[]) Arrays.stream(list).filter(Objects::nonNull).toArray();
     }
 
+    private void expand() {
+        listSize *= 2;
+        T[] temp = (T[]) new Object[listSize];
+        System.arraycopy(list, 0, temp, 0, list.length);
+        list = temp;
+    }
+
+    private void reduce() {
+        listSize = listSize / 2;
+        System.arraycopy(list, 0, list, 0, size);
+    }
+
     private void removeObject(T object) {
         for (int i = 0; i < list.length; i++) {
             T item = list[i];
@@ -185,18 +197,6 @@ public class CustomList<T> implements ListInterface<T> {
             }
         }
         return -1;
-    }
-
-    private void expand() {
-        listSize *= 2;
-        T[] temp = (T[]) new Object[listSize];
-        System.arraycopy(list, 0, temp, 0, list.length);
-        list = temp;
-    }
-
-    private void reduce() {
-        listSize = listSize / 2;
-        System.arraycopy(list, 0, list, 0, size);
     }
 
     private void shift() {
