@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SuppressWarnings("ALL")
+@SuppressWarnings("DataFlowIssue")
 class ListTest {
 
     @Test
@@ -23,7 +23,7 @@ class ListTest {
     }
 
     @Test
-    public void givenConstructorWithParamaterSUZEof_64_returnsDefaultListSizeOf_64_andZeroElements() {
+    public void givenConstructorWithParameterSUZEof_64_returnsDefaultListSizeOf_64_andZeroElements() {
         CustomList customList = new CustomList(64);
         assertEquals(64, customList.listSize);
         assertEquals(0, customList.size());
@@ -211,7 +211,6 @@ class ListTest {
             customList.add(i);
         }
         Object[] expected = new Object[] { 0, 1, 2, 3, 4, 5 };
-        Object[] actual = customList.toArray();
         assertArrayEquals(expected, customList.toArray());
     }
 
@@ -337,18 +336,14 @@ class ListTest {
     @Test
     public void givenListOf_5_values_of_0_10_20_30_40_onGettingIndexOfValue_40_returns_4() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 6; i++) {
-            customList.add(i * 10);
-        }
+        for(int i = 0; i < 6; i++) customList.add(i * 10);
         assertEquals(4, customList.indexOf(40));
     }
 
     @Test
     public void givenListOf_5_values_on_isEmpty_returns_false() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 6; i++) {
-            customList.add(i);
-        }
+        for(int i = 0; i < 6; i++) customList.add(i);
         assertFalse(customList.isEmpty());
     }
 
@@ -361,9 +356,7 @@ class ListTest {
     @Test
     public void givenIndexToRemove_whichIsLargerThanSize_throws_IndexOutOfBoundsException() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 5; i++) {
-            customList.add(i * 10);
-        }
+        for(int i = 0; i < 5; i++) customList.add(i * 10);
         assertThrows(IndexOutOfBoundsException.class,
                 ()-> customList.remove(5));
     }
@@ -371,9 +364,7 @@ class ListTest {
     @Test
     public void givenNegativeIndexOf_minus_1_onRemove_throws_IndexOutOfBoundsException() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 5; i++) {
-            customList.add(i * 10);
-        }
+        for(int i = 0; i < 5; i++) customList.add(i * 10);
         assertThrows(IndexOutOfBoundsException.class,
                 ()-> customList.remove(-1));
     }
@@ -381,9 +372,7 @@ class ListTest {
     @Test
     public void givenListOf_5_values_of_0_10_20_30_40_50_onRemovingIndexOf_2_leavesArrayOf_0_10_30_40_50_withSizeOf_4() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 5; i++) {
-            customList.add(i * 10);
-        }
+        for(int i = 0; i < 5; i++) customList.add(i * 10);
 
         CustomList expected = new CustomList();
         expected.add(0);
@@ -392,20 +381,16 @@ class ListTest {
         expected.add(40);
         boolean removed = customList.remove(2);
         assertTrue(removed);
-        assertTrue(customList.equals(expected));
+        assertEquals(customList, expected);
         assertEquals(4, customList.size());
     }
 
     @Test
     public void givenListOf_50Values_onRemoving_42Values_reducesArrayToSizeOf_32() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 50; i++) {
-            customList.add(i * 10);
-        }
+        for(int i = 0; i < 50; i++) customList.add(i * 10);
         boolean removed = false;
-        for(int i = 42; i > 0; i--) {
-            removed = customList.remove(i);
-        }
+        for(int i = 42; i > 0; i--) removed = customList.remove(i);
         assertTrue(removed);
         assertEquals(8, customList.size());
         assertEquals(32, customList.listSize);
@@ -414,9 +399,7 @@ class ListTest {
     @Test
     public void givenListOf_5_objects_of_0_10_20_30_40_50_onRemovingAnObjectThatDoesNotExist_returnsFalse() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 5; i++) {
-            customList.add(i * 10);
-        }
+        for(int i = 0; i < 5; i++) customList.add(i * 10);
         Object o = new Object();
         assertFalse(customList.remove(o));
     }
@@ -424,9 +407,7 @@ class ListTest {
     @Test
     public void givenListOf_5_objects_of_0_10_20_30_40_50_onRemovingANullValue_returnsFalse() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 5; i++) {
-            customList.add(new Integer(10 * i));
-        }
+        for(int i = 0; i < 5; i++) customList.add(10 * i);
         assertThrows(NullPointerException.class,
                 ()-> customList.remove(null));
     }
@@ -434,20 +415,14 @@ class ListTest {
     @Test
     public void givenListOf_5_objects_of_0_10_20_30_40_50_onRemovingAValueThatDoesNotExist_returnsFalse() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 5; i++) {
-            customList.add(new Integer(10 * i));
-        }
-        int asObject = 100;
-        assertFalse(customList.remove(new Integer(100)));
+        for(int i = 0; i < 5; i++) customList.add(String.valueOf(10 * i));
+        assertFalse(customList.remove(String.valueOf(100)));
     }
 
     @Test
     public void givenListOf_5_objects_of_0_10_20_30_40_50_onRemovingAValueThatDoesExist_returnsFalse() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 5; i++) {
-            customList.add(new String(String.valueOf(i * 10)));
-        }
-        int asObject = 100;
+        for(int i = 0; i < 5; i++) customList.add(String.valueOf(i * 10));
         assertFalse(customList.remove(String.valueOf(100)));
     }
 
@@ -460,7 +435,7 @@ class ListTest {
         items.add(null);
 
         assertThrows(NullPointerException.class,
-                ()-> customList.removeAll(null));
+                ()-> customList.removeAll(items));
     }
 
     @Test
@@ -472,14 +447,14 @@ class ListTest {
         items.add(null);
 
         assertThrows(NullPointerException.class,
-                ()-> customList.removeAll(null));
+                ()-> customList.removeAll(items));
     }
 
     @Test
     public void whenRemovingNullList_throws_NullPointerException() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
-            customList.add(new Integer(i * 10));
+            customList.add(i * 10);
         }
         assertThrows(NullPointerException.class,
                 ()-> customList.removeAll(null));
@@ -489,7 +464,7 @@ class ListTest {
     public void whenRemovingEmptyList_returns_false() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
-            customList.add(new Integer(i * 10));
+            customList.add(i * 10);
         }
         assertFalse(customList.removeAll(new ArrayList<>()));
     }
@@ -498,12 +473,12 @@ class ListTest {
     public void whenRemovingListWithThreeIntegersPresentInCollection_returns_true() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
-            customList.add(new Integer(i * 10));
+            customList.add(i * 10);
         }
 
         Collection<Integer> items = new ArrayList<>();
         for(int i = 0; i < 3; i++) {
-            items.add(new Integer(i * 10));
+            items.add(i * 10);
         }
 
         assertTrue(customList.removeAll(items));
@@ -513,12 +488,12 @@ class ListTest {
     public void whenRemovingListWithThreeIntegersPresentInCollection_and_oneNot_returns_false() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
-            customList.add(new Integer(i * 10));
+            customList.add(i * 10);
         }
 
         Collection<Integer> items = new ArrayList<>();
         for(int i = 2; i < 6; i++) {
-            items.add(new Integer(i * 10));
+            items.add(i * 10);
         }
 
         assertFalse(customList.removeAll(items));
@@ -528,7 +503,7 @@ class ListTest {
     public void whenRemovingListWithThreeIntegersPresentInCollection_withGaps_returns_true() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
-            customList.add(new Integer(i * 10));
+            customList.add(i * 10);
         }
 
         Collection<Integer> items = new ArrayList<>();
@@ -539,10 +514,10 @@ class ListTest {
     }
 
     @Test
-    public void whenSettingItemInList_withIndexof_negative_1_throws_IndexOutOfBoundsException() {
+    public void whenSettingItemInList_withIndexOf_negative_1_throws_IndexOutOfBoundsException() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
-            customList.add(new Integer(i * 10));
+            customList.add(i * 10);
         }
 
         assertThrows(IndexOutOfBoundsException.class,
@@ -553,7 +528,7 @@ class ListTest {
     public void whenSettingItemInList_withIndexLargerThanSize_throws_IndexOutOfBoundsException() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
-            customList.add(new Integer(i * 10));
+            customList.add(i * 10);
         }
 
         assertThrows(IndexOutOfBoundsException.class,
@@ -561,7 +536,7 @@ class ListTest {
     }
 
     @Test
-    public void whenSettingItemInList_withIndexof_3_andValueOf_100_returns_30() {
+    public void whenSettingItemInList_withIndexOf_3_andValueOf_100_returns_30() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
             customList.add(i * 10);
@@ -630,7 +605,7 @@ class ListTest {
                 ()-> customList.subList(-1, 10));
     }
     @Test
-    public void whenGettingSubList_withIndexsOf_2_8_returnsCorrectSublistOf_size_8() {
+    public void whenGettingSubList_withIndexOf_2_8_returnsCorrectSublistOf_size_8() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 10; i++) {
             customList.add(i * 10);
@@ -643,7 +618,7 @@ class ListTest {
 
         CustomList subList = customList.subList(2, 8);
 
-        assertTrue(subList.equals(expected));
+        assertEquals(subList, expected);
     }
 
     @Test
@@ -699,7 +674,7 @@ class ListTest {
     }
 
     @Test
-    public void givenListOfNoValues_returnstoString_withEmptyArray() {
+    public void givenListOfNoValues_returns_toString_withEmptyArray() {
         CustomList customList = new CustomList();
 
         String result = customList.toString();
@@ -708,7 +683,7 @@ class ListTest {
     }
 
     @Test
-    public void givenListOf_0_1_2_3_4_returnstoString() {
+    public void givenListOf_0_1_2_3_4_returns_toString() {
         CustomList customList = new CustomList();
         for(int i = 0; i < 5; i++) {
             customList.add(i);

@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-@SuppressWarnings("unchecked")
 public class CustomList<T> implements ListInterface<T> {
 
     public int listSize = 32;
@@ -121,7 +120,9 @@ public class CustomList<T> implements ListInterface<T> {
         if(c.isEmpty()) return false;
         int nextCheckIndex = 0;
         for(T item: c) {
-            if(item.equals(null)) throw new NullPointerException();
+            if(item == null) {
+                throw new NullPointerException();
+            }
             if(contains(item)) nextCheckIndex = removeObjectCollection(item, nextCheckIndex);
             else return false;
         }
