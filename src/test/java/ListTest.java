@@ -446,6 +446,9 @@ class ListTest {
         items.add(11);
         items.add(null);
 
+        customList.add(10);
+        customList.add(11);
+
         assertThrows(NullPointerException.class,
                 ()-> customList.removeAll(items));
     }
