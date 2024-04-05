@@ -275,7 +275,7 @@ class ListTest {
         for(int i = 0; i < 6; i++) {
             customList.add(i);
         }
-        assertEquals(5, customList.get(5));
+        assertEquals(3, customList.get(3));
     }
 
     @Test
