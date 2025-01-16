@@ -46,8 +46,7 @@ class ListTest {
     public void givenListOfSize_32_whenAddingValue_null_throws_NullPointerException() {
         CustomList customList = new CustomList(32);
 
-        assertThrows(NullPointerException.class,
-                ()-> customList.add(null));
+        assertThrows(NullPointerException.class, ()-> customList.add(null));
     }
 
     @Test
@@ -79,7 +78,7 @@ class ListTest {
     @Test
     public void givenListOfSize_128_whenAddingValue_1_returnsSizeOf_1() {
         CustomList customList = new CustomList(0);
-        for(int i = 0; i <= 33; i++) customList.add(i);
+        IntStream.rangeClosed(0, 33).forEach(customList::add);
 
         assertEquals(34, customList.size());
         assertEquals(64, customList.listSize);
@@ -88,8 +87,7 @@ class ListTest {
     @Test
     public void givenACollectionOf_5_ints_on_addAll_returnsTrue() {
         CustomList customList = new CustomList(0);
-        ArrayList<Integer> collection = new ArrayList<>();
-        for(int i = 0; i < 5; i++) collection.add(i);
+        ArrayList<Integer> collection = IntStream.range(0, 5).boxed().collect(Collectors.toCollection(ArrayList::new));
 
         assertTrue(customList.addAll(collection));
         assertEquals(5, customList.size());
@@ -99,8 +97,7 @@ class ListTest {
     @Test
     public void givenACollectionOf_33_ints_on_addAll_returnsTrue_andListSizeOf_64() {
         CustomList customList = new CustomList(0);
-        ArrayList<Integer> collection = new ArrayList<>();
-        for(int i = 0; i < 33; i++) collection.add(i);
+        ArrayList<Integer> collection = IntStream.range(0, 33).boxed().collect(Collectors.toCollection(ArrayList::new));
 
         assertTrue(customList.addAll(collection));
         assertEquals(33, customList.size());
@@ -110,7 +107,7 @@ class ListTest {
     @Test
     public void givenACollectionOf_5_ints_on_clear_returnsEmptyList() {
         CustomList customList = new CustomList(0);
-        for(int i = 0; i < 5; i++) customList.add(i);
+        IntStream.range(0, 5).forEach(customList::add);
 
         assertEquals(5, customList.size());
         assertEquals(32, customList.listSize);
@@ -124,7 +121,7 @@ class ListTest {
     @Test
     public void givenACollectionOf_33_ints_on_clear_returnsEmptyList() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 33; i++) customList.add(i);
+        IntStream.range(0, 33).forEach(customList::add);
         assertEquals(33, customList.size());
         assertEquals(64, customList.listSize);
 
@@ -137,7 +134,7 @@ class ListTest {
     @Test
     public void givenAListOf_0_to_32_ints_onContains_2_3_4_and_10() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 33; i++) customList.add(i);
+        IntStream.range(0, 33).forEach(customList::add);
 
         assertTrue(customList.contains(2));
         assertTrue(customList.contains(3));
@@ -147,7 +144,7 @@ class ListTest {
     @Test
     public void givenAListOf_0_to_32_ints_onContains_50_and_100_returns_false() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 33; i++) customList.add(i);
+        IntStream.range(0, 33).forEach(customList::add);
 
         assertFalse(customList.contains(50));
         assertFalse(customList.contains(100));
@@ -182,7 +179,7 @@ class ListTest {
     }
 
     @Test
-    public void givenAListOf_0_to_32_ints_onIterator_has_32_items() {
+    public void givenAListOf_0_to_32_integers_onIterator_has_32_items() {
         CustomList customList = new CustomList();
         IntStream.range(0, 32).forEach(customList::add);
 
@@ -234,8 +231,7 @@ class ListTest {
         CustomList customList = new CustomList();
         IntStream.range(0, 6).forEach(customList::add);
 
-        assertThrows(IndexOutOfBoundsException.class,
-                ()-> customList.get(-1));
+        assertThrows(IndexOutOfBoundsException.class, ()-> customList.get(-1));
     }
 
     @Test
@@ -243,8 +239,7 @@ class ListTest {
         CustomList customList = new CustomList();
         IntStream.range(0, 6).forEach(customList::add);
 
-        assertThrows(IndexOutOfBoundsException.class,
-                ()-> customList.get(10));
+        assertThrows(IndexOutOfBoundsException.class, ()-> customList.get(10));
     }
 
     @Test
@@ -284,14 +279,13 @@ class ListTest {
         CustomList customList = new CustomList();
         IntStream.range(0, 6).mapToObj(i -> i * 10).forEach(customList::add);
 
-        assertThrows(NullPointerException.class,
-                ()-> customList.indexOf(null));
+        assertThrows(NullPointerException.class, ()-> customList.indexOf(null));
     }
 
     @Test
     public void givenListOf_5_values_of_0_10_20_30_40_onGettingIndexOfValue_100_returns_negative_1() {
         CustomList customList = new CustomList();
-        for(int i = 0; i < 6; i++) customList.add(i * 10);
+        IntStream.range(0, 6).mapToObj(i -> i * 10).forEach(customList::add);
 
         assertEquals(-1, customList.indexOf(100));
     }
@@ -339,8 +333,7 @@ class ListTest {
         CustomList customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
 
-        assertThrows(IndexOutOfBoundsException.class,
-                ()-> customList.remove(5));
+        assertThrows(IndexOutOfBoundsException.class, ()-> customList.remove(5));
     }
 
     @Test
@@ -348,8 +341,7 @@ class ListTest {
         CustomList customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
 
-        assertThrows(IndexOutOfBoundsException.class,
-                ()-> customList.remove(-1));
+        assertThrows(IndexOutOfBoundsException.class, ()-> customList.remove(-1));
     }
 
     @Test
@@ -372,7 +364,8 @@ class ListTest {
 
         boolean removed = false;
 
-        for(int i = 42; i > 0; i--) removed = customList.remove(i);
+        for(int i = 42; i > 0; i--)
+            removed = customList.remove(i);
 
         assertTrue(removed);
         assertEquals(8, customList.size());
@@ -392,8 +385,7 @@ class ListTest {
         CustomList customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> 10 * i).forEach(customList::add);
 
-        assertThrows(NullPointerException.class,
-                ()-> customList.remove(null));
+        assertThrows(NullPointerException.class, ()-> customList.remove(null));
     }
 
     @Test
@@ -417,8 +409,7 @@ class ListTest {
         CustomList customList = new CustomList();
         Collection<Integer> items = IntStream.range(0, 3).<Integer>mapToObj(i -> null).collect(Collectors.toList());
 
-        assertThrows(NullPointerException.class,
-                ()-> customList.removeAll(items));
+        assertThrows(NullPointerException.class, ()-> customList.removeAll(items));
     }
 
     @Test
@@ -429,8 +420,7 @@ class ListTest {
 
         IntStream.range(10, 12).forEach(customList::add);
 
-        assertThrows(NullPointerException.class,
-                ()-> customList.removeAll(items));
+        assertThrows(NullPointerException.class, ()-> customList.removeAll(items));
     }
 
     @Test
@@ -438,8 +428,7 @@ class ListTest {
         CustomList customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
 
-        assertThrows(NullPointerException.class,
-                ()-> customList.removeAll(null));
+        assertThrows(NullPointerException.class, ()-> customList.removeAll(null));
     }
 
     @Test
@@ -485,8 +474,7 @@ class ListTest {
         CustomList customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
 
-        assertThrows(IndexOutOfBoundsException.class,
-                ()-> customList.set(-1, 1000));
+        assertThrows(IndexOutOfBoundsException.class, ()-> customList.set(-1, 1000));
     }
 
     @Test
@@ -494,8 +482,7 @@ class ListTest {
         CustomList customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
 
-        assertThrows(IndexOutOfBoundsException.class,
-                ()-> customList.set(100, 1000));
+        assertThrows(IndexOutOfBoundsException.class, ()-> customList.set(100, 1000));
     }
 
     @Test
@@ -514,8 +501,7 @@ class ListTest {
         CustomList customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
 
-        assertThrows(NullPointerException.class,
-                ()-> customList.lastIndexOf(null));
+        assertThrows(NullPointerException.class, ()-> customList.lastIndexOf(null));
     }
 
     @Test
@@ -549,8 +535,7 @@ class ListTest {
         CustomList customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
 
-        assertThrows(IndexOutOfBoundsException.class,
-                ()-> customList.subList(-1, 10));
+        assertThrows(IndexOutOfBoundsException.class, ()-> customList.subList(-1, 10));
     }
     @Test
     public void whenGettingSubList_withIndexOf_2_8_returnsCorrectSublistOf_size_8() {

@@ -17,7 +17,8 @@ public class CustomList<T> implements ListInterface<T> {
     }
 
     public CustomList(final int size) {
-        if(size < 32) this.list = (T[]) new Object[32];
+        if(size < 32)
+            this.list = (T[]) new Object[32];
         else {
             this.listSize = size;
             this.list = (T[]) new Object[size];
@@ -30,7 +31,8 @@ public class CustomList<T> implements ListInterface<T> {
         try {
             list[nextIndex++] = item;
             size++;
-            if(nextIndex == listSize) expand();
+            if(nextIndex == listSize)
+                expand();
         } catch (Exception e) {
             return false;
         }
@@ -137,16 +139,19 @@ public class CustomList<T> implements ListInterface<T> {
                 throw new NullPointerException();
             if(contains(item))
                 nextCheckIndex = removeObjectCollection(item, nextCheckIndex);
-            else return false;
+            else
+                return false;
         }
         shift();
         return true;
     }
 
     public boolean retainAll(final Collection<T> collection) {
-        if (collection == null || size == 0) throw new NullPointerException();
+        if (collection == null || size == 0)
+            throw new NullPointerException();
         boolean changed = false;
-        if(collection.isEmpty()) throw new NullPointerException();
+        if(collection.isEmpty())
+            throw new NullPointerException();
         if(containsAll(collection.stream().toList()))
             for (T t : collection)
                 if (remove(t))
