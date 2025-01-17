@@ -70,7 +70,7 @@ public class CustomList<T> implements ListInterface<T> {
     public boolean containsAll(final List<T> collection) {
         if(collection == null)
             throw new NullPointerException();
-        for(T i : collection) {
+        for (T i : collection) {
             if (i.equals(null))
                 throw new NullPointerException();
             if (!contains(i))
@@ -89,7 +89,8 @@ public class CustomList<T> implements ListInterface<T> {
         if(o == null)
             throw new NullPointerException();
         for(int i = 0; i < size; i++)
-            if (list[i].equals(o)) return i;
+            if (list[i].equals(o))
+                return i;
         return -1;
     }
 
@@ -106,7 +107,8 @@ public class CustomList<T> implements ListInterface<T> {
         if(o.equals(null))
             throw new NullPointerException();
         for(int i = size - 1; i >= 0; i--)
-            if (list[i].equals(o)) return i;
+            if (list[i].equals(o))
+                return i;
 
         return -1;
     }
@@ -132,7 +134,8 @@ public class CustomList<T> implements ListInterface<T> {
     public boolean removeAll(final Collection<T> c) {
         if (c == null)
             throw new NullPointerException();
-        if(c.isEmpty()) return false;
+        if(c.isEmpty())
+            return false;
         int nextCheckIndex = 0;
         for(T item: c) {
             if(item == null)
@@ -256,6 +259,7 @@ public class CustomList<T> implements ListInterface<T> {
         nextIndex--;
         System.arraycopy(list, 0, temp, 0, --size);
         list = temp;
-        if(nextIndex < listSize / 2 && listSize > 32) reduce();
+        if(nextIndex < listSize / 2 && listSize > 32)
+            reduce();
     }
 }
