@@ -102,7 +102,6 @@ public class CustomList<T> implements ListInterface<T> {
         return Arrays.stream(list).filter(Objects::nonNull).iterator();
     }
 
-
     public int lastIndexOf(final Object o) {
         if(o.equals(null))
             throw new NullPointerException();

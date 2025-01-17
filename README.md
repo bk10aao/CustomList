@@ -7,7 +7,7 @@ Implementation of a List using an array
 1. `CustomList(int size)` - constructor.
 2. `CustomList()` - constructor.
 3. `boolean add(T item)` - add item to list, returns true if successful. Throws NullPointerException on null item.
-4. `boolean addAll(Collection<T> values)` - adds collection of items to list, returns true if successful
+4. `boolean addAll(Collection<T> values)` - adds collection of items to list, returns true if successful.
 5. `void clear()` - removes all items from list.
 6. `boolean contains(T item)` = returns boolean determining if List contains item. Throws NullPointerException on null item.
 7. `boolean containsAll(CustomList<T> collection)` - returns boolean determining if all items were added to list. Throws NullPointerException on empty Collection.
@@ -23,12 +23,12 @@ Implementation of a List using an array
 17. `T set(int index, T item)` - replaces element at given index. Throws NullPointerException on null item. Throws IndexOutOfBoundsException.
 18. `int size()` - returns size of list as Integer.
 19. `CustomList subList(int firstIndex, int secondIndex)` - returns sub collection of given range. Throws IndexOutOfBoundsException if: 
-    - firstIndex is less than 0. 
-    - firstIndex is bigger than secondIndex, 
-    - firstIndex is bigger than size, 
-    - secondIndex is less than 0, 
-    - secondIndex is bigger than size
+    - firstIndex is less than 0 
+    - firstIndex is larger than secondIndex
+    - firstIndex is larger than size
+    - secondIndex is less than 0
+    - secondIndex is larger than size
 20. `T[] toArray()` - returns list without null elements.
 21. `boolean equals(Object o)` - returns boolean comparing List instances.
-22. `int hashCode()` - returns Integer HashCode.
+22. `int hashCode()` - returns HashCode.
 23. `String toString()` = returns String representation of List.
