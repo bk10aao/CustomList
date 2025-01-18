@@ -41,12 +41,27 @@ public interface ListInterface<T> {
     boolean containsAll(List<T> collection);
 
     /**
+     * Compares two Lists.
+     *
+     * @param list - List to compare.
+     * @return true if equal.
+     */
+    boolean equals(Object list);
+
+    /**
      * Get Object by index.
      * @param index - index of item to be returned.
      * @return Object if successful.
-     * @throws IndexOutOfBoundsException on null item.
+     * @throws IndexOutOfBoundsException on index larger < 0.
+     * @throws IndexOutOfBoundsException on index >= size().
      */
     T get(int index);
+
+    /**
+     * Get HashCode for List Object
+     * @return hashcode for List
+     */
+    int hashCode();
 
     /**
      * Get iterator for list.
@@ -79,6 +94,8 @@ public interface ListInterface<T> {
     /**
      * Remove object by index.
      * @param index - index of object to be removed.
+     * @throws IndexOutOfBoundsException if index < 0.
+     * @throws IndexOutOfBoundsException if index >= size().
      * @return true if successful.
      */
     boolean remove(int index);
@@ -86,6 +103,7 @@ public interface ListInterface<T> {
     /**
      * Remove object by index.
      * @param object - object to be removed from List.
+     * @throws IndexOutOfBoundsException - on null item.
      * @return true if successful.
      */
     boolean remove(T object);
@@ -112,6 +130,8 @@ public interface ListInterface<T> {
      * @param index - index of item to be set to.
      * @param item - item to be added to index.
      * @return Object previously at index.
+     * @throws IndexOutOfBoundsException on index <0
+     * @throws IndexOutOfBoundsException on index >= size().
      * @throws NullPointerException on null Object.
      */
     T set(int index, T item);
@@ -137,22 +157,10 @@ public interface ListInterface<T> {
 
     /**
      * Get List as Array.
+     * @throws NullPointerException if list is empty.
      * @return T[] array of List.
      */
     T[] toArray();
-
-    /**
-     * Compares two Lists.
-     * @param list - List to compare.
-     * @return true if equal.
-     */
-    boolean equals(Object list);
-
-    /**
-     * Get HashCode for List Object
-     * @return hashcode for List
-     */
-    int hashCode();
 
     /**
      * Get List object as String
