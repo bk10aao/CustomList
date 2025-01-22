@@ -61,10 +61,7 @@ public class CustomList<T> implements ListInterface<T> {
     public boolean contains(final T item) {
         if(item == null)
             throw new NullPointerException();
-        for (int i = 0; i < size; i++)
-            if (list[i] != null && list[i].equals(item))
-                return true;
-        return false;
+        return indexOf(item) != -1;
     }
 
     public boolean containsAll(final List<T> collection) {
@@ -73,7 +70,7 @@ public class CustomList<T> implements ListInterface<T> {
         for (T i : collection) {
             if (i.equals(null))
                 throw new NullPointerException();
-            if (!contains(i))
+            if(indexOf(i) == -1)
                 return false;
         }
         return true;
@@ -88,9 +85,12 @@ public class CustomList<T> implements ListInterface<T> {
     public int indexOf(final Object o) {
         if(o == null)
             throw new NullPointerException();
-        for(int i = 0; i < size; i++)
+        for(int i = 0; i < size; i++) {
+            if (list[i] == null)
+                continue;
             if (list[i].equals(o))
                 return i;
+        }
         return -1;
     }
 
@@ -123,7 +123,7 @@ public class CustomList<T> implements ListInterface<T> {
     public boolean remove(final T object) {
         if(object.equals(null))
             throw new NullPointerException();
-        if (contains(object)) {
+        if (indexOf(object) != -1) {
             removeObject(object);
             return true;
         }
@@ -139,7 +139,7 @@ public class CustomList<T> implements ListInterface<T> {
         for(T item: c) {
             if(item == null)
                 throw new NullPointerException();
-            if(contains(item))
+            else if(indexOf(item) != -1)
                 nextCheckIndex = removeObjectCollection(item, nextCheckIndex);
             else
                 return false;
