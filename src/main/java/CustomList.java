@@ -113,10 +113,15 @@ public class CustomList<T> implements ListInterface<T> {
     }
 
     public boolean remove(final int index) {
-        if(index < 0 || index >= nextIndex)
+        if (index < 0 || index >= size)
             throw new IndexOutOfBoundsException();
-        list[index] = null;
-        shift();
+        for (int i = index; i < size - 1; i++)
+            list[i] = list[i + 1];
+        list[size - 1] = null;
+        size--;
+        nextIndex--;
+        if (nextIndex < listSize / 2 && listSize > 32)
+            reduce();
         return true;
     }
 
@@ -193,13 +198,17 @@ public class CustomList<T> implements ListInterface<T> {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o == null || getClass() != o.getClass())
+        if (!(o instanceof CustomList<?> customOther))
             return false;
-        CustomList<?> that = (CustomList<?>) o;
-        return listSize == that.listSize && size == that.size && nextIndex == that.nextIndex;
+        if (size != customOther.size)
+            return false;
+        for (int i = 0; i < size; i++)
+            if (!Objects.equals(list[i], customOther.list[i]))
+                return false;
+        return true;
     }
 
     @Override
@@ -250,15 +259,15 @@ public class CustomList<T> implements ListInterface<T> {
     }
 
     private void shift() {
-        int tempInsertIndex = 0;
+        int newIndex = 0;
         T[] temp = (T[]) new Object[listSize];
-        for(int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++)
             if (list[i] != null)
-                temp[tempInsertIndex++] = list[i];
-        nextIndex--;
-        System.arraycopy(list, 0, temp, 0, --size);
+                temp[newIndex++] = list[i];
+        size = newIndex;
+        nextIndex = newIndex;
         list = temp;
-        if(nextIndex < listSize / 2 && listSize > 32)
+        if (nextIndex < listSize / 2 && listSize > 32)
             reduce();
     }
 }
