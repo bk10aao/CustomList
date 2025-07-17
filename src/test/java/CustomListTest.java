@@ -14,6 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+<<<<<<< HEAD
+=======
+@SuppressWarnings("DataFlowIssue")
+>>>>>>> master
 class CustomListTest {
 
     @Test
@@ -388,11 +392,19 @@ class CustomListTest {
     }
 
     @Test
+<<<<<<< HEAD
     public void whenRemovingListWithThreeIntegersPresentInCollection_and_oneNot_returns_true() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
         Collection<Integer> items = IntStream.range(2, 6).mapToObj(i -> i * 10).collect(Collectors.toList());
         assertTrue(customList.removeAll(items));
+=======
+    public void whenRemovingListWithThreeIntegersPresentInCollection_and_oneNot_returns_false() {
+        CustomList<Integer> customList = new CustomList();
+        IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
+        Collection<Integer> items = IntStream.range(2, 6).mapToObj(i -> i * 10).collect(Collectors.toList());
+        assertFalse(customList.removeAll(items));
+>>>>>>> master
     }
 
     @Test
@@ -480,12 +492,28 @@ class CustomListTest {
     }
 
     @Test
+<<<<<<< HEAD
     public void whenRetainingElements_whereNoMatch_emptiesListAndReturnsTrue() {
         CustomList<Integer> customList = new CustomList<>();
         IntStream.range(0, 10).mapToObj(i -> i * 10).forEach(customList::add);
         List<Integer> retainList = IntStream.range(2, 8).mapToObj(i -> i * 100).collect(Collectors.toList());
         assertTrue(customList.retainAll(retainList));
         assertTrue(customList.isEmpty());
+=======
+    public void whenRetainingElements_whereListToRetainIsEmpty_throws_NullPointerException() {
+        CustomList<Integer> customList = new CustomList();
+        IntStream.range(0, 10).mapToObj(i -> i * 10).forEach(customList::add);
+        List<Integer> emptyList = new ArrayList<>();
+        assertThrows(NullPointerException.class, ()-> customList.retainAll(emptyList));
+    }
+
+    @Test
+    public void whenRetainingElements_whereNoMatch_returns_false() {
+        CustomList<Integer> customList = new CustomList();
+        IntStream.range(0, 10).mapToObj(i -> i * 10).forEach(customList::add);
+        List<Integer> retainList = IntStream.range(2, 8).mapToObj(i -> i * 100).collect(Collectors.toList());
+        assertFalse(customList.retainAll(retainList));
+>>>>>>> master
     }
 
     @Test
