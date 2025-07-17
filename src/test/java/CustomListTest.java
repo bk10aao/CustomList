@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SuppressWarnings("DataFlowIssue")
 class CustomListTest {
 
     @Test
@@ -389,11 +388,11 @@ class CustomListTest {
     }
 
     @Test
-    public void whenRemovingListWithThreeIntegersPresentInCollection_and_oneNot_returns_false() {
+    public void whenRemovingListWithThreeIntegersPresentInCollection_and_oneNot_returns_true() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
         Collection<Integer> items = IntStream.range(2, 6).mapToObj(i -> i * 10).collect(Collectors.toList());
-        assertFalse(customList.removeAll(items));
+        assertTrue(customList.removeAll(items));
     }
 
     @Test
@@ -481,19 +480,12 @@ class CustomListTest {
     }
 
     @Test
-    public void whenRetainingElements_whereListToRetainIsEmpty_throws_NullPointerException() {
-        CustomList<Integer> customList = new CustomList();
-        IntStream.range(0, 10).mapToObj(i -> i * 10).forEach(customList::add);
-        List<Integer> emptyList = new ArrayList<>();
-        assertThrows(NullPointerException.class, ()-> customList.retainAll(emptyList));
-    }
-
-    @Test
-    public void whenRetainingElements_whereNoMatch_returns_false() {
-        CustomList<Integer> customList = new CustomList();
+    public void whenRetainingElements_whereNoMatch_emptiesListAndReturnsTrue() {
+        CustomList<Integer> customList = new CustomList<>();
         IntStream.range(0, 10).mapToObj(i -> i * 10).forEach(customList::add);
         List<Integer> retainList = IntStream.range(2, 8).mapToObj(i -> i * 100).collect(Collectors.toList());
-        assertFalse(customList.retainAll(retainList));
+        assertTrue(customList.retainAll(retainList));
+        assertTrue(customList.isEmpty());
     }
 
     @Test
