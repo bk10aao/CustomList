@@ -32,3 +32,58 @@ Implementation of a List using an array
 21. `boolean equals(Object o)` - returns boolean comparing List instances.
 22. `int hashCode()` - returns HashCode.
 23. `String toString()` = returns String representation of List.
+
+# Time Complexity Comparison
+
+| Method                      | CustomList Time Complexity | ArrayList Time Complexity | Winner         |
+|----------------------------|----------------------------|---------------------------|----------------|
+| add(T item)                | O(1)                       | O(1)                      | Tie            |
+| addAll(Collection)         | O(n)                       | O(n)                      | Tie            |
+| clear()                    | O(1)                       | O(n)                      | **CustomList** |
+| contains(T item)           | O(n)                       | O(n)                      | Tie            |
+| containsAll(Collection)    | O(n * m)                   | O(n * m)                  | Tie            |
+| get(int index)             | O(1)                       | O(1)                      | Tie            |
+| indexOf(Object o)          | O(n)                       | O(n)                      | Tie            |
+| isEmpty()                  | O(1)                       | O(1)                      | Tie            |
+| iterator()                 | O(1)                       | O(1)                      | Tie            |
+| lastIndexOf(Object o)      | O(n)                       | O(n)                      | Tie            |
+| remove(int index)          | O(n)                       | O(n)                      | Tie            |
+| remove(Object o)           | O(n)                       | O(n)                      | Tie            |
+| removeAll(Collection)      | O(n * m)                   | O(n * m)                  | Tie            |
+| retainAll(Collection)      | O(n * m)                   | O(n * m)                  | Tie            |
+| set(int index, T item)     | O(1)                       | O(1)                      | Tie            |
+| size()                     | O(1)                       | O(1)                      | Tie            |
+| subList(a, b)              | O(n)                       | O(1)                      | **ArrayList**  |
+| toArray()                  | O(n)                       | O(n)                      | Tie            |
+| equals(Object o)           | O(n)                       | O(n)                      | Tie            |
+| hashCode()                 | O(n)                       | O(n)                      | Tie            |
+| toString()                 | O(n)                       | O(n)                      | Tie            |
+
+# Space Complexity Comparison
+
+| Method                      | CustomList Time Complexity | ArrayList Time Complexity | Winner         |
+|----------------------------|----------------------------|---------------------------|----------------|
+| add(T item)                | O(1)                       | O(1)                      | Tie            |
+| addAll(Collection)         | O(n)                       | O(n)                      | Tie            |
+| clear()                    | O(1)                       | O(n)                      | **CustomList** |
+| contains(T item)           | O(n)                       | O(n)                      | Tie            |
+| containsAll(Collection)    | O(n * m)                   | O(n * m)                  | Tie            |
+| get(int index)             | O(1)                       | O(1)                      | Tie            |
+| indexOf(Object o)          | O(n)                       | O(n)                      | Tie            |
+| isEmpty()                  | O(1)                       | O(1)                      | Tie            |
+| iterator()                 | O(1)                       | O(1)                      | Tie            |
+| lastIndexOf(Object o)      | O(n)                       | O(n)                      | Tie            |
+| remove(int index)          | O(n)                       | O(n)                      | Tie            |
+| remove(Object o)           | O(n)                       | O(n)                      | Tie            |
+| removeAll(Collection)      | O(n * m)                   | O(n * m)                  | Tie            |
+| retainAll(Collection)      | O(n * m)                   | O(n * m)                  | Tie            |
+| set(int index, T item)     | O(1)                       | O(1)                      | Tie            |
+| size()                     | O(1)                       | O(1)                      | Tie            |
+| subList(a, b)              | O(n)                       | O(1)                      | **ArrayList**  |
+| toArray()                  | O(n)                       | O(n)                      | Tie            |
+| equals(Object o)           | O(n)                       | O(n)                      | Tie            |
+| hashCode()                 | O(n)                       | O(n)                      | Tie            |
+| toString()                 | O(n)                       | O(n)                      | Tie            |
+
+*n* = number of elements in the CustomList or ArrayList.
+*m* = number of elements in the input Collection (used in methods like addAll, containsAll, etc.).

@@ -2,6 +2,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class CustomList<T> implements ListInterface<T> {
@@ -40,12 +41,12 @@ public class CustomList<T> implements ListInterface<T> {
     }
 
     public boolean addAll(final Collection<T> values) {
-        if(values.equals(null))
+        if(values == null)
             throw new NullPointerException();
         Object[] temp = new Object[listSize];
-        System.arraycopy(list, 0, temp, 0, listSize);
+        System.arraycopy(list, 0, temp, 0, size);
         for (T value : values) {
-            if(value.equals(null))
+            if(value == null)
                 throw new NullPointerException();
             add(value);
         }
@@ -56,6 +57,7 @@ public class CustomList<T> implements ListInterface<T> {
         list = (T[]) new Object[32];
         listSize = 32;
         size = 0;
+        nextIndex = 0;
     }
 
     public boolean contains(final T item) {
@@ -68,7 +70,7 @@ public class CustomList<T> implements ListInterface<T> {
         if(collection == null)
             throw new NullPointerException();
         for (T i : collection) {
-            if (i.equals(null))
+            if (i == null)
                 throw new NullPointerException();
             if(indexOf(i) == -1)
                 return false;
@@ -77,7 +79,7 @@ public class CustomList<T> implements ListInterface<T> {
     }
 
     public T get(final int index) {
-        if(index > size || index < 0)
+        if(index >= size || index < 0)
             throw new IndexOutOfBoundsException();
         return list[index];
     }
@@ -85,12 +87,9 @@ public class CustomList<T> implements ListInterface<T> {
     public int indexOf(final Object o) {
         if(o == null)
             throw new NullPointerException();
-        for(int i = 0; i < size; i++) {
-            if (list[i] == null)
-                continue;
+        for(int i = 0; i < size; i++)
             if (list[i].equals(o))
                 return i;
-        }
         return -1;
     }
 
@@ -99,11 +98,23 @@ public class CustomList<T> implements ListInterface<T> {
     }
 
     public Iterator iterator() {
-        return Arrays.stream(list).filter(Objects::nonNull).iterator();
+        return new Iterator<T>() {
+            private int index = 0;
+            @Override
+            public boolean hasNext() {
+                return index < size;
+            }
+            @Override
+            public T next() {
+                if (!hasNext())
+                    throw new NoSuchElementException();
+                return list[index++];
+            }
+        };
     }
 
     public int lastIndexOf(final Object o) {
-        if(o.equals(null))
+        if(o == null)
             throw new NullPointerException();
         for(int i = size - 1; i >= 0; i--)
             if (list[i].equals(o))
@@ -126,51 +137,47 @@ public class CustomList<T> implements ListInterface<T> {
     }
 
     public boolean remove(final T object) {
-        if(object.equals(null))
+        if(object == null)
             throw new NullPointerException();
-        if (indexOf(object) != -1) {
-            removeObject(object);
+        int index = indexOf(object);
+        if (index != -1) {
+            remove(index);
             return true;
         }
         return false;
     }
 
     public boolean removeAll(final Collection<T> c) {
-        if (c == null)
-            throw new NullPointerException();
-        if(c.isEmpty())
-            return false;
-        int nextCheckIndex = 0;
-        for(T item: c) {
-            if(item == null)
+        if (c == null) throw new NullPointerException();
+        boolean changed = false;
+        for (T item : c) {
+            if (item == null)
                 throw new NullPointerException();
-            else if(indexOf(item) != -1)
-                nextCheckIndex = removeObjectCollection(item, nextCheckIndex);
-            else
-                return false;
+            while (indexOf(item) != -1) {
+                remove(indexOf(item));
+                changed = true;
+            }
         }
-        shift();
-        return true;
+        return changed;
     }
 
     public boolean retainAll(final Collection<T> collection) {
-        if (collection == null || size == 0)
+        if (collection == null)
             throw new NullPointerException();
         boolean changed = false;
-        if(collection.isEmpty())
-            throw new NullPointerException();
-        if(containsAll(collection.stream().toList()))
-            for (T t : collection)
-                if (remove(t))
-                    changed = true;
-
+        for (int i = size - 1; i >= 0; i--) {
+            if (!collection.contains(list[i])) {
+                remove(i);
+                changed = true;
+            }
+        }
         return changed;
     }
 
     public T set(final int index, final T item) {
-        if(item.equals(null))
+        if(item == null)
             throw new NullPointerException();
-        if(index < 0 || index >= nextIndex)
+        if (index < 0 || index >= size)
             throw new IndexOutOfBoundsException();
         T replaced = list[index];
         list[index] = item;
@@ -182,19 +189,18 @@ public class CustomList<T> implements ListInterface<T> {
     }
 
     public CustomList subList(final int firstIndex, final int secondIndex) {
-        if(firstIndex < 0 || firstIndex > size)
+        if (firstIndex < 0 || firstIndex > size || secondIndex < firstIndex || secondIndex > size)
             throw new IndexOutOfBoundsException();
-        if(secondIndex < firstIndex || secondIndex > size)
-            throw new IndexOutOfBoundsException();
-        CustomList subList = new CustomList(size);
-        Arrays.stream(list, firstIndex, secondIndex).forEach(subList::add);
+        CustomList<T> subList = new CustomList(Math.max(32, secondIndex - firstIndex));
+        for (int i = firstIndex; i < secondIndex; i++)
+            subList.add(list[i]);
         return subList;
     }
 
     public T[] toArray() {
-        if(list == null)
-            throw new NullPointerException();
-        return (T[]) Arrays.stream(list).filter(Objects::nonNull).toArray();
+        T[] result = (T[]) java.lang.reflect.Array.newInstance(list.getClass().getComponentType(), size);
+        System.arraycopy(list, 0, result, 0, size);
+        return result;
     }
 
     @Override
@@ -206,14 +212,17 @@ public class CustomList<T> implements ListInterface<T> {
         if (size != customOther.size)
             return false;
         for (int i = 0; i < size; i++)
-            if (!Objects.equals(list[i], customOther.list[i]))
+            if (!Objects.equals(list[i], customOther.get(i)))
                 return false;
         return true;
     }
 
     @Override
     public int hashCode() {
-        return 31 * Objects.hash(listSize, size, nextIndex) + Arrays.hashCode(list);
+        int result = 1;
+        for (int i = 0; i < size; i++)
+            result = 31 * result + list[i].hashCode();
+        return result;
     }
 
     @Override
@@ -227,47 +236,14 @@ public class CustomList<T> implements ListInterface<T> {
     private void expand() {
         listSize *= 2;
         T[] temp = (T[]) new Object[listSize];
-        System.arraycopy(list, 0, temp, 0, list.length);
+        System.arraycopy(list, 0, temp, 0, size);
         list = temp;
     }
 
     private void reduce() {
-        listSize = listSize / 2;
-        System.arraycopy(list, 0, list, 0, size);
-    }
-
-    private void removeObject(final T object) {
-        for (int i = 0; i < list.length; i++) {
-            T item = list[i];
-            if (item != null && item.equals(object)) {
-                list[i] = null;
-                shift();
-                break;
-            }
-        }
-    }
-
-    private int removeObjectCollection(final T object, final int checkIndex) {
-        for (int i = checkIndex; i < list.length; i++) {
-            T item = list[i];
-            if (item != null && item.equals(object)) {
-                list[i] = null;
-                return i + 1;
-            }
-        }
-        return -1;
-    }
-
-    private void shift() {
-        int newIndex = 0;
+        listSize = Math.max(32, listSize / 2);
         T[] temp = (T[]) new Object[listSize];
-        for (int i = 0; i < size; i++)
-            if (list[i] != null)
-                temp[newIndex++] = list[i];
-        size = newIndex;
-        nextIndex = newIndex;
+        System.arraycopy(list, 0, temp, 0, size);
         list = temp;
-        if (nextIndex < listSize / 2 && listSize > 32)
-            reduce();
     }
 }
