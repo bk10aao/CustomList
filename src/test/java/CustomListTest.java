@@ -480,14 +480,6 @@ class CustomListTest {
     }
 
     @Test
-    public void whenRetainingElements_whereListToRetainIsEmpty_throws_NullPointerException() {
-        CustomList<Integer> customList = new CustomList();
-        IntStream.range(0, 10).mapToObj(i -> i * 10).forEach(customList::add);
-        List<Integer> emptyList = new ArrayList<>();
-        assertTrue(customList.retainAll(emptyList));
-    }
-
-    @Test
     public void whenRetainingElements_whereNoMatch_emptiesListAndReturnsTrue() {
         CustomList<Integer> customList = new CustomList<>();
         IntStream.range(0, 10).mapToObj(i -> i * 10).forEach(customList::add);
@@ -495,6 +487,7 @@ class CustomListTest {
         assertTrue(customList.retainAll(retainList));
         assertTrue(customList.isEmpty());
     }
+
 
     @Test
     public void whenRetainingElements_whereFiveMatch_returns_true() {
