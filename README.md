@@ -87,3 +87,17 @@ Implementation of a List using an array
 
 - *n* = number of elements in the CustomList or ArrayList.
 - *m* = number of elements in the input Collection (used in methods like addAll, containsAll, etc.).
+
+# Performance Charts
+
+## CustomList vs Array List
+
+![Combined Performance Charts](PerformanceTesting/CustomList_vs_ArrayList_Performance_Comparisons.png)
+
+# Custom List
+
+![Combined Performance Charts](PerformanceTesting/CustomList_Performance.png)
+
+# Array List
+
+![Combined Performance Charts](PerformanceTesting/ArrayList_Performance.png)
