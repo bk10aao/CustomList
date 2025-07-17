@@ -41,16 +41,13 @@ public class CustomList<T> implements ListInterface<T> {
     }
 
     public boolean addAll(final Collection<T> values) {
-        if(values == null)
-            throw new NullPointerException();
-        Object[] temp = new Object[listSize];
-        System.arraycopy(list, 0, temp, 0, size);
+        if (values == null) throw new NullPointerException();
+        int oldSize = size;
         for (T value : values) {
-            if(value == null)
-                throw new NullPointerException();
+            if (value == null) throw new NullPointerException();
             add(value);
         }
-        return !Arrays.equals(temp, list);
+        return size != oldSize;
     }
 
     public void clear() {
