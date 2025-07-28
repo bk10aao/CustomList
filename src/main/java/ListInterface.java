@@ -2,7 +2,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public interface ListInterface<T> {
+public interface ListInterface<E> {
 
     /**
      * Add item to List.
@@ -10,14 +10,14 @@ public interface ListInterface<T> {
      * @return boolean true if successful, else false.
      * @throws NullPointerException on null item.
      */
-    boolean add(T item);
+    boolean add(E item);
 
     /**
      * Add Collection of items to List.
      * @param values - values to be added to List.
      * @return boolean true if successful, else false.
      */
-    boolean addAll(Collection<T> values);
+    boolean addAll(Collection<? extends E> values);
 
     /**
      * Clear all items from collection.
@@ -30,7 +30,7 @@ public interface ListInterface<T> {
      * @return boolean true if contains, else false.
      * @throws NullPointerException on null item.
      */
-    boolean contains(T item);
+    boolean contains(Object item);
 
     /**
      * Check if List contains all items in collection.
@@ -38,7 +38,7 @@ public interface ListInterface<T> {
      * @return boolean true if contains all items, else false.
      * @throws NullPointerException on null collection.
      */
-    boolean containsAll(List<T> collection);
+    boolean containsAll(List<E> collection);
 
     /**
      * Compares two Lists.
@@ -55,7 +55,7 @@ public interface ListInterface<T> {
      * @throws IndexOutOfBoundsException on index larger < 0.
      * @throws IndexOutOfBoundsException on index >= size().
      */
-    T get(int index);
+    E get(int index);
 
     /**
      * Get HashCode for List Object
@@ -106,7 +106,7 @@ public interface ListInterface<T> {
      * @throws IndexOutOfBoundsException - on null item.
      * @return true if successful.
      */
-    boolean remove(T object);
+    boolean remove(E object);
 
     /**
      * Remove all Object in Collection from List.
@@ -115,7 +115,7 @@ public interface ListInterface<T> {
      * @throws NullPointerException on null collection.
      * @throws NullPointerException on null item in collection.
      */
-    boolean removeAll(Collection<T> c);
+    boolean removeAll(Collection<E> c);
 
     /**
      * Remove all Objects in Collection except those in list.
@@ -123,7 +123,7 @@ public interface ListInterface<T> {
      * @return true if successful, else false.
      * @throws NullPointerException on null List.
      */
-    boolean retainAll(Collection<T> c);
+    boolean retainAll(Collection<E> c);
 
     /**
      * Set object at index to new Object.
@@ -134,7 +134,7 @@ public interface ListInterface<T> {
      * @throws IndexOutOfBoundsException on index >= size().
      * @throws NullPointerException on null Object.
      */
-    T set(int index, T item);
+    E set(int index, E item);
 
     /**
      * Get size of List.
@@ -160,7 +160,7 @@ public interface ListInterface<T> {
      * @throws NullPointerException if list is empty.
      * @return T[] array of List.
      */
-    T[] toArray();
+    E[] toArray();
 
     /**
      * Get List object as String
