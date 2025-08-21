@@ -1,7 +1,7 @@
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -40,14 +40,38 @@ public class CustomList<E> implements ListInterface<E> {
         return true;
     }
 
+    public void add(int index, E element) {
+        if(index < 0 || index > size())
+            throw new IndexOutOfBoundsException();
+        if(element == null)
+            throw new NullPointerException();
+        if(size == list.length)
+            expand();
+        for (int i = index + 1; i < size - 1; i++)
+            list[i] = list[i + 1];
+        list[index] = element;
+        size++;
+    }
+
     public boolean addAll(final Collection<? extends E> values ) {
         if (values == null) throw new NullPointerException();
         int oldSize = size;
         for (E value : values) {
-            if (value == null) throw new NullPointerException();
+            if (value == null)
+                throw new NullPointerException();
             add(value);
         }
         return size != oldSize;
+    }
+
+    public boolean addAll(int index, Collection<? extends E> c) {
+        if(index < 0 || index > size())
+            throw new IndexOutOfBoundsException();
+        if (c == null)
+            throw new NullPointerException();
+        if(index == size)
+            return addAll(c);
+        return insert(index, c);
     }
 
     public void clear() {
@@ -63,10 +87,10 @@ public class CustomList<E> implements ListInterface<E> {
         return indexOf(item) != -1;
     }
 
-    public boolean containsAll(final List<E> collection) {
-        if(collection == null)
+    public boolean containsAll(Collection<?> c) {
+        if(c == null)
             throw new NullPointerException();
-        for (E i : collection) {
+        for (Object i : c) {
             if (i == null)
                 throw new NullPointerException();
             if(indexOf(i) == -1)
@@ -75,10 +99,32 @@ public class CustomList<E> implements ListInterface<E> {
         return true;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof CustomList<?> customOther))
+            return false;
+        if (size != customOther.size)
+            return false;
+        for (int i = 0; i < size; i++)
+            if (!Objects.equals(list[i], customOther.get(i)))
+                return false;
+        return true;
+    }
+
     public E get(final int index) {
         if(index >= size || index < 0)
             throw new IndexOutOfBoundsException();
         return list[index];
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        for (int i = 0; i < size; i++)
+            result = 31 * result + list[i].hashCode();
+        return result;
     }
 
     public int indexOf(final Object o) {
@@ -96,11 +142,14 @@ public class CustomList<E> implements ListInterface<E> {
 
     public Iterator iterator() {
         return new Iterator<E>() {
+
             private int index = 0;
+
             @Override
             public boolean hasNext() {
                 return index < size;
             }
+
             @Override
             public E next() {
                 if (!hasNext())
@@ -116,13 +165,13 @@ public class CustomList<E> implements ListInterface<E> {
         for(int i = size - 1; i >= 0; i--)
             if (list[i].equals(o))
                 return i;
-
         return -1;
     }
 
-    public boolean remove(final int index) {
+    public E remove(final int index) {
         if (index < 0 || index >= size)
             throw new IndexOutOfBoundsException();
+        E o = list[index];
         for (int i = index; i < size - 1; i++)
             list[i] = list[i + 1];
         list[size - 1] = null;
@@ -130,10 +179,11 @@ public class CustomList<E> implements ListInterface<E> {
         nextIndex--;
         if (nextIndex < listSize / 2 && listSize > 32)
             reduce();
-        return true;
+        return o;
     }
 
-    public boolean remove(final E object) {
+
+    public boolean remove(final Object object) {
         if(object == null)
             throw new NullPointerException();
         int index = indexOf(object);
@@ -144,10 +194,10 @@ public class CustomList<E> implements ListInterface<E> {
         return false;
     }
 
-    public boolean removeAll(final Collection<E> c) {
+    public boolean removeAll(Collection<?> c){
         if (c == null) throw new NullPointerException();
         boolean changed = false;
-        for (E item : c) {
+        for (Object item : c) {
             if (item == null)
                 throw new NullPointerException();
             while (indexOf(item) != -1) {
@@ -158,7 +208,7 @@ public class CustomList<E> implements ListInterface<E> {
         return changed;
     }
 
-    public boolean retainAll(final Collection<E> collection) {
+    public boolean retainAll(final Collection<?> collection) {
         if (collection == null)
             throw new NullPointerException();
         boolean changed = false;
@@ -201,28 +251,6 @@ public class CustomList<E> implements ListInterface<E> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (!(o instanceof CustomList<?> customOther))
-            return false;
-        if (size != customOther.size)
-            return false;
-        for (int i = 0; i < size; i++)
-            if (!Objects.equals(list[i], customOther.get(i)))
-                return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = 1;
-        for (int i = 0; i < size; i++)
-            result = 31 * result + list[i].hashCode();
-        return result;
-    }
-
-    @Override
     public String toString() {
         return "CustomList{" +
                 "size=" + size +
@@ -242,5 +270,18 @@ public class CustomList<E> implements ListInterface<E> {
         E[] temp = (E[]) new Object[listSize];
         System.arraycopy(list, 0, temp, 0, size);
         list = temp;
+    }
+
+    private boolean insert(int index, Collection<? extends E> c) {
+        int oldSize = size;
+        E[] newList = (E[]) Array.newInstance(list.getClass().getComponentType(), size + c.size());
+        System.arraycopy(list, 0, newList, 0, index);
+        int updateIndex = index;
+        for(E o : c)
+            newList[updateIndex++] = o;
+        System.arraycopy(list, index, newList, updateIndex, size - index);
+        this.list = newList;
+        this.size = size + c.size();
+        return size != oldSize;
     }
 }

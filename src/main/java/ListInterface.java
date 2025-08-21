@@ -38,7 +38,7 @@ public interface ListInterface<E> {
      * @return boolean true if contains all items, else false.
      * @throws NullPointerException on null collection.
      */
-    boolean containsAll(List<E> collection);
+    boolean containsAll(Collection<?> collection);
 
     /**
      * Compares two Lists.
@@ -96,9 +96,9 @@ public interface ListInterface<E> {
      * @param index - index of object to be removed.
      * @throws IndexOutOfBoundsException if index < 0.
      * @throws IndexOutOfBoundsException if index >= size().
-     * @return true if successful.
+     * @return object removed.
      */
-    boolean remove(int index);
+    E remove(int index);
 
     /**
      * Remove object by index.
@@ -115,7 +115,7 @@ public interface ListInterface<E> {
      * @throws NullPointerException on null collection.
      * @throws NullPointerException on null item in collection.
      */
-    boolean removeAll(Collection<E> c);
+    boolean removeAll(Collection<?> c);
 
     /**
      * Remove all Objects in Collection except those in list.
@@ -123,7 +123,7 @@ public interface ListInterface<E> {
      * @return true if successful, else false.
      * @throws NullPointerException on null List.
      */
-    boolean retainAll(Collection<E> c);
+    boolean retainAll(Collection<?> c);
 
     /**
      * Set object at index to new Object.

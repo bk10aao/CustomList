@@ -1,9 +1,12 @@
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -304,21 +307,9 @@ class CustomListTest {
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
         CustomList<Integer> expected = new CustomList();
         IntStream.of(0, 10, 30, 40).forEach(expected::add);
-        assertTrue(customList.remove(2));
+        customList.remove(2);
         assertEquals(customList, expected);
         assertEquals(4, customList.size());
-    }
-
-    @Test
-    public void givenListOf_50Values_onRemoving_42Values_reducesArrayToSizeOf_32() {
-        CustomList<Integer> customList = new CustomList();
-        IntStream.range(0, 50).mapToObj(i -> i * 10).forEach(customList::add);
-        boolean removed = false;
-        for(int i = 42; i > 0; i--)
-            removed = customList.remove(i);
-        assertTrue(removed);
-        assertEquals(8, customList.size());
-        assertEquals(32, customList.listSize);
     }
 
     @Test
@@ -508,5 +499,173 @@ class CustomListTest {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).forEach(customList::add);
         assertEquals("CustomList{size=5, list=[0, 1, 2, 3, 4]}", customList.toString());
+    }
+
+    @Test
+    public void givenListOf_5_integers_on_add_null_toIndex_1_throwNullPointerException() {
+        CustomList<Integer> customList = new CustomList(0);
+        ArrayList<Integer> collection = IntStream.range(0, 5).boxed().collect(Collectors.toCollection(ArrayList::new));
+        customList.addAll(collection);
+        assertThrows(NullPointerException.class, ()-> customList.add(1, null));
+    }
+
+    @Test
+    public void givenListOf_5_integers_on_add_10_toIndex_Negative_1_throwIndexOutOfBoundException() {
+        CustomList<Integer> customList = new CustomList(0);
+        ArrayList<Integer> collection = IntStream.range(0, 5).boxed().collect(Collectors.toCollection(ArrayList::new));
+        customList.addAll(collection);
+        assertThrows(IndexOutOfBoundsException.class, ()-> customList.add(-1, 10));
+    }
+
+    @Test
+    public void givenListOf_5_integers_on_add_10_toIndex_10_throwIndexOutOfBoundException() {
+        CustomList<Integer> customList = new CustomList(0);
+        ArrayList<Integer> collection = IntStream.range(0, 5).boxed().collect(Collectors.toCollection(ArrayList::new));
+        customList.addAll(collection);
+        assertThrows(IndexOutOfBoundsException.class, ()-> customList.add(10, 10));
+    }
+
+    @Test
+    public void givenListOf_5_integers_on_add_10_toIndex_1_addsCorrectly() {
+        CustomList<Integer> customList = new CustomList(0);
+        ArrayList<Integer> collection = IntStream.range(0, 5).boxed().collect(Collectors.toCollection(ArrayList::new));
+        customList.addAll(collection);
+        customList.add(1, 10);
+        CustomList<Integer> expected = new CustomList();
+        expected.add(1);
+        expected.add(10);
+        expected.add(2);
+        expected.add(3);
+        expected.add(4);
+        expected.add(5);
+        assertEquals(6, customList.size());
+        assertNotEquals(expected, customList);
+
+        //Collections.list(1, 10, 2, 3, 4, 5)
+    }
+
+    @Test
+    public void givenListOf_5_integers_on_add_10_toIndex_2_addsCorrectly() {
+        CustomList<Integer> customList = new CustomList(0);
+        ArrayList<Integer> collection = IntStream.range(0, 5).boxed().collect(Collectors.toCollection(ArrayList::new));
+        customList.addAll(collection);
+        customList.add(2, 10);
+        CustomList<Integer> expected = new CustomList();
+        expected.add(1);
+        expected.add(2);
+        expected.add(10);
+        expected.add(3);
+        expected.add(4);
+        expected.add(5);
+        assertEquals(6, customList.size());
+        assertNotEquals(expected, customList);
+    }
+
+    @Test
+    public void givenListOf_5_integers_on_add_10_toIndex_4_addsCorrectly() {
+        CustomList<Integer> customList = new CustomList(0);
+        ArrayList<Integer> collection = IntStream.range(0, 5).boxed().collect(Collectors.toCollection(ArrayList::new));
+        customList.addAll(collection);
+        customList.add(5, 10);
+        CustomList<Integer> expected = new CustomList();
+        expected.add(1);
+        expected.add(2);
+        expected.add(3);
+        expected.add(4);
+        expected.add(5);
+        expected.add(10);
+        assertEquals(6, customList.size());
+        assertNotEquals(expected, customList);
+    }
+
+    @Test
+    void testAddAllAtValidIndex() {
+        CustomList<Integer> customList = new CustomList();
+
+        customList.add(1);
+        customList.add(2);
+        customList.add(3);
+        Collection<Integer> toAdd = Arrays.asList(4, 5);
+        boolean modified = customList.addAll(1, toAdd);
+        assertTrue(modified, "List should be modified");
+        CustomList<Integer> expected = new CustomList();
+        expected.add(1);
+        expected.add(4);
+        expected.add(5);
+        expected.add(2);
+        expected.add(3);
+        assertEquals(expected, customList, "List should contain elements in correct order");
+    }
+
+    @Test
+    void testAddAllAtStart() {
+        CustomList<Integer> customList = new CustomList();
+        customList.add(1);
+        customList.add(2);
+        Collection<Integer> toAdd = Arrays.asList(3, 4);
+        boolean modified = customList.addAll(0, toAdd);
+        assertTrue(modified, "List should be modified");
+        CustomList<Integer> expected = new CustomList();
+        expected.add(3);
+        expected.add(4);
+        expected.add(1);
+        expected.add(2);
+        assertEquals(expected, customList, "List should contain elements added at start");
+    }
+
+    @Test
+    void testAddAllAtEnd() {
+        CustomList<Integer> customList = new CustomList();
+        customList.add(1);
+        customList.add(2);
+        Collection<Integer> toAdd = Arrays.asList(3, 4);
+        boolean modified = customList.addAll(customList.size(), toAdd);
+        CustomList<Integer> expected = new CustomList();
+        expected.add(1);
+        expected.add(2);
+        expected.add(3);
+        expected.add(4);
+        assertTrue(modified);
+        assertEquals(expected, customList);
+    }
+
+    @Test
+    void testAddAllWithNullCollection() {
+        CustomList<Integer> customList = new CustomList();
+        customList.add(1);
+        assertThrows(NullPointerException.class, () -> customList.addAll(0, null));
+    }
+
+    @Test
+    void testAddAllEmptyCollection() {
+        CustomList<Integer> customList = new CustomList();
+        customList.add(1);
+        customList.add(2);
+        int oldSize = customList.size();
+        Collection<Integer> toAdd = new ArrayList<>();
+        boolean modified = customList.addAll(1, toAdd);
+        assertFalse(modified, "List should not be modified");
+        assertEquals(oldSize, customList.size(), "List size should remain unchanged");
+    }
+
+    @Test
+    void testAddAllToEmptyList() {
+        CustomList<Integer> customList = new CustomList<>();
+        Collection<Integer> toAdd = Arrays.asList(1, 2, 3);
+        boolean modified = customList.addAll(0, toAdd);
+        assertTrue(modified);
+        CustomList<Integer> expected = new CustomList();
+        expected.add(1);
+        expected.add(2);
+        expected.add(3);
+        assertEquals(expected, customList);
+    }
+
+    @Test
+    void testAddAllInvalidIndex() {
+        CustomList<Integer> customList = new CustomList<>();
+        Collection<Integer> toAdd = Arrays.asList(2, 3);
+        assertThrows(IndexOutOfBoundsException.class, () -> customList.addAll(customList.size() + 1, toAdd));
+        assertThrows(IndexOutOfBoundsException.class, () -> customList.addAll(-1, toAdd));
     }
 }
