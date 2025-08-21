@@ -101,7 +101,7 @@ Implementation of a List using an array
 ![Combined Performance Charts](PerformanceTesting/CustomList_vs_ArrayList_Performance_Comparisons.png)
 
 ## Custom List
-![Combined Performance Charts](PerformanceTesting/CustomList_Performance.png)
+![Custom List](PerformanceTesting/CustomList_Performance.png)
 
 ## Array List
 =======
