@@ -34,80 +34,93 @@ Implementation of a List using an array
 28. `String toString()` - Returns a string representation of the list in the format CustomList{size=<size>, list=<elements>}.
 
 # Time Complexity Comparison
-| Method                            | CustomList O() | ArrayList O()  | Winner    |
-|-----------------------------------|----------------|----------------|-----------|
-| add(E)                            | O(1) amortized | O(1) amortized | Tie       |
-| add(int, E)                       | O(n)           | O(n)           | Tie       |
-| addAll(Collection)                | O(m) amortized | O(m) amortized | Tie       |
-| addAll(int, Collection)           | O(n + m)       | O(n + m)       | Tie       |
-| clear()                           | O(1)           | O(1)           | Tie       |
-| contains(Object)                  | O(n)           | O(n)           | Tie       |
-| containsAll(Collection)           | O(n * m)       | O(n * m)       | Tie       |
-| equals(Object)                    | O(n)           | O(n)           | Tie       |
-| get(int)                          | O(1)           | O(1)           | Tie       |
-| hashCode()                        | O(n)           | O(n)           | Tie       |
-| indexOf(Object)                   | O(n)           | O(n)           | Tie       |
-| isEmpty()                         | O(1)           | O(1)           | Tie       |
-| iterator()                        | O(1)           | O(1)           | Tie       |
-| iterator().next()                 | O(1)           | O(1)           | Tie       |
-| listIterator()                    | O(1)           | O(1)           | Tie       |
-| listIterator(int)                 | O(1)           | O(1)           | Tie       |
-| listIterator().next()             | O(1)           | O(1)           | Tie       |
-| listIterator().previous()         | O(1)           | O(1)           | Tie       |
-| listIterator().add(E)             | O(n)           | O(n)           | Tie       |
-| listIterator().set(E)             | O(1)           | O(1)           | Tie       |
-| listIterator().remove()           | O(n)           | O(n)           | Tie       |
-| lastIndexOf(Object)               | O(n)           | O(n)           | Tie       |
-| remove(int)                       | O(n)           | O(n)           | Tie       |
-| remove(Object)                    | O(n)           | O(n)           | Tie       |
-| removeAll(Collection)             | O(n * m)       | O(n * m)       | Tie       |
-| retainAll(Collection)             | O(n * m)       | O(n * m)       | Tie       |
-| set(int, E)                       | O(1)           | O(1)           | Tie       |
-| size()                            | O(1)           | O(1)           | Tie       |
-| subList(int, int)                 | O(k)           | O(1)           | ArrayList |
-| toArray()                         | O(n)           | O(n)           | Tie       |
-| toArray(T[])                      | O(n)           | O(n)           | Tie       |
-| toString()                        | O(n)           | O(n)           | Tie       |
+| Method                                  | CustomList O()     | ArrayList O()     | Winner         |
+|----------------------------------------|--------------------|-------------------|----------------|
+| add(E)                                | O(1) amortized     | O(1) amortized    | Tie            |
+| add(int, E)                           | O(n)               | O(n)              | Tie            |
+| addAll(Collection)                    | O(m) amortized     | O(m) amortized    | Tie            |
+| addAll(int, Collection)               | O(n + m)           | O(n + m)          | Tie            |
+| clear()                               | O(1)               | O(1)              | Tie            |
+| contains(Object)                      | O(n)               | O(n)              | Tie            |
+| containsAll(Collection)               | O(n * m)           | O(n * m)          | Tie            |
+| equals(Object)                        | O(n)               | O(n)              | Tie            |
+| get(int)                              | O(1)               | O(1)              | Tie            |
+| hashCode()                            | O(n)               | O(n)              | Tie            |
+| indexOf(Object)                       | O(n)               | O(n)              | Tie            |
+| isEmpty()                             | O(1)               | O(1)              | Tie            |
+| iterator()                            | O(1)               | O(1)              | Tie            |
+| iterator().next()                     | O(1)               | O(1)              | Tie            |
+| listIterator()                        | O(1)               | O(1)              | Tie            |
+| listIterator(int)                     | O(1)               | O(1)              | Tie            |
+| listIterator().next()                 | O(1)               | O(1)              | Tie            |
+| listIterator().previous()             | O(1)               | O(1)              | Tie            |
+| listIterator().add(E)                 | O(n)               | O(n)              | Tie            |
+| listIterator().set(E)                 | O(1)               | O(1)              | Tie            |
+| listIterator().remove()               | O(n)               | O(n)              | Tie            |
+| lastIndexOf(Object)                   | O(n)               | O(n)              | Tie            |
+| remove(int)                           | O(n)               | O(n)              | Tie            |
+| remove(Object)                        | O(n)               | O(n)              | Tie            |
+| removeAll(Collection)                 | O(n * m)           | O(n * m)          | Tie            |
+| retainAll(Collection)                 | O(n * m)           | O(n * m)          | Tie            |
+| set(int, E)                           | O(1)               | O(1)              | Tie            |
+| size()                                | O(1)               | O(1)              | Tie            |
+| subList(int, int)                     | O(k)               | O(1)              | ArrayList      |
+| toArray()                             | O(n)               | O(n)              | Tie            |
+| toArray(T[])                          | O(n)               | O(n)              | Tie            |
+| toString()                            | O(n)               | O(n)              | Tie            |
+| expand() (private)                    | O(n)               | O(n)              | Tie            |
+| reduce() (private)                    | O(n)               | O(n)              | Tie            |
+| insert(int, Collection) (private)     | O(n + m)           | O(n + m)          | Tie            |
+
+**Legend**:
+- `n`: Number of elements in the list.
+- `m`: Number of elements in the input collection.
+- `k`: Number of elements in the sublist (`toIndex - fromIndex`).
 
 # Space Complexity Comparison
-| Method                            | CustomList | ArrayList | Winner    |
-|-----------------------------------|------------|-----------|-----------|
-| add(E)                            | O(n)       | O(n)      | Tie       |
-| add(int, E)                       | O(n)       | O(n)      | Tie       |
-| addAll(Collection)                | O(n)       | O(n)      | Tie       |
-| addAll(int, Collection)           | O(n + m)   | O(n + m)  | Tie       |
-| clear()                           | O(1)       | O(1)      | Tie       |
-| contains(Object)                  | O(1)       | O(1)      | Tie       |
-| containsAll(Collection)           | O(1)       | O(1)      | Tie       |
-| equals(Object)                    | O(1)       | O(1)      | Tie       |
-| get(int)                          | O(1)       | O(1)      | Tie       |
-| hashCode()                        | O(1)       | O(1)      | Tie       |
-| indexOf(Object)                   | O(1)       | O(1)      | Tie       |
-| isEmpty()                         | O(1)       | O(1)      | Tie       |
-| iterator()                        | O(1)       | O(1)      | Tie       |
-| iterator().next()                 | O(1)       | O(1)      | Tie       |
-| listIterator()                    | O(1)       | O(1)      | Tie       |
-| listIterator(int)                 | O(1)       | O(1)      | Tie       |
-| listIterator().next()             | O(1)       | O(1)      | Tie       |
-| listIterator().previous()         | O(1)       | O(1)      | Tie       |
-| listIterator().add(E)             | O(n)       | O(n)      | Tie       |
-| listIterator().set(E)             | O(1)       | O(1)      | Tie       |
-| listIterator().remove()           | O(n)       | O(n)      | Tie       |
-| lastIndexOf(Object)               | O(1)       | O(1)      | Tie       |
-| remove(int)                       | O(n)       | O(n)      | Tie       |
-| remove(Object)                    | O(n)       | O(n)      | Tie       |
-| removeAll(Collection)             | O(n)       | O(n)      | Tie       |
-| retainAll(Collection)             | O(n)       | O(n)      | Tie       |
-| set(int, E)                       | O(1)       | O(1)      | Tie       |
-| size()                            | O(1)       | O(1)      | Tie       |
-| subList(int, int)                 | O(k)       | O(1)      | ArrayList |
-| toArray()                         | O(n)       | O(n)      | Tie       |
-| toArray(T[])                      | O(n)       | O(n)      | Tie       |
-| toString()                        | O(n)       | O(n)      | Tie       |
+| Method                                  | CustomList Space O() | ArrayList Space O() | Winner         |
+|----------------------------------------|----------------------|---------------------|----------------|
+| add(E)                                | O(n) worst-case      | O(n) worst-case     | Tie            |
+| add(int, E)                           | O(n)                 | O(n)                | Tie            |
+| addAll(Collection)                    | O(n) worst-case      | O(n) worst-case     | Tie            |
+| addAll(int, Collection)               | O(n + m)             | O(n + m)            | Tie            |
+| clear()                               | O(1)                 | O(1)                | Tie            |
+| contains(Object)                      | O(1)                 | O(1)                | Tie            |
+| containsAll(Collection)               | O(1)                 | O(1)                | Tie            |
+| equals(Object)                        | O(1)                 | O(1)                | Tie            |
+| get(int)                              | O(1)                 | O(1)                | Tie            |
+| hashCode()                            | O(1)                 | O(1)                | Tie            |
+| indexOf(Object)                       | O(1)                 | O(1)                | Tie            |
+| isEmpty()                             | O(1)                 | O(1)                | Tie            |
+| iterator()                            | O(1)                 | O(1)                | Tie            |
+| iterator().next()                     | O(1)                 | O(1)                | Tie            |
+| listIterator()                        | O(1)                 | O(1)                | Tie            |
+| listIterator(int)                     | O(1)                 | O(1)                | Tie            |
+| listIterator().next()                 | O(1)                 | O(1)                | Tie            |
+| listIterator().previous()             | O(1)                 | O(1)                | Tie            |
+| listIterator().add(E)                 | O(n) worst-case      | O(n) worst-case     | Tie            |
+| listIterator().set(E)                 | O(1)                 | O(1)                | Tie            |
+| listIterator().remove()               | O(n) worst-case      | O(n) worst-case     | Tie            |
+| lastIndexOf(Object)                   | O(1)                 | O(1)                | Tie            |
+| remove(int)                           | O(n) worst-case      | O(n) worst-case     | Tie            |
+| remove(Object)                        | O(n) worst-case      | O(n) worst-case     | Tie            |
+| removeAll(Collection)                 | O(n) worst-case      | O(n) worst-case     | Tie            |
+| retainAll(Collection)                 | O(n) worst-case      | O(n) worst-case     | Tie            |
+| set(int, E)                           | O(1)                 | O(1)                | Tie            |
+| size()                                | O(1)                 | O(1)                | Tie            |
+| subList(int, int)                     | O(k)                 | O(1)                | ArrayList      |
+| toArray()                             | O(n)                 | O(n)                | Tie            |
+| toArray(T[])                          | O(n) worst-case      | O(n) worst-case     | Tie            |
+| toString()                            | O(n)                 | O(n)                | Tie            |
+| expand() (private)                    | O(n)                 | O(n)                | Tie            |
+| reduce() (private)                    | O(n)                 | O(n)                | Tie            |
+| insert(int, Collection) (private)     | O(n + m)             | O(n + m)            | Tie            |
 
-- n = number of elements in the list.
-- m - number of elements in the input collection.
-- k - number of elements in the sublist (toIndex - fromIndex).
+**Legend**:
+- `n`: Number of elements in the list.
+- `m`: Number of elements in the input collection.
+- `k`: Number of elements in the sublist (`toIndex - fromIndex`).
+
 # Performance Charts
 
 ## Custom List vs Array List
