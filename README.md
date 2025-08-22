@@ -4,136 +4,111 @@ Implementation of a List using an array
 
 # Methods
 
-1. `CustomList(int size)` - constructor.
-2. `CustomList()` - constructor.
-3. `boolean add(E item)` - add item to list, returns true if successful. Throws NullPointerException on null item.
-4. `boolean addAll(Collection<E> values)` - adds collection of items to list, returns true if successful.
-5. `void clear()` - removes all items from list.
-6. `boolean contains(E item)` = returns boolean determining if List contains item. Throws NullPointerException on null item.
-7. `boolean containsAll(CustomList<E> collection)` - returns boolean determining if all items were added to list. Throws NullPointerException on empty Collection.
-8. `E get(int index)` - returns item from List given Index. Throws IndexOutOfBoundsException. 
-9. `Iterator iterator()` - returns an iterator. 
-10. `int indexOf(Object o)` - returns the index of specified object. Throws NullPointerException on null item.
-11. `boolean isEmpty()` - returns boolean determining if collection is empty.
-12. `int lastIndexOf(Object o)` - returns the last index of specified object if exists, else -1. Throws NullPointerException on null item.
-13. `boolean remove(int index)` - removes object from List given index returning boolean result. Throws IndexOutOfBoundsException.
-14. `boolean remove(E object)` - removes specified object from List returning boolean result. Throws NullPointerException.
-15. `boolean removeAll(Collection<E> c)` - removes collection of objects from List returning boolean result. Throws NullPointerException on either null Collection or null item in Collection.
-16. `boolean retainAll(Collection<E> collection)` - removes all elements from list that do not exist in collection. Throws NullPointerException on either null Collection or null item in Collection.
-17. `E set(int index, E item)` - replaces element at given index. Throws NullPointerException on null item. Throws IndexOutOfBoundsException.
-18. `int size()` - returns size of list as Integer.
-19. `CustomList subList(int firstIndex, int secondIndex)` - returns sub collection of given range. Throws IndexOutOfBoundsException if: 
-    - firstIndex is less than 0 
-    - firstIndex is larger than secondIndex
-    - firstIndex is larger than size
-    - secondIndex is less than 0
-    - secondIndex is larger than size
-20. `E[] toArray()` - returns list without null elements.
-21. `boolean equals(Object o)` - returns boolean comparing List instances.
-22. `int hashCode()` - returns HashCode.
-23. `String toString()` = returns String representation of List.
+1. `CustomList()` - Constructs an empty list with an initial capacity of 32. 
+2. `CustomList(int initialCapacity)` - Constructs an empty list with the specified initial capacity (minimum 32). 
+3. `boolean add(E element)` - Appends the specified element to the end of the list. Returns true. Throws NullPointerException if the element is null. 
+4. `void add(int index, E element)` - Inserts the specified element at the given index, shifting elements to the right. Throws IndexOutOfBoundsException if index < 0 or index > size(). Throws NullPointerException if the element is null. 
+5. `boolean addAll(Collection<? extends E> c)` - Appends all elements from the specified collection to the end of the list, in the order returned by the collection’s iterator. Returns true if the list changed. Throws NullPointerException if the collection or any of its elements is null.
+6. `boolean addAll(int index, Collection<? extends E> c)` - Inserts all elements from the specified collection at the given index, shifting elements to the right. Returns true if the list changed. Throws IndexOutOfBoundsException if index < 0 or index > size(). Throws NullPointerException if the collection or any of its elements is null.
+7. `void clear()` - Removes all elements from the list, resetting it to an empty state with a capacity of 32. 
+8. `boolean contains(Object o)` - Returns true if the list contains the specified element (using Objects.equals). Throws NullPointerException if the element is null. 
+9. `boolean containsAll(Collection<?> c)` - Returns true if the list contains all elements from the specified collection. Throws NullPointerException if the collection or any of its elements is null.
+10. `boolean equals(Object o)` - Returns true if the specified object is a list with the same size and elements in the same order (using Objects.equals).
+11. `E get(int index)` - Returns the element at the specified index. Throws IndexOutOfBoundsException if index < 0 or index >= size().
+12. `int hashCode()` - Returns the hash code of the list based on its elements.
+13. `int indexOf(Object o)` - Returns the index of the first occurrence of the specified element, or -1 if not found. Throws NullPointerException if the element is null.
+14. `boolean isEmpty()` - Returns true if the list contains no elements.
+15. `Iterator<E> iterator()` - Returns an iterator over the elements in the list in proper sequence.
+16. `int lastIndexOf(Object o)` - Returns the index of the last occurrence of the specified element, or -1 if not found. Throws NullPointerException if the element is null.
+17. `ListIterator<E> listIterator()` - Returns a list iterator over the elements in the list starting at index 0.
+18. `ListIterator<E> listIterator(int index)` - Returns a list iterator over the elements in the list starting at the specified index. Throws IndexOutOfBoundsException if index < 0 or index > size().
+19. `E remove(int index)` - Removes and returns the element at the specified index, shifting elements to the left. Throws IndexOutOfBoundsException if index < 0 or index >= size().
+20. `boolean remove(Object o)` - Removes the first occurrence of the specified element, returning true if the list changed. Throws NullPointerException if the element is null.
+21. `boolean removeAll(Collection<?> c)` - Removes all elements from the list that are contained in the specified collection, returning true if the list changed. Throws NullPointerException if the collection or any of its elements is null.
+22. `boolean retainAll(Collection<?> c)` - Removes all elements from the list that are not contained in the specified collection, returning true if the list changed. Throws NullPointerException if the collection or any of its elements is null.
+23. `E set(int index, E element)` - Replaces the element at the specified index with the given element, returning the previous element. Throws IndexOutOfBoundsException if index < 0 or index >= size(). Throws NullPointerException if the element is null.
+24. `int size()` - Returns the number of elements in the list.
+25. `CustomList<E> subList(int fromIndex, int toIndex)` - Returns a new CustomList containing elements from fromIndex (inclusive) to toIndex (exclusive). Throws IndexOutOfBoundsException if fromIndex < 0, toIndex > size(), fromIndex > toIndex
+26. `E[] toArray()` - Returns an array containing all elements in the list in proper sequence.
+27. `T[] toArray(T[] a)` - Returns an array containing all elements in the list in proper sequence, using the provided array if it is large enough, or a new array of the same type. Throws NullPointerException if the array is null. Throws ArrayStoreException if the array’s type is incompatible.
+28. `String toString()` - Returns a string representation of the list in the format CustomList{size=<size>, list=<elements>}.
 
 # Time Complexity Comparison
-
-| Method                  |  CustomList Time Complexity  |  ArrayList Time Complexity  |      Winner      |
-|-------------------------|:----------------------------:|:---------------------------:|:----------------:|
-<<<<<<< HEAD
-| add(E item)             |             O(1)             |            O(1)             |       Tie        |
-| addAll(Collection)      |             O(n)             |            O(n)             |       Tie        |
-| clear()                 |             O(1)             |            O(n)             |  **CustomList**  |
-| contains(E item)        |             O(n)             |            O(n)             |       Tie        |
-=======
-| add(T item)             |             O(1)             |            O(1)             |       Tie        |
-| addAll(Collection)      |             O(n)             |            O(n)             |       Tie        |
-| clear()                 |             O(1)             |            O(n)             |  **CustomList**  |
-| contains(T item)        |             O(n)             |            O(n)             |       Tie        |
->>>>>>> e62966eb45121b32b88e2cff7c1dbc1272ec98cf
-| containsAll(Collection) |           O(n * m)           |          O(n * m)           |       Tie        |
-| get(int index)          |             O(1)             |            O(1)             |       Tie        |
-| indexOf(Object o)       |             O(n)             |            O(n)             |       Tie        |
-| isEmpty()               |             O(1)             |            O(1)             |       Tie        |
-| iterator()              |             O(1)             |            O(1)             |       Tie        |
-| lastIndexOf(Object o)   |             O(n)             |            O(n)             |       Tie        |
-| remove(int index)       |             O(n)             |            O(n)             |       Tie        |
-| remove(Object o)        |             O(n)             |            O(n)             |       Tie        |
-| removeAll(Collection)   |           O(n * m)           |          O(n * m)           |       Tie        |
-| retainAll(Collection)   |           O(n * m)           |          O(n * m)           |       Tie        |
-<<<<<<< HEAD
-| set(int index, E item)  |             O(1)             |            O(1)             |       Tie        |
-=======
-| set(int index, T item)  |             O(1)             |            O(1)             |       Tie        |
->>>>>>> e62966eb45121b32b88e2cff7c1dbc1272ec98cf
-| size()                  |             O(1)             |            O(1)             |       Tie        |
-| subList(a, b)           |             O(n)             |            O(1)             |  **ArrayList**   |
-| toArray()               |             O(n)             |            O(n)             |       Tie        |
-| equals(Object o)        |             O(n)             |            O(n)             |       Tie        |
-| hashCode()              |             O(n)             |            O(n)             |       Tie        |
-| toString()              |             O(n)             |            O(n)             |       Tie        |
+| Method                            | CustomList O() | ArrayList O()  | Winner    |
+|-----------------------------------|----------------|----------------|-----------|
+| add(E)                            | O(1) amortized | O(1) amortized | Tie       |
+| add(int, E)                       | O(n)           | O(n)           | Tie       |
+| addAll(Collection)                | O(m) amortized | O(m) amortized | Tie       |
+| addAll(int, Collection)           | O(n + m)       | O(n + m)       | Tie       |
+| clear()                           | O(1)           | O(1)           | Tie       |
+| contains(Object)                  | O(n)           | O(n)           | Tie       |
+| containsAll(Collection)           | O(n * m)       | O(n * m)       | Tie       |
+| equals(Object)                    | O(n)           | O(n)           | Tie       |
+| get(int)                          | O(1)           | O(1)           | Tie       |
+| hashCode()                        | O(n)           | O(n)           | Tie       |
+| indexOf(Object)                   | O(n)           | O(n)           | Tie       |
+| isEmpty()                         | O(1)           | O(1)           | Tie       |
+| iterator()                        | O(1)           | O(1)           | Tie       |
+| iterator().next()                 | O(1)           | O(1)           | Tie       |
+| listIterator()                    | O(1)           | O(1)           | Tie       |
+| listIterator(int)                 | O(1)           | O(1)           | Tie       |
+| listIterator().next()             | O(1)           | O(1)           | Tie       |
+| listIterator().previous()         | O(1)           | O(1)           | Tie       |
+| listIterator().add(E)             | O(n)           | O(n)           | Tie       |
+| listIterator().set(E)             | O(1)           | O(1)           | Tie       |
+| listIterator().remove()           | O(n)           | O(n)           | Tie       |
+| lastIndexOf(Object)               | O(n)           | O(n)           | Tie       |
+| remove(int)                       | O(n)           | O(n)           | Tie       |
+| remove(Object)                    | O(n)           | O(n)           | Tie       |
+| removeAll(Collection)             | O(n * m)       | O(n * m)       | Tie       |
+| retainAll(Collection)             | O(n * m)       | O(n * m)       | Tie       |
+| set(int, E)                       | O(1)           | O(1)           | Tie       |
+| size()                            | O(1)           | O(1)           | Tie       |
+| subList(int, int)                 | O(k)           | O(1)           | ArrayList |
+| toArray()                         | O(n)           | O(n)           | Tie       |
+| toArray(T[])                      | O(n)           | O(n)           | Tie       |
+| toString()                        | O(n)           | O(n)           | Tie       |
 
 # Space Complexity Comparison
+| Method                            | CustomList | ArrayList | Winner    |
+|-----------------------------------|------------|-----------|-----------|
+| add(E)                            | O(n)       | O(n)      | Tie       |
+| add(int, E)                       | O(n)       | O(n)      | Tie       |
+| addAll(Collection)                | O(n)       | O(n)      | Tie       |
+| addAll(int, Collection)           | O(n + m)   | O(n + m)  | Tie       |
+| clear()                           | O(1)       | O(1)      | Tie       |
+| contains(Object)                  | O(1)       | O(1)      | Tie       |
+| containsAll(Collection)           | O(1)       | O(1)      | Tie       |
+| equals(Object)                    | O(1)       | O(1)      | Tie       |
+| get(int)                          | O(1)       | O(1)      | Tie       |
+| hashCode()                        | O(1)       | O(1)      | Tie       |
+| indexOf(Object)                   | O(1)       | O(1)      | Tie       |
+| isEmpty()                         | O(1)       | O(1)      | Tie       |
+| iterator()                        | O(1)       | O(1)      | Tie       |
+| iterator().next()                 | O(1)       | O(1)      | Tie       |
+| listIterator()                    | O(1)       | O(1)      | Tie       |
+| listIterator(int)                 | O(1)       | O(1)      | Tie       |
+| listIterator().next()             | O(1)       | O(1)      | Tie       |
+| listIterator().previous()         | O(1)       | O(1)      | Tie       |
+| listIterator().add(E)             | O(n)       | O(n)      | Tie       |
+| listIterator().set(E)             | O(1)       | O(1)      | Tie       |
+| listIterator().remove()           | O(n)       | O(n)      | Tie       |
+| lastIndexOf(Object)               | O(1)       | O(1)      | Tie       |
+| remove(int)                       | O(n)       | O(n)      | Tie       |
+| remove(Object)                    | O(n)       | O(n)      | Tie       |
+| removeAll(Collection)             | O(n)       | O(n)      | Tie       |
+| retainAll(Collection)             | O(n)       | O(n)      | Tie       |
+| set(int, E)                       | O(1)       | O(1)      | Tie       |
+| size()                            | O(1)       | O(1)      | Tie       |
+| subList(int, int)                 | O(k)       | O(1)      | ArrayList |
+| toArray()                         | O(n)       | O(n)      | Tie       |
+| toArray(T[])                      | O(n)       | O(n)      | Tie       |
+| toString()                        | O(n)       | O(n)      | Tie       |
 
-<<<<<<< HEAD
-| **Method**                        | **Java ArrayList** | **CustomList<T>** | **Winner** |
-|-----------------------------------|:------------------:|:-----------------:|:----------:|
-| `add(E)`                          |        O(1)        |       O(1)        |    Tie     |
-| `addAll(Collection<? extends E>)` |        O(1)        |       O(n)        | ArrayList  |
-| `clear()`                         |        O(1)        |       O(1)        |    Tie     |
-| `contains(Object)`                |        O(1)        |       O(1)        |    Tie     |
-| `containsAll(Collection<?>)`      |        O(1)        |       O(1)        |    Tie     |
-| `get(int)`                        |        O(1)        |       O(1)        |    Tie     |
-| `indexOf(Object)`                 |        O(1)        |       O(1)        |    Tie     |
-| `isEmpty()`                       |        O(1)        |       O(1)        |    Tie     |
-| `iterator()`                      |        O(1)        |       O(1)        |    Tie     |
-| `lastIndexOf(Object)`             |        O(1)        |       O(1)        |    Tie     |
-| `remove(int)`                     |        O(1)        |       O(1)        |    Tie     |
-| `remove(Object)`                  |        O(1)        |       O(1)        |    Tie     |
-| `removeAll(Collection<?>)`        |        O(1)        |       O(1)        |    Tie     |
-| `retainAll(Collection<?>)`        |        O(1)        |       O(1)        |    Tie     |
-| `set(int, E)`                     |        O(1)        |       O(1)        |    Tie     |
-| `size()`                          |        O(1)        |       O(1)        |    Tie     |
-| `subList(int, int)`               |        O(1)        |       O(n)        | ArrayList  |
-| `toArray()`                       |        O(n)        |       O(n)        |    Tie     |
-- *n* = number of elements in the CustomList or ArrayList.
-- *m* = number of elements in the input Collection (used in methods like addAll, containsAll, etc.).
-
+- n = number of elements in the list.
+- m - number of elements in the input collection.
+- k - number of elements in the sublist (toIndex - fromIndex).
 # Performance Charts
+
 ## Custom List vs Array List
-![Combined Performance Charts](PerformanceTesting/CustomList_vs_ArrayList_Performance_Comparisons.png)
-
-## Custom List
-![Custom List](PerformanceTesting/CustomList_Performance.png)
-
-## Array List
-=======
-| Method                  |  CustomList Time Complexity  |  ArrayList Time Complexity  |      Winner      |
-|-------------------------|:----------------------------:|:---------------------------:|:----------------:|
-| add(T item)             |             O(1)             |            O(1)             |       Tie        |
-| addAll(Collection)      |             O(n)             |            O(n)             |       Tie        |
-| clear()                 |             O(1)             |            O(n)             |  **CustomList**  |
-| contains(T item)        |             O(n)             |            O(n)             |       Tie        |
-| containsAll(Collection) |           O(n * m)           |          O(n * m)           |       Tie        |
-| get(int index)          |             O(1)             |            O(1)             |       Tie        |
-| indexOf(Object o)       |             O(n)             |            O(n)             |       Tie        |
-| isEmpty()               |             O(1)             |            O(1)             |       Tie        |
-| iterator()              |             O(1)             |            O(1)             |       Tie        |
-| lastIndexOf(Object o)   |             O(n)             |            O(n)             |       Tie        |
-| remove(int index)       |             O(n)             |            O(n)             |       Tie        |
-| remove(Object o)        |             O(n)             |            O(n)             |       Tie        |
-| removeAll(Collection)   |           O(n * m)           |          O(n * m)           |       Tie        |
-| retainAll(Collection)   |           O(n * m)           |          O(n * m)           |       Tie        |
-| set(int index, T item)  |             O(1)             |            O(1)             |       Tie        |
-| size()                  |             O(1)             |            O(1)             |       Tie        |
-| subList(a, b)           |             O(n)             |            O(1)             |  **ArrayList**   |
-| toArray()               |             O(n)             |            O(n)             |       Tie        |
-| equals(Object o)        |             O(n)             |            O(n)             |       Tie        |
-| hashCode()              |             O(n)             |            O(n)             |       Tie        |
-| toString()              |             O(n)             |            O(n)             |       Tie        |
-
-- *n* = number of elements in the CustomList or ArrayList.
-- *m* = number of elements in the input Collection (used in methods like addAll, containsAll, etc.).
-
-# Performance Charts
-
-## CustomList vs Array List
-
 ![Combined Performance Charts](PerformanceTesting/CustomList_vs_ArrayList_Performance_Comparisons.png)
