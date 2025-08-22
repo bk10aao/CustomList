@@ -19,7 +19,6 @@ public class CustomList<E> implements List<E> {
 
     public int listSize = 32;
     private int size = 0;
-    private int nextIndex = 0;
 
     private E[] list;
 
@@ -55,9 +54,8 @@ public class CustomList<E> implements List<E> {
     public boolean add(final E e) {
         if(e == null)
             throw new NullPointerException();
-        list[nextIndex++] = e;
-        size++;
-        if(nextIndex == listSize)
+        list[size++] = e;
+        if(size == listSize)
             expand();
         return true;
     }
@@ -121,7 +119,6 @@ public class CustomList<E> implements List<E> {
         list =  (E[])Array.newInstance(Object.class, 32);
         listSize = 32;
         size = 0;
-        nextIndex = 0;
     }
 
     /**
@@ -302,8 +299,7 @@ public class CustomList<E> implements List<E> {
             list[i] = list[i + 1];
         list[size - 1] = null;
         size--;
-        nextIndex--;
-        if (nextIndex < listSize / 2 && listSize > 32)
+        if (size < listSize / 2 && listSize > 32)
             reduce();
         return o;
     }
@@ -417,7 +413,6 @@ public class CustomList<E> implements List<E> {
         CustomList<E> subList = new CustomList<>(Math.max(32, subListSize));
         System.arraycopy(list, fromIndex, subList.list, 0, subListSize);
         subList.size = subListSize;
-        subList.nextIndex = subListSize;
         return subList;
     }
 
@@ -524,7 +519,6 @@ public class CustomList<E> implements List<E> {
         System.arraycopy(list, index, newList, updateIndex, size - index);
         this.list = newList;
         this.size = size + c.size();
-        this.nextIndex = this.size;
         return size != oldSize;
     }
 
@@ -584,11 +578,10 @@ public class CustomList<E> implements List<E> {
                 list[i] = list[i + 1];
             list[size - 1] = null;
             size--;
-            nextIndex--;
             index = lastReturned;
             canModify = false;
 
-            if (nextIndex < listSize / 2 && listSize > 32)
+            if (size < listSize / 2 && listSize > 32)
                 reduce();
         }
 
@@ -612,7 +605,6 @@ public class CustomList<E> implements List<E> {
                 list[i] = list[i - 1];
             list[index] = e;
             size++;
-            nextIndex++;
             index++;
             canModify = false;
         }
