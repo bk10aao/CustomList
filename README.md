@@ -137,12 +137,3 @@ Implementation of a List using an array
 ## CustomList vs Array List
 
 ![Combined Performance Charts](PerformanceTesting/CustomList_vs_ArrayList_Performance_Comparisons.png)
-
-# Custom List
-
-![Combined Performance Charts](PerformanceTesting/CustomList_Performance.png)
-
-# Array List
-
->>>>>>> e62966eb45121b32b88e2cff7c1dbc1272ec98cf
-![Combined Performance Charts](PerformanceTesting/ArrayList_Performance.png)

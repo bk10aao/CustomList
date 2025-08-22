@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -39,10 +41,11 @@ class CustomListTest {
         assertTrue(customList.add(1));
         assertEquals(1, customList.size());
     }
+
     @Test
     public void givenListOfSize_32_whenAddingValue_null_throws_NullPointerException() {
         CustomList customList = new CustomList(32);
-        assertThrows(NullPointerException.class, ()-> customList.add(null));
+        assertThrows(NullPointerException.class, () -> customList.add(null));
     }
 
     @Test
@@ -73,7 +76,7 @@ class CustomListTest {
         CustomList<Integer> customList = new CustomList(0);
         IntStream.rangeClosed(0, 33).forEach(customList::add);
         assertEquals(34, customList.size());
-        assertEquals(64, customList.listSize);
+        assertEquals(48, customList.listSize);
     }
 
     @Test
@@ -91,7 +94,7 @@ class CustomListTest {
         ArrayList<Integer> collection = IntStream.range(0, 33).boxed().collect(Collectors.toCollection(ArrayList::new));
         assertTrue(customList.addAll(collection));
         assertEquals(33, customList.size());
-        assertEquals(64, customList.listSize);
+        assertEquals(48, customList.listSize);
     }
 
     @Test
@@ -110,9 +113,9 @@ class CustomListTest {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 33).forEach(customList::add);
         assertEquals(33, customList.size());
-        assertEquals(64, customList.listSize);
+        assertEquals(48, customList.listSize);
         customList.clear();
-        assertEquals(0, customList.size());
+        assertTrue(customList.isEmpty());
         assertEquals(32, customList.listSize);
     }
 
@@ -153,7 +156,7 @@ class CustomListTest {
     public void givenAListOf_0_to_32_integers_onContainsAllOf_nullCollection_throws_NullPointerException() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 33).forEach(customList::add);
-        assertThrows(NullPointerException.class, ()-> customList.containsAll(null));
+        assertThrows(NullPointerException.class, () -> customList.containsAll(null));
     }
 
     @Test
@@ -162,7 +165,7 @@ class CustomListTest {
         IntStream.range(0, 32).forEach(customList::add);
         Iterator it = customList.iterator();
         int iteratorCount = 0;
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             it.next();
             iteratorCount++;
         }
@@ -173,7 +176,7 @@ class CustomListTest {
     public void givenListOf_0_to_5_its_return_arrayOfList() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 6).forEach(customList::add);
-        Object[] expected = new Object[] { 0, 1, 2, 3, 4, 5 };
+        Object[] expected = new Object[]{0, 1, 2, 3, 4, 5};
         assertArrayEquals(expected, customList.toArray());
     }
 
@@ -199,14 +202,14 @@ class CustomListTest {
     public void givenListOf_5_values_onGettingIndex_negative_1_throws_IndexOutOfBoundsException() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 6).forEach(customList::add);
-        assertThrows(IndexOutOfBoundsException.class, ()-> customList.get(-1));
+        assertThrows(IndexOutOfBoundsException.class, () -> customList.get(-1));
     }
 
     @Test
     public void givenListOf_5_values_onGettingIndex_10_throws_IndexOutOfBoundsException() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 6).forEach(customList::add);
-        assertThrows(IndexOutOfBoundsException.class, ()-> customList.get(10));
+        assertThrows(IndexOutOfBoundsException.class, () -> customList.get(10));
     }
 
     @Test
@@ -241,7 +244,7 @@ class CustomListTest {
     public void givenListOf_5_values_of_0_10_20_30_40_onGettingIndex_null_throws_NullPointerException() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 6).mapToObj(i -> i * 10).forEach(customList::add);
-        assertThrows(NullPointerException.class, ()-> customList.indexOf(null));
+        assertThrows(NullPointerException.class, () -> customList.indexOf(null));
     }
 
     @Test
@@ -289,14 +292,14 @@ class CustomListTest {
     public void givenIndexToRemove_whichIsLargerThanSize_throws_IndexOutOfBoundsException() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
-        assertThrows(IndexOutOfBoundsException.class, ()-> customList.remove(5));
+        assertThrows(IndexOutOfBoundsException.class, () -> customList.remove(5));
     }
 
     @Test
     public void givenNegativeIndexOf_minus_1_onRemove_throws_IndexOutOfBoundsException() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
-        assertThrows(IndexOutOfBoundsException.class, ()-> customList.remove(-1));
+        assertThrows(IndexOutOfBoundsException.class, () -> customList.remove(-1));
     }
 
     @Test
@@ -321,7 +324,7 @@ class CustomListTest {
     public void givenListOf_5_objects_of_0_10_20_30_40_50_onRemovingANullValue_returnsFalse() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> 10 * i).forEach(customList::add);
-        assertThrows(NullPointerException.class, ()-> customList.remove(null));
+        assertThrows(NullPointerException.class, () -> customList.remove(null));
     }
 
     @Test
@@ -342,7 +345,7 @@ class CustomListTest {
     public void whenRemovingListWithOnlyNullItems_throws_NullPointerException() {
         CustomList<Integer> customList = new CustomList();
         Collection<Integer> items = IntStream.range(0, 3).<Integer>mapToObj(i -> null).collect(Collectors.toList());
-        assertThrows(NullPointerException.class, ()-> customList.removeAll(items));
+        assertThrows(NullPointerException.class, () -> customList.removeAll(items));
     }
 
     @Test
@@ -351,14 +354,14 @@ class CustomListTest {
         Collection<Integer> items = IntStream.range(10, 12).boxed().collect(Collectors.toList());
         items.add(null);
         IntStream.range(10, 12).forEach(customList::add);
-        assertThrows(NullPointerException.class, ()-> customList.removeAll(items));
+        assertThrows(NullPointerException.class, () -> customList.removeAll(items));
     }
 
     @Test
     public void whenRemovingNullList_throws_NullPointerException() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
-        assertThrows(NullPointerException.class, ()-> customList.removeAll(null));
+        assertThrows(NullPointerException.class, () -> customList.removeAll(null));
     }
 
     @Test
@@ -396,14 +399,14 @@ class CustomListTest {
     public void whenSettingItemInList_withIndexOf_negative_1_throws_IndexOutOfBoundsException() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
-        assertThrows(IndexOutOfBoundsException.class, ()-> customList.set(-1, 1000));
+        assertThrows(IndexOutOfBoundsException.class, () -> customList.set(-1, 1000));
     }
 
     @Test
     public void whenSettingItemInList_withIndexLargerThanSize_throws_IndexOutOfBoundsException() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
-        assertThrows(IndexOutOfBoundsException.class, ()-> customList.set(100, 1000));
+        assertThrows(IndexOutOfBoundsException.class, () -> customList.set(100, 1000));
     }
 
     @Test
@@ -420,7 +423,7 @@ class CustomListTest {
     public void whenGettingLastIndexOfObjectThatDoesNotExist_throws_NullPointerException() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
-        assertThrows(NullPointerException.class, ()-> customList.lastIndexOf(null));
+        assertThrows(NullPointerException.class, () -> customList.lastIndexOf(null));
     }
 
     @Test
@@ -449,8 +452,9 @@ class CustomListTest {
     public void whenGettingSubList_withFirstIndexSmallerThan_0_throws_IndexOutOfBoundsException() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
-        assertThrows(IndexOutOfBoundsException.class, ()-> customList.subList(-1, 10));
+        assertThrows(IndexOutOfBoundsException.class, () -> customList.subList(-1, 10));
     }
+
     @Test
     public void whenGettingSubList_withIndexOf_2_8_returnsCorrectSublistOf_size_8() {
         CustomList<Integer> customList = new CustomList();
@@ -465,7 +469,7 @@ class CustomListTest {
     public void whenRetainingElements_whereNullListIsProvided_throws_NullPointerException() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 10).mapToObj(i -> i * 10).forEach(customList::add);
-        assertThrows(NullPointerException.class, ()-> customList.retainAll(null));
+        assertThrows(NullPointerException.class, () -> customList.retainAll(null));
     }
 
     @Test
@@ -504,7 +508,7 @@ class CustomListTest {
         CustomList<Integer> customList = new CustomList(0);
         ArrayList<Integer> collection = IntStream.range(0, 5).boxed().collect(Collectors.toCollection(ArrayList::new));
         customList.addAll(collection);
-        assertThrows(NullPointerException.class, ()-> customList.add(1, null));
+        assertThrows(NullPointerException.class, () -> customList.add(1, null));
     }
 
     @Test
@@ -512,7 +516,7 @@ class CustomListTest {
         CustomList<Integer> customList = new CustomList(0);
         ArrayList<Integer> collection = IntStream.range(0, 5).boxed().collect(Collectors.toCollection(ArrayList::new));
         customList.addAll(collection);
-        assertThrows(IndexOutOfBoundsException.class, ()-> customList.add(-1, 10));
+        assertThrows(IndexOutOfBoundsException.class, () -> customList.add(-1, 10));
     }
 
     @Test
@@ -520,7 +524,7 @@ class CustomListTest {
         CustomList<Integer> customList = new CustomList(0);
         ArrayList<Integer> collection = IntStream.range(0, 5).boxed().collect(Collectors.toCollection(ArrayList::new));
         customList.addAll(collection);
-        assertThrows(IndexOutOfBoundsException.class, ()-> customList.add(10, 10));
+        assertThrows(IndexOutOfBoundsException.class, () -> customList.add(10, 10));
     }
 
     @Test
@@ -575,9 +579,8 @@ class CustomListTest {
     }
 
     @Test
-    void givenListOf_3_integers_onAddAllWithValues_4_5_atIndex_1_returns_1_4_5_2_3() {
+    public void givenListOf_3_integers_onAddAllWithValues_4_5_atIndex_1_returns_1_4_5_2_3() {
         CustomList<Integer> customList = new CustomList();
-
         customList.add(1);
         customList.add(2);
         customList.add(3);
@@ -594,7 +597,7 @@ class CustomListTest {
     }
 
     @Test
-    void givenListOf_2_integers_onAddAllWithValues_3_4_atIndex_0_returns_3_4_1_2() {
+    public void givenListOf_2_integers_onAddAllWithValues_3_4_atIndex_0_returns_3_4_1_2() {
         CustomList<Integer> customList = new CustomList();
         customList.add(1);
         customList.add(2);
@@ -610,7 +613,7 @@ class CustomListTest {
     }
 
     @Test
-    void givenListOf_2_integers_onAddAllWithValues_3_4_atIndex_2_returns_1_2_3_4() {
+    public void givenListOf_2_integers_onAddAllWithValues_3_4_atIndex_2_returns_1_2_3_4() {
         CustomList<Integer> customList = new CustomList();
         customList.add(1);
         customList.add(2);
@@ -626,14 +629,14 @@ class CustomListTest {
     }
 
     @Test
-    void testAddAll_withNullCollection_throwsNullPointerException() {
+    public void testAddAll_withNullCollection_throwsNullPointerException() {
         CustomList<Integer> customList = new CustomList();
         customList.add(1);
         assertThrows(NullPointerException.class, () -> customList.addAll(0, null));
     }
 
     @Test
-    void testAddAll_withEmptyCollection_doesNotChangeList() {
+    public void testAddAll_withEmptyCollection_doesNotChangeList() {
         CustomList<Integer> customList = new CustomList();
         customList.add(1);
         customList.add(2);
@@ -645,7 +648,7 @@ class CustomListTest {
     }
 
     @Test
-    void testAddAll_withValues_1_2_3_toEmptyList_updatedList() {
+    public void testAddAll_withValues_1_2_3_toEmptyList_updatedList() {
         CustomList<Integer> customList = new CustomList<>();
         Collection<Integer> toAdd = Arrays.asList(1, 2, 3);
         boolean modified = customList.addAll(0, toAdd);
@@ -658,16 +661,159 @@ class CustomListTest {
     }
 
     @Test
-    void testAddAll_toNegativeIndex_throwsIndexOutOfBoundsException() {
+    public void testAddAll_toNegativeIndex_throwsIndexOutOfBoundsException() {
         CustomList<Integer> customList = new CustomList<>();
         Collection<Integer> toAdd = Arrays.asList(2, 3);
         assertThrows(IndexOutOfBoundsException.class, () -> customList.addAll(-1, toAdd));
     }
 
     @Test
-    void testAddAll_toIndexLarherThanSize_throwsIndexOutOfBoundsException() {
+    public void testAddAll_toIndexLarherThanSize_throwsIndexOutOfBoundsException() {
         CustomList<Integer> customList = new CustomList<>();
         Collection<Integer> toAdd = Arrays.asList(2, 3);
         assertThrows(IndexOutOfBoundsException.class, () -> customList.addAll(customList.size() + 1, toAdd));
+    }
+
+    @Test
+    public void givenListOf_1_2_3_testListIterator_onForward_traversesCorrectly() {
+        CustomList<Integer> customList = new CustomList<>();
+        customList.add(1);
+        customList.add(2);
+        customList.add(3);
+        ListIterator<Integer> it = customList.listIterator();
+        assertTrue(it.hasNext());
+        assertEquals(0, it.nextIndex());
+        assertEquals(1, it.next());
+        assertEquals(1, it.nextIndex());
+        assertEquals(2, it.next());
+        assertEquals(3, it.next());
+        assertFalse(it.hasNext());
+        assertThrows(NoSuchElementException.class, it::next);
+    }
+
+    @Test
+    public void givenListOf_1_2_3_testListIterator_onBackwards_traversesCorrectly() {
+        CustomList<Integer> customList = new CustomList<>();
+        customList.add(1);
+        customList.add(2);
+        customList.add(3);
+        ListIterator<Integer> it = customList.listIterator(3);
+        assertTrue(it.hasPrevious());
+        assertEquals(2, it.previousIndex());
+        assertEquals(3, it.previous());
+        assertEquals(2, it.previous());
+        assertEquals(1, it.previous());
+        assertFalse(it.hasPrevious());
+        assertThrows(NoSuchElementException.class, it::previous);
+    }
+
+    @Test
+    public void givenListOf_1_2_3_toArrayWithSize_5_returns_1_2_3_null_null() {
+        CustomList<Integer> customList = new CustomList<>();
+        customList.add(1);
+        customList.add(2);
+        customList.add(3);
+        Integer[] array = new Integer[5];
+        Arrays.fill(array, 999);
+        Integer[] result = customList.toArray(array);
+        assertArrayEquals(new Integer[]{1, 2, 3, null, null}, result);
+    }
+
+    @Test
+    public void givenListOf_1_2_3_toArrayWithSize_3_returns_1_2_3() {
+        CustomList<Integer> customList = new CustomList<>();
+        customList.add(1);
+        customList.add(2);
+        customList.add(3);
+        Integer[] array = new Integer[3];
+        Integer[] result = customList.toArray(array);
+        assertEquals(array, result);
+        assertArrayEquals(new Integer[]{1, 2, 3}, result);
+    }
+
+    @Test
+    public void givenListOf_1_2_3_toArrayWithSize_2_returns_1_2_3() {
+        CustomList<Integer> customList = new CustomList<>();
+        customList.add(1);
+        customList.add(2);
+        customList.add(3);
+        Integer[] array = new Integer[2];
+        Integer[] result = customList.toArray(array);
+        assertNotEquals(array, result);
+        assertArrayEquals(new Integer[]{1, 2, 3}, result);
+        assertEquals(Integer[].class, result.getClass());
+    }
+
+    @Test
+    public void testToArray_withEmptyList_returnsArrayOf_null() {
+        CustomList<Integer> customList = new CustomList();
+        Integer[] array = new Integer[1];
+        Arrays.fill(array, 999);
+        Integer[] result = customList.toArray(array);
+        assertEquals(array, result);
+        assertArrayEquals(new Integer[]{null}, result);
+    }
+
+    @Test
+    public void givenEmptyList_add_42_atIndex_0_addsCorrectly() {
+        CustomList<Integer> customList = new CustomList<>();
+        customList.add(0, 42);
+        assertEquals(1, customList.size());
+        assertArrayEquals(new Integer[]{42}, customList.toArray());
+    }
+
+    @Test
+    public void givenListOf_1_2_3_onAdd_42_AtIndex_1_returnsListOf_1_42_2_3() {
+        CustomList<Integer> customList = new CustomList<>();
+        customList.add(1);
+        customList.add(2);
+        customList.add(3);
+        customList.add(1, 42);
+        assertEquals(4, customList.size());
+        assertArrayEquals(new Integer[]{1, 42, 2, 3}, customList.toArray());
+    }
+
+    @Test
+    public void givenListOf_1_2_3_onAdd_42_AtIndex_10_returnsListOf_42_1_2_3() {
+        CustomList<Integer> customList = new CustomList<>();
+        customList.add(1);
+        customList.add(2);
+        customList.add(3);
+        customList.add(0, 42);
+        assertEquals(4, customList.size());
+        assertArrayEquals(new Integer[]{42, 1, 2, 3}, customList.toArray());
+    }
+
+    @Test
+    public void givenListOf_1_2_3_onAdd_42_AtIndex_4_returns_1_2_3_42() {
+        CustomList<Integer> customList = new CustomList<>();
+        customList.add(1);
+        customList.add(2);
+        customList.add(3);
+        customList.add(customList.size(), 42);
+        assertEquals(4, customList.size());
+        assertArrayEquals(new Integer[]{1, 2, 3, 42}, customList.toArray());
+    }
+
+    @Test
+    public void givenListOf_1_2_3_onAddAtNegativeIndex_throwsIndexOutOfBoundsException() {
+        CustomList<Integer> customList = new CustomList<>();
+        customList.add(1);
+        customList.add(2);
+        customList.add(3);
+        assertThrows(IndexOutOfBoundsException.class, () -> customList.add(-1, 4));
+    }
+
+    @Test
+    void givenListOf_1_2_3_onAddAtIndexGreaterThanSize_throwsIndexOutOfBoundsException() {
+        CustomList<Integer> customList = new CustomList<>();
+        customList.add(1);
+        assertThrows(IndexOutOfBoundsException.class, () -> customList.add(2, 42));
+    }
+
+    @Test
+    public void givenListOf_1_2_3_onAddNull_throwsNullPointerException() {
+        CustomList<Integer> customList = new CustomList<>();
+        assertThrows(NullPointerException.class, () -> customList.add(0, null));
     }
 }
