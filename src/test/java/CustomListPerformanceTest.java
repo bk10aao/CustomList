@@ -1,6 +1,7 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -28,7 +29,7 @@ public class CustomListPerformanceTest {
             for (int run = 0; run < RUNS; run++) {
                 CustomList<Integer> list = new CustomList<>();
                 List<Integer> sampleList = IntStream.range(0, size).boxed().collect(Collectors.toList());
-                List<Integer> smallList = IntStream.range(0, Math.min(1000, size)).boxed().collect(Collectors.toList());
+                List<Integer> smallList = IntStream.range(0, Math.min(1000, size)).boxed().toList();
 
                 long start, end;
 
@@ -38,28 +39,28 @@ public class CustomListPerformanceTest {
                 end = System.nanoTime();
                 results[si][0] += (end - start);
 
-                // 1. add(int, T)
+                System.out.println("1. add(int, T)");
                 list.clear();
                 start = System.nanoTime();
                 for (int i = 0; i < size; i++) list.add(0, i);
                 end = System.nanoTime();
                 results[si][1] += (end - start);
 
-                // 2. addAll(Collection<T>)
+                System.out.println("2. addAll(Collection<T>");
                 list.clear();
                 start = System.nanoTime();
                 list.addAll(sampleList);
                 end = System.nanoTime();
                 results[si][2] += (end - start);
 
-                // 3. addAll(int, Collection<T>)
+                System.out.println("3. addAll(int, Collection<T>)");
                 list.clear();
                 start = System.nanoTime();
                 list.addAll(0, sampleList);
                 end = System.nanoTime();
                 results[si][3] += (end - start);
 
-                // 4. clear()
+                System.out.println("4. clear()");
                 list.clear();
                 list.addAll(sampleList);
                 start = System.nanoTime();
@@ -67,45 +68,45 @@ public class CustomListPerformanceTest {
                 end = System.nanoTime();
                 results[si][4] += (end - start);
 
-                // 5. contains(T)
+                System.out.println("5. contains(T)");
                 list.addAll(sampleList);
                 start = System.nanoTime();
                 for (int i = 0; i < size; i++) list.contains(i);
                 end = System.nanoTime();
                 results[si][5] += (end - start);
 
-                // 6. containsAll(List<T>)
+                System.out.println("6. containsAll(List<T>)");
                 start = System.nanoTime();
                 list.containsAll(smallList);
                 end = System.nanoTime();
                 results[si][6] += (end - start);
 
-                // 7. get(int)
+                System.out.println("7. get(int)");
                 start = System.nanoTime();
                 for (int i = 0; i < size; i++) list.get(i);
                 end = System.nanoTime();
                 results[si][7] += (end - start);
 
-                // 8. indexOf(Object)
+                System.out.println("8. indexOf(Object)");
                 start = System.nanoTime();
                 for (int i = 0; i < size; i++) list.indexOf(i);
                 end = System.nanoTime();
                 results[si][8] += (end - start);
 
-                // 9. isEmpty()
+                System.out.println("9. isEmpty()");
                 start = System.nanoTime();
                 list.isEmpty();
                 end = System.nanoTime();
                 results[si][9] += (end - start);
 
-                // 10. iterator().next()
+                System.out.println("10. iterator().next()");
                 start = System.nanoTime();
                 var iter = list.iterator();
                 while (iter.hasNext()) iter.next();
                 end = System.nanoTime();
                 results[si][10] += (end - start);
 
-                // 11. listIterator().add(T)
+                System.out.println("11. listIterator().add(T)");
                 list.clear();
                 var listIterAdd = list.listIterator();
                 start = System.nanoTime();
@@ -115,7 +116,7 @@ public class CustomListPerformanceTest {
                 end = System.nanoTime();
                 results[si][11] += (end - start);
 
-                // 12. listIterator().set(T)
+                System.out.println("12. listIterator().set(T)");
                 list.clear();
                 list.addAll(sampleList);
                 var listIterSet = list.listIterator();
@@ -127,7 +128,7 @@ public class CustomListPerformanceTest {
                 end = System.nanoTime();
                 results[si][12] += (end - start);
 
-                // 13. listIterator().remove()
+                System.out.println("13. listIterator().remove()");
                 list.clear();
                 list.addAll(sampleList);
                 var listIterRemove = list.listIterator();
@@ -139,14 +140,14 @@ public class CustomListPerformanceTest {
                 end = System.nanoTime();
                 results[si][13] += (end - start);
 
-                // 14. lastIndexOf(Object)
+                System.out.println("14. lastIndexOf(Object)");
                 list.addAll(sampleList);
                 start = System.nanoTime();
                 for (int i = 0; i < size; i++) list.lastIndexOf(i);
                 end = System.nanoTime();
                 results[si][14] += (end - start);
 
-                // 15. remove(int)
+                System.out.println("15. remove(int)");
                 list.clear();
                 list.addAll(sampleList);
                 start = System.nanoTime();
@@ -154,14 +155,14 @@ public class CustomListPerformanceTest {
                 end = System.nanoTime();
                 results[si][15] += (end - start);
 
-                // 16. remove(T)
+                System.out.println("16. remove(T)");
                 list.addAll(sampleList);
                 start = System.nanoTime();
                 for (int i = 0; i < size; i++) list.remove(Integer.valueOf(i));
                 end = System.nanoTime();
                 results[si][16] += (end - start);
 
-                // 17. removeAll(Collection<T>)
+                System.out.println("17. removeAll(Collection<T>)");
                 list.addAll(sampleList);
                 List<Integer> removeList = sampleList.subList(size / 2, size);
                 start = System.nanoTime();
@@ -169,7 +170,7 @@ public class CustomListPerformanceTest {
                 end = System.nanoTime();
                 results[si][17] += (end - start);
 
-                // 18. retainAll(Collection<T>)
+                System.out.println("18. retainAll(Collection<T>)");
                 list.addAll(sampleList);
                 List<Integer> retainList = sampleList.subList(0, size / 2);
                 start = System.nanoTime();
@@ -177,7 +178,7 @@ public class CustomListPerformanceTest {
                 end = System.nanoTime();
                 results[si][18] += (end - start);
 
-                // 19. set(int, T)
+                System.out.println("19. set(int, T)");
                 list.clear();
                 list.addAll(sampleList);
                 start = System.nanoTime();
@@ -185,40 +186,40 @@ public class CustomListPerformanceTest {
                 end = System.nanoTime();
                 results[si][19] += (end - start);
 
-                // 20. size()
+                System.out.println("20. size()");
                 start = System.nanoTime();
                 list.size();
                 end = System.nanoTime();
                 results[si][20] += (end - start);
 
-                // 21. subList(int, int)
+                System.out.println("21. subList(int, int)");
                 list.addAll(sampleList);
                 start = System.nanoTime();
                 list.subList(0, size / 2);
                 end = System.nanoTime();
                 results[si][21] += (end - start);
 
-                // 22. toArray()
+                System.out.println("22. toArray()");
                 start = System.nanoTime();
                 list.toArray();
                 end = System.nanoTime();
                 results[si][22] += (end - start);
 
-                // 23. equals(Object)
-                CustomList<Integer> other = new CustomList<>();
+                System.out.println("23. equals(Object)");
+                List<Integer> other = new ArrayList<>();
                 other.addAll(sampleList);
                 start = System.nanoTime();
                 list.equals(other);
                 end = System.nanoTime();
                 results[si][23] += (end - start);
 
-                // 24. hashCode()
+                System.out.println("24. hashCode()");
                 start = System.nanoTime();
                 list.hashCode();
                 end = System.nanoTime();
                 results[si][24] += (end - start);
 
-                // 25. toString()
+                System.out.println("25. toString()");
                 start = System.nanoTime();
                 list.toString();
                 end = System.nanoTime();

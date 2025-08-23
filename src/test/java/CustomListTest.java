@@ -139,7 +139,7 @@ class CustomListTest {
     @Test
     public void givenAListOf_0_to_32_integers_onContainsAllOf_5_10_and_20_returns_true() {
         CustomList<Integer> customList = new CustomList();
-        List<Integer> collection = IntStream.of(5, 10, 20).boxed().collect(Collectors.toList());
+        List<Integer> collection = IntStream.of(5, 10, 20).boxed().toList();
         IntStream.range(0, 33).forEach(customList::add);
         assertTrue(customList.containsAll(collection));
     }
@@ -147,7 +147,7 @@ class CustomListTest {
     @Test
     public void givenAListOf_0_to_32_integers_onContainsAllOf_5_10_and_200_returns_false() {
         CustomList<Integer> customList = new CustomList();
-        List<Integer> collection = IntStream.of(5, 10, 200).boxed().collect(Collectors.toList());
+        List<Integer> collection = IntStream.of(5, 10, 200).boxed().toList();
         IntStream.range(0, 33).forEach(customList::add);
         assertFalse(customList.containsAll(collection));
     }
@@ -344,7 +344,7 @@ class CustomListTest {
     @Test
     public void whenRemovingListWithOnlyNullItems_throws_NullPointerException() {
         CustomList<Integer> customList = new CustomList();
-        Collection<Integer> items = IntStream.range(0, 3).<Integer>mapToObj(i -> null).collect(Collectors.toList());
+        Collection<Integer> items = IntStream.range(0, 3).<Integer>mapToObj(i -> null).toList();
         assertThrows(NullPointerException.class, () -> customList.removeAll(items));
     }
 
@@ -375,7 +375,7 @@ class CustomListTest {
     public void whenRemovingListWithThreeIntegersPresentInCollection_returns_true() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
-        Collection<Integer> items = IntStream.range(0, 3).mapToObj(i -> i * 10).collect(Collectors.toList());
+        Collection<Integer> items = IntStream.range(0, 3).mapToObj(i -> i * 10).toList();
         assertTrue(customList.removeAll(items));
     }
 
@@ -383,7 +383,7 @@ class CustomListTest {
     public void whenRemovingListWithThreeIntegersPresentInCollection_and_oneNot_returns_true() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
-        Collection<Integer> items = IntStream.range(2, 6).mapToObj(i -> i * 10).collect(Collectors.toList());
+        Collection<Integer> items = IntStream.range(2, 6).mapToObj(i -> i * 10).toList();
         assertTrue(customList.removeAll(items));
     }
 
@@ -391,7 +391,7 @@ class CustomListTest {
     public void whenRemovingListWithThreeIntegersPresentInCollection_withGaps_returns_true() {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
-        Collection<Integer> items = IntStream.of(0, 30, 10).boxed().collect(Collectors.toList());
+        Collection<Integer> items = IntStream.of(0, 30, 10).boxed().toList();
         assertTrue(customList.removeAll(items));
     }
 
