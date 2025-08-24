@@ -12,7 +12,7 @@ import java.util.Objects;
  * Resizable-array implementation of the List interface. Implements all optional list operations,
  * LinkedIn - <a href="https://www.linkedin.com/in/benjamin-kane-81149482/"/>
  * GitHub account bk10aao - <a href="https://github.com/bk10aao"/>
- * Repository - <a href="https://github.com/bk10aao/CustomSetV2"/>
+ * Repository - <a href="https://github.com/bk10aao/CustomList"/>
  * <E> – the type of elements in this list
  */
 public class CustomList<E> implements List<E> {
