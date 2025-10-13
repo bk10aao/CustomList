@@ -83,7 +83,7 @@ public class CustomList<E> implements List<E> {
      * @throws NullPointerException if the specified collection or any of its elements is null
      */
     public boolean addAll(final Collection<? extends E> values) {
-        if (values == null)
+        if(values == null)
             throw new NullPointerException();
         if(values.isEmpty())
             return false;
@@ -122,10 +122,7 @@ public class CustomList<E> implements List<E> {
      * Removes all elements from this list.
      */
     public void clear() {
-        for(int i = 0; i < size; i++)
-            list[i] = null;
-        if(listSize > MINIMUM_CAPACITY)
-            ensureCapacity(MINIMUM_CAPACITY);
+        this.list = (E[])Array.newInstance(Object.class, MINIMUM_CAPACITY);
         listSize = MINIMUM_CAPACITY;
         size = 0;
     }
