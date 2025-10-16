@@ -22,21 +22,18 @@ class CustomListTest {
     @Test
     public void givenDefaultConstructor_returnsListSizeOf_32() {
         CustomList customList = new CustomList();
-        assertEquals(32, customList.listSize);
         assertEquals(0, customList.size());
     }
 
     @Test
     public void givenConstructorWithParameterSUZEof_64_returnsDefaultListSizeOf_64_andZeroElements() {
         CustomList customList = new CustomList(64);
-        assertEquals(64, customList.listSize);
         assertEquals(0, customList.size());
     }
 
     @Test
     public void givenDefaultList_whenAddingValue_1_returnsSizeOf_1() {
         CustomList customList = new CustomList();
-        assertEquals(32, customList.listSize);
         assertEquals(0, customList.size());
         assertTrue(customList.add(1));
         assertEquals(1, customList.size());
@@ -51,7 +48,6 @@ class CustomListTest {
     @Test
     public void givenListOfSize_32_whenAddingValue_1_returnsSizeOf_1() {
         CustomList customList = new CustomList(32);
-        assertEquals(32, customList.listSize);
         assertEquals(0, customList.size());
         assertTrue(customList.add(1));
         assertEquals(1, customList.size());
@@ -76,7 +72,6 @@ class CustomListTest {
         CustomList<Integer> customList = new CustomList(0);
         IntStream.rangeClosed(0, 33).forEach(customList::add);
         assertEquals(34, customList.size());
-        assertEquals(48, customList.listSize);
     }
 
     @Test
@@ -85,16 +80,14 @@ class CustomListTest {
         ArrayList<Integer> collection = IntStream.range(0, 5).boxed().collect(Collectors.toCollection(ArrayList::new));
         assertTrue(customList.addAll(collection));
         assertEquals(5, customList.size());
-        assertEquals(32, customList.listSize);
     }
 
     @Test
-    public void givenACollectionOf_33_integers_on_addAll_returnsTrue_andListSizeOf_64() {
+    public void givenACollectionOf_33_integers_on_addAll_returnsTrue() {
         CustomList<Integer> customList = new CustomList(0);
         ArrayList<Integer> collection = IntStream.range(0, 33).boxed().collect(Collectors.toCollection(ArrayList::new));
         assertTrue(customList.addAll(collection));
         assertEquals(33, customList.size());
-        assertEquals(48, customList.listSize);
     }
 
     @Test
@@ -102,10 +95,8 @@ class CustomListTest {
         CustomList<Integer> customList = new CustomList(0);
         IntStream.range(0, 5).forEach(customList::add);
         assertEquals(5, customList.size());
-        assertEquals(32, customList.listSize);
         customList.clear();
         assertEquals(0, customList.size());
-        assertEquals(32, customList.listSize);
     }
 
     @Test
@@ -113,10 +104,8 @@ class CustomListTest {
         CustomList<Integer> customList = new CustomList();
         IntStream.range(0, 33).forEach(customList::add);
         assertEquals(33, customList.size());
-        assertEquals(48, customList.listSize);
         customList.clear();
         assertTrue(customList.isEmpty());
-        assertEquals(32, customList.listSize);
     }
 
     @Test
@@ -708,7 +697,7 @@ class CustomListTest {
     }
 
     @Test
-    public void givenListOf_1_2_3_toArrayWithSize_5_returns_1_2_3_null_null() {
+    public void givenListOf_1_2_3_toArrayWithSize_5_returns_1_2_3_null_999() {
         CustomList<Integer> customList = new CustomList<>();
         customList.add(1);
         customList.add(2);
@@ -716,7 +705,7 @@ class CustomListTest {
         Integer[] array = new Integer[5];
         Arrays.fill(array, 999);
         Integer[] result = customList.toArray(array);
-        assertArrayEquals(new Integer[]{1, 2, 3, null, null}, result);
+        assertArrayEquals(new Integer[]{1, 2, 3, null, 999}, result);
     }
 
     @Test
