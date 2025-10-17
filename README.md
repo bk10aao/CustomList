@@ -4,7 +4,7 @@ Implementation of a List using an array
 
 1. [time complexity](https://github.com/bk10aao/CustomList/tree/main?tab=readme-ov-file#time-complexity)
 2. [space complexity](https://github.com/bk10aao/CustomList/tree/main?tab=readme-ov-file#space-complexity)
-3. [performance testing](https://github.com/bk10aao/CustomList/blob/main/README.md#performance-testing)
+3. [performance testing](https://github.com/bk10aao/CustomList/blob/main/README.md#performance-charts)
 
 All methods implemented are identical to those found in the Java [List](https://docs.oracle.com/javase/8/docs/api/java/util/List.html) interface.
 
