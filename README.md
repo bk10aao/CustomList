@@ -2,7 +2,7 @@
 
 Implementation of a List using an array
 
-1. [time complexity](https://github.com/bk10aao/CustomList/tree/main?tab=readme-ov-file#performance-complexity)
+1. [time complexity](https://github.com/bk10aao/CustomList/tree/main?tab=readme-ov-file#time-complexity)
 2. [space complexity](https://github.com/bk10aao/CustomList/tree/main?tab=readme-ov-file#space-complexity)
 3. [performance testing](https://github.com/bk10aao/CustomList/blob/main/README.md#performance-testing)
 
