@@ -43,9 +43,6 @@ All methods implemented are identical to those found in the Java [List](https://
 | toArray()                         | O(n)                           | O(n)                           | Tie       |
 | toArray(T[])                      | O(n)                           | O(n)                           | Tie       |
 | toString()                        | O(n)                           | O(n)                           | Tie       |
-| expand() (private)                | O(n)                           | O(n)                           | Tie       |
-| reduce() (private)                | O(n)                           | O(n)                           | Tie       |
-| insert(int, Collection) (private) | O(n + m)                       | O(n + m)                       | Tie       |
 
 # Space Complexity
 | Method                            | CustomList Space O()          | ArrayList Space O()           | Winner    |
@@ -82,9 +79,6 @@ All methods implemented are identical to those found in the Java [List](https://
 | toArray()                         | O(n)                          | O(n)                          | Tie       |
 | toArray(T[])                      | O(n) worst, O(1) average      | O(n) worst, O(1) average      | Tie       |
 | toString()                        | O(n)                          | O(n)                          | Tie       |
-| expand() (private)                | O(n)                          | O(n)                          | Tie       |
-| reduce() (private)                | O(n)                          | O(n)                          | Tie       |
-| insert(int, Collection) (private) | O(n + m)                      | O(n + m)                      | Tie       |
 
 **Legend**:
 - `n`: Number of elements in the list.
