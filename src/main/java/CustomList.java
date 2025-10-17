@@ -29,7 +29,7 @@ public class CustomList<E> implements List<E> {
 
     private int capacity = 32;
 
-    private static final double GROWTH_FACTOR = 1.5;
+    private static final int GROWTH_FACTOR = 10;
     private static final int MINIMUM_CAPACITY = 32;
     private int size = 0;
 
@@ -189,13 +189,15 @@ public class CustomList<E> implements List<E> {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof CustomList<?> customOther))
+        if (!(o instanceof List<?> other))
             return false;
-        if (size != customOther.size)
+        if (size != other.size())
             return false;
-        for (int i = 0; i < size; i++)
-            if (!Objects.equals(list[i], customOther.get(i)))
+        Iterator<?> otherIterator = other.iterator();
+        for (int i = 0; i < size; i++) {
+            if (!Objects.equals(list[i], otherIterator.next()))
                 return false;
+        }
         return true;
     }
 
@@ -363,7 +365,6 @@ public class CustomList<E> implements List<E> {
         if(c.contains(null))
             throw new NullPointerException();
         boolean changed = false;
-
         java.util.Set<?> set = (c instanceof java.util.Set) ? (java.util.Set<?>) c : new java.util.HashSet<>(c);
         int index = 0;
         for (int r = 0; r < size; r++)
@@ -510,10 +511,14 @@ public class CustomList<E> implements List<E> {
      */
     @Override
     public String toString() {
-        return "CustomList{" +
-                "size=" + size +
-                ", list=" + Arrays.toString(toArray()) +
-                '}';
+        StringBuilder sb = new StringBuilder("CustomList{size=").append(size).append(", list=[");
+        for (int i = 0; i < size; i++) {
+            sb.append(list[i]);
+            if (i < size - 1) {
+                sb.append(", ");
+            }
+        }
+        return sb.append("]}").toString();
     }
 
     /**
@@ -521,7 +526,7 @@ public class CustomList<E> implements List<E> {
      */
     private void reduce() {
         if(size < capacity / 2 && capacity > MINIMUM_CAPACITY) {
-            int newCapacity = Math.max((int)(capacity / GROWTH_FACTOR), MINIMUM_CAPACITY);
+            int newCapacity = Math.max(capacity / GROWTH_FACTOR, MINIMUM_CAPACITY);
             if(newCapacity < capacity) {
                 E[] temp = (E[]) Array.newInstance(Object.class, newCapacity);
                 System.arraycopy(list, 0, temp, 0, size);
@@ -559,7 +564,7 @@ public class CustomList<E> implements List<E> {
      */
     private void ensureCapacity(int required) {
         if (required > capacity) {
-            int newCapacity = Math.max(required, Math.max((int)(capacity * GROWTH_FACTOR), MINIMUM_CAPACITY));
+            int newCapacity = Math.max(required, Math.max(capacity * GROWTH_FACTOR, MINIMUM_CAPACITY));
             E[] temp = (E[]) Array.newInstance(Object.class, newCapacity);
             System.arraycopy(list, 0, temp, 0, size);
             list = temp;
