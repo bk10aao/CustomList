@@ -194,10 +194,9 @@ public class CustomList<E> implements List<E> {
         if (size != other.size())
             return false;
         Iterator<?> otherIterator = other.iterator();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++)
             if (!Objects.equals(list[i], otherIterator.next()))
                 return false;
-        }
         return true;
     }
 
@@ -377,7 +376,6 @@ public class CustomList<E> implements List<E> {
         size = index;
         if (size < capacity / 2 && capacity > MINIMUM_CAPACITY)
             reduce();
-
         return changed;
     }
 
@@ -495,7 +493,6 @@ public class CustomList<E> implements List<E> {
     public <T> T[] toArray(T[] a) {
         if (a == null)
             throw new NullPointerException();
-
         if (a.length < size)
             return (T[]) Arrays.copyOf(list, size, a.getClass());
         System.arraycopy(list, 0, a, 0, size);
@@ -514,9 +511,8 @@ public class CustomList<E> implements List<E> {
         StringBuilder sb = new StringBuilder("CustomList{size=").append(size).append(", list=[");
         for (int i = 0; i < size; i++) {
             sb.append(list[i]);
-            if (i < size - 1) {
+            if (i < size - 1)
                 sb.append(", ");
-            }
         }
         return sb.append("]}").toString();
     }
@@ -525,15 +521,11 @@ public class CustomList<E> implements List<E> {
      * Reduces the size of the array when removing items.
      */
     private void reduce() {
-        if(size < capacity / 2 && capacity > MINIMUM_CAPACITY) {
-            int newCapacity = Math.max(capacity / GROWTH_FACTOR, MINIMUM_CAPACITY);
-            if(newCapacity < capacity) {
-                E[] temp = (E[]) Array.newInstance(Object.class, newCapacity);
-                System.arraycopy(list, 0, temp, 0, size);
-                list = temp;
-                capacity = newCapacity;
-            }
-        }
+        int newCapacity = Math.max(capacity / GROWTH_FACTOR, MINIMUM_CAPACITY);
+        E[] temp = (E[]) Array.newInstance(Object.class, newCapacity);
+        System.arraycopy(list, 0, temp, 0, size);
+        list = temp;
+        capacity = newCapacity;
     }
 
     /**
@@ -634,14 +626,12 @@ public class CustomList<E> implements List<E> {
                 throw new IllegalStateException();
             if (lastReturned < 0 || lastReturned >= size)
                 throw new IllegalStateException();
-
             for (int i = lastReturned; i < size - 1; i++)
                 list[i] = list[i + 1];
             list[size - 1] = null;
             size--;
             index = lastReturned;
             canModify = false;
-
             if (size < capacity / 2 && capacity > MINIMUM_CAPACITY)
                 reduce();
         }
