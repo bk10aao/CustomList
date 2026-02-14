@@ -59,10 +59,8 @@ public class CustomList<E> implements List<E> {
      * @return {@code true} (as specified by {@link Collection#add})
      * @throws NullPointerException if the specified element is null
      */
-    @Override
     public boolean add(final E e) {
-        if(e == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(e);
         ensureCapacity(size + 1);
         list[size++] = e;
         return true;
@@ -77,12 +75,9 @@ public class CustomList<E> implements List<E> {
      * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
      * @throws NullPointerException if the specified element is null
      */
-    @Override
     public void add(int index, E element) {
-        if(index < 0 || index > size())
-            throw new IndexOutOfBoundsException();
-        if(element == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(element);
+        checkIndexInnerRange(index);
         ensureCapacity(size + 1);
         System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = element;
@@ -97,17 +92,14 @@ public class CustomList<E> implements List<E> {
      * @return {@code true} if this list changed as a result of the call
      * @throws NullPointerException if the specified collection or any of its elements is null
      */
-    @Override
     public boolean addAll(final Collection<? extends E> values) {
-        if(values == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(values);
         if(values.isEmpty())
             return false;
         ensureCapacity(size + values.size());
         int oldSize = size;
         for (E value : values) {
-            if(value == null)
-                throw new NullPointerException();
+            Objects.requireNonNull(value);
             list[size++] = value;
         }
         return size != oldSize;
@@ -124,12 +116,9 @@ public class CustomList<E> implements List<E> {
      * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
      * @throws NullPointerException if the specified collection is null
      */
-    @Override
     public boolean addAll(int index, Collection<? extends E> c) {
-        if(index < 0 || index > size())
-            throw new IndexOutOfBoundsException();
-        if (c == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(c);
+        checkIndexInnerRange(index);
         if(index == size)
             return addAll(c);
         return insert(index, c);
@@ -138,7 +127,6 @@ public class CustomList<E> implements List<E> {
     /**
      * Removes all elements from this list.
      */
-    @Override
     public void clear() {
         this.list = (E[])Array.newInstance(Object.class, MINIMUM_CAPACITY);
         capacity = MINIMUM_CAPACITY;
@@ -152,10 +140,8 @@ public class CustomList<E> implements List<E> {
      * @return {@code true} if this list contains the specified element
      * @throws NullPointerException if the specified element is null
      */
-    @Override
     public boolean contains(final Object o) {
-        if(o == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(o);
         return indexOf(o) != -1;
     }
 
@@ -166,13 +152,10 @@ public class CustomList<E> implements List<E> {
      * @return {@code true} if this list contains all elements in collection
      * @throws NullPointerException if the specified collection or any of its elements is null
      */
-    @Override
     public boolean containsAll(Collection<?> c) {
-        if(c == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(c);
         for (Object i : c) {
-            if (i == null)
-                throw new NullPointerException();
+            Objects.requireNonNull(i);
             if(indexOf(i) == -1)
                 return false;
         }
@@ -185,7 +168,6 @@ public class CustomList<E> implements List<E> {
      * @param o the object to be compared for equality with this list
      * @return {@code true} if the specified object is equal to this list
      */
-    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
@@ -207,17 +189,14 @@ public class CustomList<E> implements List<E> {
      * @return the element at the specified position in this list
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    @Override
     public E get(final int index) {
-        if(index >= size || index < 0)
-            throw new IndexOutOfBoundsException();
+        checkIndexInRange(index);
         return list[index];
     }
 
     /**
      * {@inheritDoc}
      */
-    @Override
     public int hashCode() {
         int result = 1;
         for (int i = 0; i < size; i++)
@@ -229,10 +208,8 @@ public class CustomList<E> implements List<E> {
      * Returns the index of the first occurrence of the specified element in this list, or -1.
      * {@code Objects.equals(o, get(i))},
      */
-    @Override
     public int indexOf(final Object o) {
-        if(o == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(o);
         for(int i = 0; i < size; i++)
             if (list[i].equals(o))
                 return i;
@@ -244,7 +221,6 @@ public class CustomList<E> implements List<E> {
      *
      * @return {@code true} if this list contains no elements
      */
-    @Override
     public boolean isEmpty() {
         return size == 0;
     }
@@ -254,7 +230,6 @@ public class CustomList<E> implements List<E> {
      *
      * @return an iterator over the elements in this list in proper sequence
      */
-    @Override
     public Iterator<E> iterator() {
         return new Iterator<>() {
 
@@ -275,10 +250,8 @@ public class CustomList<E> implements List<E> {
     /**
      * Returns the index of the last occurrence of the specified element in this list, or -1.
      */
-    @Override
     public int lastIndexOf(final Object o) {
-        if(o == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(o);
         for(int i = size - 1; i >= 0; i--)
             if (list[i].equals(o))
                 return i;
@@ -290,7 +263,6 @@ public class CustomList<E> implements List<E> {
      *
      * @return an iterator over the elements in this list in proper sequence
      */
-    @Override
     public ListIterator<E> listIterator() {
         return new CustomListIterator(0);
     }
@@ -301,10 +273,8 @@ public class CustomList<E> implements List<E> {
      * @return an iterator over the elements in this list in proper sequence
      * @param index the index of the start of List Iterator
      */
-    @Override
     public ListIterator<E> listIterator(int index) {
-        if (index < 0 || index > size())
-            throw new IndexOutOfBoundsException();
+        checkIndexInnerRange(index);
         return new CustomListIterator(index);
     }
 
@@ -315,10 +285,8 @@ public class CustomList<E> implements List<E> {
      * @return the element that was removed from the list
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
-    @Override
     public E remove(final int index) {
-        if (index < 0 || index >= size)
-            throw new IndexOutOfBoundsException();
+        checkIndexInRange(index);
         E o = list[index];
         for (int i = index; i < size - 1; i++)
             list[i] = list[i + 1];
@@ -337,10 +305,8 @@ public class CustomList<E> implements List<E> {
      * @return true if removed from list
      * @throws NullPointerException {@inheritDoc}
      */
-    @Override
     public boolean remove(final Object object) {
-        if(object == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(object);
         int index = indexOf(object);
         if (index != -1) {
             remove(index);
@@ -357,10 +323,8 @@ public class CustomList<E> implements List<E> {
      * @throws NullPointerException if the specified collection or any of its elements is null
      * @see Collection#contains(Object)
      */
-    @Override
     public boolean removeAll(Collection<?> c){
-        if (c == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(c);
         if(c.contains(null))
             throw new NullPointerException();
         boolean changed = false;
@@ -388,10 +352,8 @@ public class CustomList<E> implements List<E> {
      * @throws NullPointerException if the specified collection is null
      * @see Collection#contains(Object)
      */
-    @Override
     public boolean retainAll(final Collection<?> c) {
-        if (c == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(c);
         java.util.Set<?> set = (c instanceof java.util.Set) ? (java.util.Set<?>) c : new java.util.HashSet<>(c);
         boolean changed = false;
         int index = 0;
@@ -417,12 +379,9 @@ public class CustomList<E> implements List<E> {
      * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index >= size()})
      * @throws NullPointerException if the specified element is null
      */
-    @Override
     public E set(final int index, final E element) {
-        if(element == null)
-            throw new NullPointerException();
-        if (index < 0 || index >= size)
-            throw new IndexOutOfBoundsException();
+        Objects.requireNonNull(element);
+        checkIndexInnerRange(index);
         E replaced = list[index];
         list[index] = element;
         return replaced;
@@ -433,7 +392,6 @@ public class CustomList<E> implements List<E> {
      *
      * @return the number of elements in this list
      */
-    @Override
     public int size() {
         return size;
     }
@@ -450,7 +408,6 @@ public class CustomList<E> implements List<E> {
      * @throws IndexOutOfBoundsException if {@code fromIndex < 0}, {@code toIndex > size()},
      * or {@code fromIndex > toIndex}
      */
-    @Override
     public CustomList<E> subList(final int fromIndex, final int toIndex) {
         if (fromIndex < 0 || toIndex > size || fromIndex > toIndex)
             throw new IndexOutOfBoundsException();
@@ -466,7 +423,6 @@ public class CustomList<E> implements List<E> {
      *
      * @return an array containing all the elements in this list in proper sequence
      */
-    @Override
     public E[] toArray() {
         return Arrays.copyOf(list, size);
     }
@@ -488,11 +444,9 @@ public class CustomList<E> implements List<E> {
      *         this list
      * @throws NullPointerException if the specified array is null
      */
-    @Override
     @SuppressWarnings("SuspiciousSystemArraycopy")
     public <T> T[] toArray(T[] a) {
-        if (a == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(a);
         if (a.length < size)
             return (T[]) Arrays.copyOf(list, size, a.getClass());
         System.arraycopy(list, 0, a, 0, size);
@@ -506,7 +460,6 @@ public class CustomList<E> implements List<E> {
      *
      * @return a string in the format {@code CustomList{size=<size>, list=<elements>}}
      */
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CustomList{size=").append(size).append(", list=[");
         for (int i = 0; i < size; i++) {
@@ -517,37 +470,14 @@ public class CustomList<E> implements List<E> {
         return sb.append("]}").toString();
     }
 
-    /**
-     * Reduces the size of the array when removing items.
-     */
-    private void reduce() {
-        int newCapacity = Math.max(capacity / GROWTH_FACTOR, MINIMUM_CAPACITY);
-        E[] temp = (E[]) Array.newInstance(Object.class, newCapacity);
-        System.arraycopy(list, 0, temp, 0, size);
-        list = temp;
-        capacity = newCapacity;
+    private void checkIndexInnerRange(int index) {
+        if(index < 0 || index > size())
+            throw new IndexOutOfBoundsException();
     }
 
-    /**
-     * Inserts, shifts and resizes list based on insertion index.
-     * @param index the index for collection to be inserted into
-     * @param c the collection of values to be inserted
-     * @return true if list has changed
-     */
-    private boolean insert(int index, Collection<? extends E> c) {
-        if(c.isEmpty())
-            return false;
-        ensureCapacity(size + c.size());
-        int oldSize = size;
-        System.arraycopy(list, index, list, index + c.size(), size - index);
-        int updateIndex = index;
-        for(E o : c) {
-            if(o == null)
-                throw new NullPointerException();
-            list[updateIndex++] = o;
-        }
-        size += c.size();
-        return size != oldSize;
+    private void checkIndexInRange(int index) {
+        if(index >= size || index < 0)
+            throw new IndexOutOfBoundsException();
     }
 
     /**
@@ -565,6 +495,38 @@ public class CustomList<E> implements List<E> {
     }
 
     /**
+     * Inserts, shifts and resizes list based on insertion index.
+     * @param index the index for collection to be inserted into
+     * @param c the collection of values to be inserted
+     * @return true if list has changed
+     */
+    private boolean insert(int index, Collection<? extends E> c) {
+        if(c.isEmpty())
+            return false;
+        ensureCapacity(size + c.size());
+        int oldSize = size;
+        System.arraycopy(list, index, list, index + c.size(), size - index);
+        int updateIndex = index;
+        for(E o : c) {
+            Objects.requireNonNull(o);
+            list[updateIndex++] = o;
+        }
+        size += c.size();
+        return size != oldSize;
+    }
+
+    /**
+     * Reduces the size of the array when removing items.
+     */
+    private void reduce() {
+        int newCapacity = Math.max(capacity / GROWTH_FACTOR, MINIMUM_CAPACITY);
+        E[] temp = (E[]) Array.newInstance(Object.class, newCapacity);
+        System.arraycopy(list, 0, temp, 0, size);
+        list = temp;
+        capacity = newCapacity;
+    }
+
+    /**
      * A custom implementation of ListIterator
      */
     private class CustomListIterator implements ListIterator<E> {
@@ -577,8 +539,7 @@ public class CustomList<E> implements List<E> {
         }
 
         public void add(E e) {
-            if (e == null)
-                throw new NullPointerException();
+            Objects.requireNonNull(e);
             ensureCapacity(size + 1);
             System.arraycopy(list, index, list, index + 1, size - index);
             list[index] = e;
@@ -622,9 +583,7 @@ public class CustomList<E> implements List<E> {
         }
 
         public void remove() {
-            if (!canModify)
-                throw new IllegalStateException();
-            if (lastReturned < 0 || lastReturned >= size)
+            if (!canModify || lastReturned < 0 || lastReturned >= size)
                 throw new IllegalStateException();
             for (int i = lastReturned; i < size - 1; i++)
                 list[i] = list[i + 1];
@@ -637,12 +596,8 @@ public class CustomList<E> implements List<E> {
         }
 
         public void set(E e) {
-            if (!canModify)
-                throw new IllegalStateException();
-            if (lastReturned < 0 || lastReturned >= size)
-                throw new IllegalStateException();
-            if (e == null)
-                throw new NullPointerException();
+            Objects.requireNonNull(e);
+            if (!canModify || lastReturned < 0 || lastReturned >= size) throw new IllegalStateException();
             list[lastReturned] = e;
         }
     }
