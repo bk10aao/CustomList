@@ -91,7 +91,7 @@ All methods implemented are identical to those found in the Java [List](https://
 
 # Performance Charts
 
-#### Note: The following performance charts designed to be viewed in dark mode.
+#### Note: The following performance charts are designed to be viewed in dark mode.
 
 ![Combined Performance Charts](PerformanceTesting/add(int,%20T).png)
 ![Combined Performance Charts](PerformanceTesting/add(T).png)
