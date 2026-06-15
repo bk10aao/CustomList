@@ -43,7 +43,6 @@ public class CustomListPerformanceTest {
 
         for (int si = 0; si < SIZES.length; si++) {
             int size = SIZES[si];
-            // Skip large sizes in warmup to avoid quadratic bottlenecks
             if (isWarmup && size > 5000) continue;
 
             System.out.println("Processing collection size element layer: " + size);
@@ -71,10 +70,10 @@ public class CustomListPerformanceTest {
         List<Integer> target = isCustom ? new CustomList<>() : new ArrayList<>();
         int typeIdx = isCustom ? 0 : 1;
         long start, end;
-        int cap = Math.min(size, 10000); // Prevents O(N^2) hangs
+        int cap = Math.min(size, 10000);
 
         // 0. add(T)
-        start = System.nanoTime(); for (int i = 0; i < size; i++) target.add(i); end = System.nanoTime(); deltaMap[si][0][typeIdx] += (end - start);
+        target.clear(); start = System.nanoTime(); for (int i = 0; i < size; i++) target.add(i); end = System.nanoTime(); deltaMap[si][0][typeIdx] += (end - start);
         // 1. add(int, T)
         target.clear(); start = System.nanoTime(); for (int i = 0; i < size; i++) target.add(0, i); end = System.nanoTime(); deltaMap[si][1][typeIdx] += (end - start);
         // 2. addAll
@@ -99,9 +98,11 @@ public class CustomListPerformanceTest {
         // 10. iterator
         start = System.nanoTime(); var it = target.iterator(); while(it.hasNext()) blackholeToken += it.next(); end = System.nanoTime(); deltaMap[si][10][typeIdx] += (end - start);
 
-        // 11-13. ListIterator ops
+        // 11. listIterator().add(T)
+        target.clear(); var lit = target.listIterator(); start = System.nanoTime(); for(int i=0; i<size; i++) lit.add(i); end = System.nanoTime(); deltaMap[si][11][typeIdx] += (end - start);
+
+        // 12-13. ListIterator ops
         target.clear(); target.addAll(sampleList);
-        var lit = target.listIterator(); start = System.nanoTime(); for(int i=0; i<size; i++) lit.add(i); end = System.nanoTime(); deltaMap[si][11][typeIdx] += (end - start);
         lit = target.listIterator(); start = System.nanoTime(); while(lit.hasNext()){ lit.next(); lit.set(1); } end = System.nanoTime(); deltaMap[si][12][typeIdx] += (end - start);
         lit = target.listIterator(); start = System.nanoTime(); while(lit.hasNext()){ lit.next(); lit.remove(); } end = System.nanoTime(); deltaMap[si][13][typeIdx] += (end - start);
 
@@ -110,14 +111,25 @@ public class CustomListPerformanceTest {
         start = System.nanoTime(); for(int i=0; i<cap; i++) blackholeToken += target.lastIndexOf(i); end = System.nanoTime(); deltaMap[si][14][typeIdx] += (end - start);
         // 15. remove(int)
         start = System.nanoTime(); for(int i=size-1; i>=0; i--) target.remove(i); end = System.nanoTime(); deltaMap[si][15][typeIdx] += (end - start);
-        // 16. remove(T) - Only for small sizes
+        // 16. remove(T)
         if(size <= 50000) { target.addAll(sampleList); start = System.nanoTime(); for(int i=0; i<size; i++) target.remove(Integer.valueOf(i)); end = System.nanoTime(); deltaMap[si][16][typeIdx] += (end - start); }
 
-        // 17-25. Remaining
+        // 17-18. RemoveAll/RetainAll
         target.clear(); target.addAll(sampleList);
         start = System.nanoTime(); target.removeAll(subMatchList); end = System.nanoTime(); deltaMap[si][17][typeIdx] += (end - start);
         start = System.nanoTime(); target.retainAll(subMatchList); end = System.nanoTime(); deltaMap[si][18][typeIdx] += (end - start);
-        start = System.nanoTime(); for(int i=0; i<target.size(); i++) target.set(i, i); end = System.nanoTime(); deltaMap[si][19][typeIdx] += (end - start);
+
+        // 19. set(int, T) - FIXED TO PREVENT DEAD CODE ELIMINATION
+        target.clear(); target.addAll(sampleList);
+        start = System.nanoTime();
+        for(int i=0; i<target.size(); i++) {
+            // Using hashcode() on the returned object forces the compiler to run the 'set' operation
+            blackholeToken += target.set(i, i).hashCode();
+        }
+        end = System.nanoTime();
+        deltaMap[si][19][typeIdx] += (end - start);
+
+        // 20-25. Remaining
         start = System.nanoTime(); blackholeToken += target.size(); end = System.nanoTime(); deltaMap[si][20][typeIdx] += (end - start);
         start = System.nanoTime(); blackholeToken += target.subList(0, Math.min(size, 1)/2 + (size>0?0:0)).size(); end = System.nanoTime(); deltaMap[si][21][typeIdx] += (end - start);
         start = System.nanoTime(); blackholeToken += target.toArray().length; end = System.nanoTime(); deltaMap[si][22][typeIdx] += (end - start);
@@ -134,7 +146,7 @@ public class CustomListPerformanceTest {
                 StringBuilder row = new StringBuilder();
                 row.append(SIZES[i]);
                 for (int j = 0; j < METHOD_NAMES.length; j++) {
-                    row.append(";").append(results[i][j][0]); // Printing CustomList results
+                    row.append(";").append(results[i][j][0]);
                 }
                 writer.write(row.toString());
                 writer.newLine();

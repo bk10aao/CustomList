@@ -24,7 +24,9 @@ import java.util.Objects;
  * Repository - <a href="https://github.com/bk10aao/CustomList"/>
  * <E> – the type of elements in this list
  */
-public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable{
+public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable {
+
+    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
     private int capacity;
 
@@ -499,13 +501,22 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
     }
 
     private void ensureCapacity(int minCapacity) {
-        if (minCapacity > capacity) {
-            int newCapacity = Math.max(capacity + (capacity >> 1), minCapacity);
-            if(newCapacity < 32)
-                newCapacity = 32;
+        if (minCapacity - list.length > 0) {
+            int oldCapacity = list.length;
+            int newCapacity = oldCapacity + (oldCapacity >> 1);
+            if (newCapacity - minCapacity < 0)
+                newCapacity = minCapacity;
+            if (newCapacity - MAX_ARRAY_SIZE > 0)
+                newCapacity = hugeCapacity(minCapacity);
             list = Arrays.copyOf(list, newCapacity);
-            capacity = newCapacity;
+            this.capacity = newCapacity;
         }
+    }
+
+    private static int hugeCapacity(int minCapacity) {
+        if (minCapacity < 0)
+            throw new OutOfMemoryError();
+        return (minCapacity > MAX_ARRAY_SIZE) ? Integer.MAX_VALUE : MAX_ARRAY_SIZE;
     }
 
     private boolean insert(int index, Collection<? extends E> c) {
