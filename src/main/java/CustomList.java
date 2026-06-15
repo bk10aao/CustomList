@@ -479,7 +479,8 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @return a string in the format {@code CustomList{size=<size>, list=<elements>}}
      */
     public String toString() {
-
+        if(size == 0)
+            return "CustomList{size=0, list=[]}";
         StringBuilder sb = new StringBuilder("CustomList{size=").append(size).append(", list=[");
         for(int i = 0; i < size; i++) {
             sb.append(list[i]);
@@ -522,15 +523,15 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
         if(c.isEmpty())
             return false;
         Object[] a = c.toArray();
-        int numNew = a.length;
+        int newSize = a.length;
         for(Object o : a)
             Objects.requireNonNull(o);
-        ensureCapacity(size + numNew);
+        ensureCapacity(size + newSize);
         int numMoved = size - index;
         if(numMoved > 0)
-            System.arraycopy(list, index, list, index + numNew, numMoved);
-        System.arraycopy(a, 0, list, index, numNew);
-        size += numNew;
+            System.arraycopy(list, index, list, index + newSize, numMoved);
+        System.arraycopy(a, 0, list, index, newSize);
+        size += newSize;
         return true;
     }
 
