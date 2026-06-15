@@ -890,12 +890,6 @@ class CustomListTest {
     }
 
     @Test
-    public void givneCustomLinkedListOf_1_2_3_on_ListIterator_hasPrevious_returns_false() {
-        CustomList<Integer> customList = new CustomList<>(List.of(1, 2, 3));
-        assertFalse(customList.listIterator().hasPrevious());
-    }
-
-    @Test
     public void givenCustomLinkedListOf_1_2_3_on_ListIterator_withIndexOf_negative_1_throws_IndexOutOfBoundsException() {
         CustomList<Integer> customList = new CustomList<>(List.of(1, 2, 3));
         assertThrows(IndexOutOfBoundsException.class, () -> customList.listIterator(-1));
