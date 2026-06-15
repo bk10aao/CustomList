@@ -24,11 +24,10 @@ import java.util.Objects;
  * Repository - <a href="https://github.com/bk10aao/CustomList"/>
  * <E> – the type of elements in this list
  */
-public class CustomList<E> implements List<E> {
+public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable{
 
-    private int capacity = 32;
+    private int capacity;
 
-    private static final int GROWTH_FACTOR = 10;
     private static final int MINIMUM_CAPACITY = 32;
     private int size = 0;
 
@@ -38,7 +37,9 @@ public class CustomList<E> implements List<E> {
      * Constructs an empty list.
      */
     public CustomList() {
-        this.list = new Object[MINIMUM_CAPACITY];    }
+        this.list = new Object[MINIMUM_CAPACITY];
+        this.capacity = MINIMUM_CAPACITY;
+    }
 
     /**
      * Constructs an empty list with the specified initial capacity.
@@ -53,7 +54,7 @@ public class CustomList<E> implements List<E> {
     /**
      * Constructs a list and adds all items from collection.
      *
-     * @param values the intial items to add to list
+     * @param values the initial items to add to list
      * @throws NullPointerException on null list
      */
     public CustomList(final Collection<? extends E> values) {
@@ -105,16 +106,7 @@ public class CustomList<E> implements List<E> {
      */
     public boolean addAll(final Collection<? extends E> values) {
         Objects.requireNonNull(values);
-        if(values.isEmpty())
-            return false;
-        ensureCapacity(size + values.size());
-        boolean modified = false;
-        for (E value : values) {
-            Objects.requireNonNull(value);
-            list[size++] = value;
-            modified = true;
-        }
-        return modified;
+        return insert(size, values);
     }
 
     /**
@@ -131,8 +123,6 @@ public class CustomList<E> implements List<E> {
     public boolean addAll(int index, Collection<? extends E> c) {
         Objects.requireNonNull(c);
         checkIndexInnerRange(index);
-        if(index == size)
-            return addAll(c);
         return insert(index, c);
     }
 
@@ -140,9 +130,10 @@ public class CustomList<E> implements List<E> {
      * Removes all elements from this list.
      */
     public void clear() {
-        this.list = new Object[MINIMUM_CAPACITY];
-        capacity = MINIMUM_CAPACITY;
-        size = 0;
+        if (size > 0) {
+            Arrays.fill(list, 0, size, null);
+            size = 0;
+        }
     }
 
     /**
@@ -150,7 +141,15 @@ public class CustomList<E> implements List<E> {
      */
     @Override
     public CustomList clone() {
-        return new CustomList<>(this);
+        try {
+            CustomList<E> clone = (CustomList<E>) super.clone();
+            clone.list = Arrays.copyOf(this.list, this.capacity);
+            clone.size = this.size;
+            clone.capacity = this.capacity;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new InternalError(e);
+        }
     }
 
     /**
@@ -195,6 +194,12 @@ public class CustomList<E> implements List<E> {
             return false;
         if (size != other.size())
             return false;
+        if (o instanceof CustomList<?> otherCustom) {
+            for (int i = 0; i < size; i++)
+                if (!list[i].equals(otherCustom.list[i]))
+                    return false;
+            return true;
+        }
         Iterator<?> otherIterator = other.iterator();
         for (int i = 0; i < size; i++)
             if (!Objects.equals(list[i], otherIterator.next()))
@@ -345,10 +350,11 @@ public class CustomList<E> implements List<E> {
         Objects.requireNonNull(c);
         if (c.isEmpty())
             return false;
+        java.util.Set<?> set = (c instanceof java.util.Set) ? (java.util.Set<?>) c : new java.util.HashSet<>(c);
         boolean changed = false;
         int index = 0;
         for (int r = 0; r < size; r++)
-            if (!c.contains(list[r]))
+            if (!set.contains(list[r]))
                 list[index++] = list[r];
             else
                 changed = true;
@@ -423,14 +429,10 @@ public class CustomList<E> implements List<E> {
      * @throws IndexOutOfBoundsException if {@code fromIndex < 0}, {@code toIndex > size()},
      * or {@code fromIndex > toIndex}
      */
-    public CustomList<E> subList(final int fromIndex, final int toIndex) {
+    public List<E> subList(final int fromIndex, final int toIndex) {
         if (fromIndex < 0 || toIndex > size || fromIndex > toIndex)
             throw new IndexOutOfBoundsException();
-        int subListSize = toIndex - fromIndex;
-        CustomList<E> subList = new CustomList<>(subListSize);
-        System.arraycopy(list, fromIndex, subList.list, 0, subListSize);
-        subList.size = subListSize;
-        return subList;
+        return new SubList(fromIndex, toIndex);
     }
 
     /**
@@ -465,7 +467,8 @@ public class CustomList<E> implements List<E> {
         if (a.length < size)
             return (T[]) Arrays.copyOf(list, size, a.getClass());
         System.arraycopy(list, 0, a, 0, size);
-        Arrays.fill(a, size, a.length,null);
+        if (a.length > size)
+            a[size] = null;
         return a;
     }
 
@@ -495,47 +498,39 @@ public class CustomList<E> implements List<E> {
             throw new IndexOutOfBoundsException();
     }
 
-    private void ensureCapacity(int required) {
-        if (required > capacity) {
-            int newCapacity = Math.max(required, Math.max(capacity * GROWTH_FACTOR, MINIMUM_CAPACITY));
-            Object[] temp = new Object[newCapacity];
-            System.arraycopy(list, 0, temp, 0, size);
-            list = temp;
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > capacity) {
+            int newCapacity = Math.max(capacity + (capacity >> 1), minCapacity);
+            if(newCapacity < 32)
+                newCapacity = 32;
+            list = Arrays.copyOf(list, newCapacity);
             capacity = newCapacity;
         }
     }
 
-    /**
-     * Inserts, shifts and resizes list based on insertion index.
-     * @param index the index for collection to be inserted into
-     * @param c the collection of values to be inserted
-     * @return true if list has changed
-     */
     private boolean insert(int index, Collection<? extends E> c) {
         if(c.isEmpty())
             return false;
-        ensureCapacity(size + c.size());
-        System.arraycopy(list, index, list, index + c.size(), size - index);
-        int updateIndex = index;
-        for(E o : c) {
+        Object[] a = c.toArray();
+        int numNew = a.length;
+        for (Object o : a)
             Objects.requireNonNull(o);
-            list[updateIndex++] = o;
-        }
-        size += c.size();
+        ensureCapacity(size + numNew);
+        int numMoved = size - index;
+        if (numMoved > 0)
+            System.arraycopy(list, index, list, index + numNew, numMoved);
+        System.arraycopy(a, 0, list, index, numNew);
+        size += numNew;
+
         return true;
     }
 
-    /**
-     * Reduces the size of the array when removing items.
-     */
     private void reduce() {
-        int newCapacity = Math.max(capacity / GROWTH_FACTOR, MINIMUM_CAPACITY);
-        if (size > newCapacity)
-            newCapacity = size;
-        Object[] temp = new Object[newCapacity];
-        System.arraycopy(list, 0, temp, 0, size);
-        list = temp;
-        capacity = newCapacity;
+        int newCapacity = Math.max(capacity >> 1, MINIMUM_CAPACITY);
+        if(newCapacity < capacity) {
+            list = Arrays.copyOf(list, newCapacity);
+            capacity = newCapacity;
+        }
     }
 
     /**
@@ -595,12 +590,12 @@ public class CustomList<E> implements List<E> {
         }
 
         public void remove() {
-            if (!canModify || lastReturned < 0 || lastReturned >= size)
+            if(!canModify || lastReturned < 0 || lastReturned >= size)
                 throw new IllegalStateException();
-            for (int i = lastReturned; i < size - 1; i++)
-                list[i] = list[i + 1];
-            list[size - 1] = null;
-            size--;
+            int numMoved = size - lastReturned - 1;
+            if(numMoved > 0)
+                System.arraycopy(list, lastReturned + 1, list, lastReturned, numMoved);
+            list[--size] = null;
             index = lastReturned;
             canModify = false;
             if (size < capacity / 2 && capacity > MINIMUM_CAPACITY)
@@ -612,6 +607,87 @@ public class CustomList<E> implements List<E> {
             if (!canModify || lastReturned < 0 || lastReturned >= size)
                 throw new IllegalStateException();
             list[lastReturned] = e;
+        }
+    }
+
+    private class SubList extends java.util.AbstractList<E> implements java.util.RandomAccess {
+        private final int offset;
+        private int subSize;
+
+        public SubList(int fromIndex, int toIndex) {
+            this.offset = fromIndex;
+            this.subSize = toIndex - fromIndex;
+        }
+
+        @Override
+        public E get(int index) {
+            checkIndexInRange(index);
+            return CustomList.this.get(offset + index);
+        }
+
+        @Override
+        public void clear() {
+            if (subSize == 0) return;
+            int tailSize = CustomList.this.size - (offset + subSize);
+            if (tailSize > 0)
+                System.arraycopy(CustomList.this.list, offset + subSize, CustomList.this.list, offset, tailSize);
+            int newParentSize = CustomList.this.size - subSize;
+            Arrays.fill(CustomList.this.list, newParentSize, CustomList.this.size, null);
+            CustomList.this.size = newParentSize;
+            subSize = 0;
+            if (CustomList.this.size < CustomList.this.capacity / 2 && CustomList.this.capacity > MINIMUM_CAPACITY)
+                CustomList.this.reduce();
+        }
+
+        @Override
+        public int size() {
+            return subSize;
+        }
+
+        @Override
+        public E set(int index, E element) {
+            checkIndexInRange(index);
+            return CustomList.this.set(offset + index, element);
+        }
+
+        @Override
+        public void add(int index, E element) {
+            checkIndexInnerRange(index);
+            CustomList.this.add(offset + index, element);
+            subSize++;
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends E> c) {
+            return addAll(subSize, c);
+        }
+
+        @Override
+        public boolean addAll(int index, Collection<? extends E> c) {
+            checkIndexInnerRange(index);
+            if (c.isEmpty())
+                return false;
+            CustomList.this.addAll(offset + index, c);
+            subSize += c.size();
+            return true;
+        }
+
+        @Override
+        public E remove(int index) {
+            checkIndexInRange(index);
+            E result = CustomList.this.remove(offset + index);
+            subSize--;
+            return result;
+        }
+
+        private void checkIndexInRange(int index) {
+            if (index < 0 || index >= subSize)
+                throw new IndexOutOfBoundsException();
+        }
+
+        private void checkIndexInnerRange(int index) {
+            if (index < 0 || index > subSize)
+                throw new IndexOutOfBoundsException();
         }
     }
 }

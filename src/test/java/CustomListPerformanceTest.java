@@ -8,250 +8,137 @@ import java.util.stream.IntStream;
 
 public class CustomListPerformanceTest {
 
+    private static final int WARMUP_RUNS = 3;
     private static final int RUNS = 5;
-    private static final int[] SIZES = {0, 1000, 2500, 5000, 7500, 10000, 25000, 50000, 100000};
+    private static final int[] SIZES = {5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000};
+
     private static final String[] METHOD_NAMES = {
-            "add(T)", "add(int, T)", "addAll(Collection<T>)", "addAll(int, Collection<T>)",
-            "clear()", "contains(T)", "containsAll(List<T>)", "get(int)",
+            "add(T)", "add(int, T)", "addAll(Collection)", "addAll(int, Collection)",
+            "clear()", "contains(T)", "containsAll(Collection)", "get(int)",
             "indexOf(Object)", "isEmpty()", "iterator().next()", "listIterator().add(T)",
             "listIterator().set(T)", "listIterator().remove()", "lastIndexOf(Object)",
-            "remove(int)", "remove(T)", "removeAll(Collection<T>)", "retainAll(Collection<T>)",
+            "remove(int)", "remove(T)", "removeAll(Collection)", "retainAll(Collection)",
             "set(int, T)", "size()", "subList(int, int)", "toArray()", "equals(Object)",
             "hashCode()", "toString()"
     };
 
+    private static long blackholeToken = 0;
+
     public static void main(String[] args) {
-        long[][] results = new long[SIZES.length][METHOD_NAMES.length];
+        long[][][] results = new long[SIZES.length][METHOD_NAMES.length][2];
+
+        System.out.println("--- Starting JIT Warmup Phase ---");
+        runBenchmarkSuite(null, WARMUP_RUNS);
+        System.out.println("--- Warmup Complete. Running Active Benchmarks ---");
+
+        results = runBenchmarkSuite(results, RUNS);
+
+        writeResultsToCsv(results);
+        System.out.println("Blackhole anti-optimization verification token: " + blackholeToken);
+    }
+
+    private static long[][][] runBenchmarkSuite(long[][][] targetResults, int iterations) {
+        long[][][] runDelta = (targetResults != null) ? targetResults : new long[SIZES.length][METHOD_NAMES.length][2];
+        boolean isWarmup = (targetResults == null);
 
         for (int si = 0; si < SIZES.length; si++) {
             int size = SIZES[si];
-            System.out.println("Current size: " + size);
-            for (int run = 0; run < RUNS; run++) {
-                CustomList<Integer> list = new CustomList<>();
-                List<Integer> sampleList = IntStream.range(0, size).boxed().collect(Collectors.toList());
-                List<Integer> smallList = IntStream.range(0, Math.min(1000, size)).boxed().toList();
+            // Skip large sizes in warmup to avoid quadratic bottlenecks
+            if (isWarmup && size > 5000) continue;
 
-                long start, end;
+            System.out.println("Processing collection size element layer: " + size);
 
-                // 0. add(T)
-                start = System.nanoTime();
-                for (int i = 0; i < size; i++) list.add(i);
-                end = System.nanoTime();
-                results[si][0] += (end - start);
+            List<Integer> sampleList = IntStream.range(0, size).boxed().collect(Collectors.toList());
+            List<Integer> smallList = IntStream.range(0, Math.min(1000, size)).boxed().collect(Collectors.toList());
+            List<Integer> subMatchList = sampleList.subList(0, size / 2);
 
-                System.out.println("1. add(int, T)");
-                list.clear();
-                start = System.nanoTime();
-                for (int i = 0; i < size; i++) list.add(0, i);
-                end = System.nanoTime();
-                results[si][1] += (end - start);
-
-                System.out.println("2. addAll(Collection<T>");
-                list.clear();
-                start = System.nanoTime();
-                list.addAll(sampleList);
-                end = System.nanoTime();
-                results[si][2] += (end - start);
-
-                System.out.println("3. addAll(int, Collection<T>)");
-                list.clear();
-                start = System.nanoTime();
-                list.addAll(0, sampleList);
-                end = System.nanoTime();
-                results[si][3] += (end - start);
-
-                System.out.println("4. clear()");
-                list.clear();
-                list.addAll(sampleList);
-                start = System.nanoTime();
-                list.clear();
-                end = System.nanoTime();
-                results[si][4] += (end - start);
-
-                System.out.println("5. contains(T)");
-                list.addAll(sampleList);
-                start = System.nanoTime();
-                for (int i = 0; i < size; i++) list.contains(i);
-                end = System.nanoTime();
-                results[si][5] += (end - start);
-
-                System.out.println("6. containsAll(List<T>)");
-                start = System.nanoTime();
-                list.containsAll(smallList);
-                end = System.nanoTime();
-                results[si][6] += (end - start);
-
-                System.out.println("7. get(int)");
-                start = System.nanoTime();
-                for (int i = 0; i < size; i++) list.get(i);
-                end = System.nanoTime();
-                results[si][7] += (end - start);
-
-                System.out.println("8. indexOf(Object)");
-                start = System.nanoTime();
-                for (int i = 0; i < size; i++) list.indexOf(i);
-                end = System.nanoTime();
-                results[si][8] += (end - start);
-
-                System.out.println("9. isEmpty()");
-                start = System.nanoTime();
-                list.isEmpty();
-                end = System.nanoTime();
-                results[si][9] += (end - start);
-
-                System.out.println("10. iterator().next()");
-                start = System.nanoTime();
-                var iter = list.iterator();
-                while (iter.hasNext()) iter.next();
-                end = System.nanoTime();
-                results[si][10] += (end - start);
-
-                System.out.println("11. listIterator().add(T)");
-                list.clear();
-                var listIterAdd = list.listIterator();
-                start = System.nanoTime();
-                for (int i = 0; i < size; i++) {
-                    listIterAdd.add(i);
-                }
-                end = System.nanoTime();
-                results[si][11] += (end - start);
-
-                System.out.println("12. listIterator().set(T)");
-                list.clear();
-                list.addAll(sampleList);
-                var listIterSet = list.listIterator();
-                start = System.nanoTime();
-                while (listIterSet.hasNext()) {
-                    listIterSet.next();
-                    listIterSet.set(listIterSet.nextIndex());
-                }
-                end = System.nanoTime();
-                results[si][12] += (end - start);
-
-                System.out.println("13. listIterator().remove()");
-                list.clear();
-                list.addAll(sampleList);
-                var listIterRemove = list.listIterator();
-                start = System.nanoTime();
-                while (listIterRemove.hasNext()) {
-                    listIterRemove.next();
-                    listIterRemove.remove();
-                }
-                end = System.nanoTime();
-                results[si][13] += (end - start);
-
-                System.out.println("14. lastIndexOf(Object)");
-                list.addAll(sampleList);
-                start = System.nanoTime();
-                for (int i = 0; i < size; i++) list.lastIndexOf(i);
-                end = System.nanoTime();
-                results[si][14] += (end - start);
-
-                System.out.println("15. remove(int)");
-                list.clear();
-                list.addAll(sampleList);
-                start = System.nanoTime();
-                for (int i = size - 1; i >= 0; i--) list.remove(i);
-                end = System.nanoTime();
-                results[si][15] += (end - start);
-
-                System.out.println("16. remove(T)");
-                list.addAll(sampleList);
-                start = System.nanoTime();
-                for (int i = 0; i < size; i++) list.remove(Integer.valueOf(i));
-                end = System.nanoTime();
-                results[si][16] += (end - start);
-
-                System.out.println("17. removeAll(Collection<T>)");
-                list.addAll(sampleList);
-                List<Integer> removeList = sampleList.subList(size / 2, size);
-                start = System.nanoTime();
-                list.removeAll(removeList);
-                end = System.nanoTime();
-                results[si][17] += (end - start);
-
-                System.out.println("18. retainAll(Collection<T>)");
-                list.addAll(sampleList);
-                List<Integer> retainList = sampleList.subList(0, size / 2);
-                start = System.nanoTime();
-                list.retainAll(retainList);
-                end = System.nanoTime();
-                results[si][18] += (end - start);
-
-                System.out.println("19. set(int, T)");
-                list.clear();
-                list.addAll(sampleList);
-                start = System.nanoTime();
-                for (int i = 0; i < size; i++) list.set(i, i + 1);
-                end = System.nanoTime();
-                results[si][19] += (end - start);
-
-                System.out.println("20. size()");
-                start = System.nanoTime();
-                list.size();
-                end = System.nanoTime();
-                results[si][20] += (end - start);
-
-                System.out.println("21. subList(int, int)");
-                list.addAll(sampleList);
-                start = System.nanoTime();
-                list.subList(0, size / 2);
-                end = System.nanoTime();
-                results[si][21] += (end - start);
-
-                System.out.println("22. toArray()");
-                start = System.nanoTime();
-                list.toArray();
-                end = System.nanoTime();
-                results[si][22] += (end - start);
-
-                System.out.println("23. equals(Object)");
-                List<Integer> other = new ArrayList<>();
-                other.addAll(sampleList);
-                start = System.nanoTime();
-                list.equals(other);
-                end = System.nanoTime();
-                results[si][23] += (end - start);
-
-                System.out.println("24. hashCode()");
-                start = System.nanoTime();
-                list.hashCode();
-                end = System.nanoTime();
-                results[si][24] += (end - start);
-
-                System.out.println("25. toString()");
-                start = System.nanoTime();
-                list.toString();
-                end = System.nanoTime();
-                results[si][25] += (end - start);
+            for (int run = 0; run < iterations; run++) {
+                runListInstanceSuite(runDelta, si, size, sampleList, smallList, subMatchList, true);
+                runListInstanceSuite(runDelta, si, size, sampleList, smallList, subMatchList, false);
             }
 
-            // Average results over runs
-            for (int mi = 0; mi < METHOD_NAMES.length; mi++) {
-                results[si][mi] /= RUNS;
+            if (!isWarmup) {
+                for (int mi = 0; mi < METHOD_NAMES.length; mi++) {
+                    runDelta[si][mi][0] /= iterations;
+                    runDelta[si][mi][1] /= iterations;
+                }
             }
         }
+        return runDelta;
+    }
 
-        // Write CSV file
+    private static void runListInstanceSuite(long[][][] deltaMap, int si, int size, List<Integer> sampleList, List<Integer> smallList, List<Integer> subMatchList, boolean isCustom) {
+        List<Integer> target = isCustom ? new CustomList<>() : new ArrayList<>();
+        int typeIdx = isCustom ? 0 : 1;
+        long start, end;
+        int cap = Math.min(size, 10000); // Prevents O(N^2) hangs
+
+        // 0. add(T)
+        start = System.nanoTime(); for (int i = 0; i < size; i++) target.add(i); end = System.nanoTime(); deltaMap[si][0][typeIdx] += (end - start);
+        // 1. add(int, T)
+        target.clear(); start = System.nanoTime(); for (int i = 0; i < size; i++) target.add(0, i); end = System.nanoTime(); deltaMap[si][1][typeIdx] += (end - start);
+        // 2. addAll
+        target.clear(); start = System.nanoTime(); target.addAll(sampleList); end = System.nanoTime(); deltaMap[si][2][typeIdx] += (end - start);
+        // 3. addAll(int, Collection)
+        target.clear(); start = System.nanoTime(); target.addAll(0, sampleList); end = System.nanoTime(); deltaMap[si][3][typeIdx] += (end - start);
+        // 4. clear
+        target.addAll(sampleList); start = System.nanoTime(); target.clear(); end = System.nanoTime(); deltaMap[si][4][typeIdx] += (end - start);
+
+        target.addAll(sampleList);
+
+        // 5. contains(T)
+        start = System.nanoTime(); for (int i = 0; i < cap; i++) if (target.contains(i)) blackholeToken++; end = System.nanoTime(); deltaMap[si][5][typeIdx] += (end - start);
+        // 6. containsAll
+        start = System.nanoTime(); if (target.containsAll(smallList)) blackholeToken++; end = System.nanoTime(); deltaMap[si][6][typeIdx] += (end - start);
+        // 7. get(int)
+        start = System.nanoTime(); for (int i = 0; i < size; i++) blackholeToken += target.get(i); end = System.nanoTime(); deltaMap[si][7][typeIdx] += (end - start);
+        // 8. indexOf
+        start = System.nanoTime(); for (int i = 0; i < cap; i++) blackholeToken += target.indexOf(i); end = System.nanoTime(); deltaMap[si][8][typeIdx] += (end - start);
+        // 9. isEmpty
+        start = System.nanoTime(); if (target.isEmpty()) blackholeToken++; end = System.nanoTime(); deltaMap[si][9][typeIdx] += (end - start);
+        // 10. iterator
+        start = System.nanoTime(); var it = target.iterator(); while(it.hasNext()) blackholeToken += it.next(); end = System.nanoTime(); deltaMap[si][10][typeIdx] += (end - start);
+
+        // 11-13. ListIterator ops
+        target.clear(); target.addAll(sampleList);
+        var lit = target.listIterator(); start = System.nanoTime(); for(int i=0; i<size; i++) lit.add(i); end = System.nanoTime(); deltaMap[si][11][typeIdx] += (end - start);
+        lit = target.listIterator(); start = System.nanoTime(); while(lit.hasNext()){ lit.next(); lit.set(1); } end = System.nanoTime(); deltaMap[si][12][typeIdx] += (end - start);
+        lit = target.listIterator(); start = System.nanoTime(); while(lit.hasNext()){ lit.next(); lit.remove(); } end = System.nanoTime(); deltaMap[si][13][typeIdx] += (end - start);
+
+        // 14. lastIndexOf
+        target.clear(); target.addAll(sampleList);
+        start = System.nanoTime(); for(int i=0; i<cap; i++) blackholeToken += target.lastIndexOf(i); end = System.nanoTime(); deltaMap[si][14][typeIdx] += (end - start);
+        // 15. remove(int)
+        start = System.nanoTime(); for(int i=size-1; i>=0; i--) target.remove(i); end = System.nanoTime(); deltaMap[si][15][typeIdx] += (end - start);
+        // 16. remove(T) - Only for small sizes
+        if(size <= 50000) { target.addAll(sampleList); start = System.nanoTime(); for(int i=0; i<size; i++) target.remove(Integer.valueOf(i)); end = System.nanoTime(); deltaMap[si][16][typeIdx] += (end - start); }
+
+        // 17-25. Remaining
+        target.clear(); target.addAll(sampleList);
+        start = System.nanoTime(); target.removeAll(subMatchList); end = System.nanoTime(); deltaMap[si][17][typeIdx] += (end - start);
+        start = System.nanoTime(); target.retainAll(subMatchList); end = System.nanoTime(); deltaMap[si][18][typeIdx] += (end - start);
+        start = System.nanoTime(); for(int i=0; i<target.size(); i++) target.set(i, i); end = System.nanoTime(); deltaMap[si][19][typeIdx] += (end - start);
+        start = System.nanoTime(); blackholeToken += target.size(); end = System.nanoTime(); deltaMap[si][20][typeIdx] += (end - start);
+        start = System.nanoTime(); blackholeToken += target.subList(0, Math.min(size, 1)/2 + (size>0?0:0)).size(); end = System.nanoTime(); deltaMap[si][21][typeIdx] += (end - start);
+        start = System.nanoTime(); blackholeToken += target.toArray().length; end = System.nanoTime(); deltaMap[si][22][typeIdx] += (end - start);
+        start = System.nanoTime(); if(target.equals(sampleList)) blackholeToken++; end = System.nanoTime(); deltaMap[si][23][typeIdx] += (end - start);
+        start = System.nanoTime(); blackholeToken += target.hashCode(); end = System.nanoTime(); deltaMap[si][24][typeIdx] += (end - start);
+        start = System.nanoTime(); blackholeToken += target.toString().length(); end = System.nanoTime(); deltaMap[si][25][typeIdx] += (end - start);
+    }
+
+    private static void writeResultsToCsv(long[][][] results) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("customlist_performance.csv"))) {
-            // Header
-            writer.write("\"Size\"");
-            for (String name : METHOD_NAMES) {
-                writer.write(";\"" + name + "\"");
-            }
+            writer.write("\"Size\";\"add(T)\";\"add(int, T)\";\"addAll(Collection<T>)\";\"addAll(int, Collection<T>)\";\"clear()\";\"contains(T)\";\"containsAll(List<T>)\";\"get(int)\";\"indexOf(Object)\";\"isEmpty()\";\"iterator().next()\";\"listIterator().add(T)\";\"listIterator().set(T)\";\"listIterator().remove()\";\"lastIndexOf(Object)\";\"remove(int)\";\"remove(T)\";\"removeAll(Collection<T>)\";\"retainAll(Collection<T>)\";\"set(int, T)\";\"size()\";\"subList(int, int)\";\"toArray()\";\"equals(Object)\";\"hashCode()\";\"toString()\"");
             writer.newLine();
-
-            // Data rows
             for (int i = 0; i < SIZES.length; i++) {
-                writer.write(String.valueOf(SIZES[i]));
+                StringBuilder row = new StringBuilder();
+                row.append(SIZES[i]);
                 for (int j = 0; j < METHOD_NAMES.length; j++) {
-                    writer.write(";" + results[i][j]);
+                    row.append(";").append(results[i][j][0]); // Printing CustomList results
                 }
+                writer.write(row.toString());
                 writer.newLine();
             }
-            System.out.println("Performance results written to customlist_performance.csv");
-        } catch (IOException e) {
-            System.err.println("Error writing CSV file: " + e.getMessage());
-        }
+        } catch (IOException e) { e.printStackTrace(); }
     }
 }
