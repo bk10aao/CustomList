@@ -8,7 +8,7 @@ custom_df = pd.read_csv('customlist_performance.csv', sep=';')
 jdk_df = pd.read_csv('list_performance.csv', sep=';')
 
 # Extract input sizes and isolate methods (excluding metadata and 'equals')
-methods = [col for col in custom_df.columns if col not in ['Size', 'equals(Object)']]
+methods = [col for col in custom_df.columns]
 sizes = custom_df['Size'].tolist()
 
 # Construct the relative performance matrix (Log2 ratios)
@@ -73,7 +73,7 @@ sns.heatmap(clipped_heatmap_data,
 
 # Format Title, Labels, and Colorbar styling to match dark/transparent theme guidelines
 ax.set_title(
-    'Performance Speedup Matrix Heatmap Across Sizes\n(Symmetric Scaling Factor Comparison | "equals" Excluded)',
+    'Performance Speedup Matrix Heatmap Across Sizes\n(Symmetric Scaling Factor Comparison)',
     color='#ffffff', fontsize=16, fontweight='bold', pad=20)
 ax.set_ylabel('Benchmark Methods', color='#aaaaaa', fontsize=13, labelpad=10)
 ax.set_xlabel('Collection Size (Elements)', color='#aaaaaa', fontsize=13, labelpad=10)
