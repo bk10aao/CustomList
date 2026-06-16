@@ -155,6 +155,8 @@ Note: all data is an average of 100 runs.
 ![Combined Performance Charts](PerformanceTesting/plot_subList_int_int_.png)
 ![Combined Performance Charts](PerformanceTesting/plot_toArray__.png)
 ![Combined Performance Charts](PerformanceTesting/plot_toString__.png)
+![Heatmap](PerformanceTesting/heatmap.png)
+
 
 
 
