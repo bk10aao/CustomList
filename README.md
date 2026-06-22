@@ -126,9 +126,9 @@ Note: all data is an average of 100 runs.
 | `hashCode()`                 | 51,916.2        | 50,897.9             |  **JDK**   | 1.02x  |
 | `toString()`                 | 585,878.8       | 558,610.5            |  **JDK**   | 1.05x  |
 
-
 #### Note: The following performance charts are designed to be viewed in dark mode.
 ![Combined Performance Charts](PerformanceTesting/geometric_mean.png)
+![Combined Performance Charts](PerformanceTesting/heatmap.png)
 ![Combined Performance Charts](PerformanceTesting/plot_add_T_.png)
 ![Combined Performance Charts](PerformanceTesting/plot_add_int_T_.png)
 ![Combined Performance Charts](PerformanceTesting/plot_addAll_CollectionT_.png)
@@ -155,31 +155,3 @@ Note: all data is an average of 100 runs.
 ![Combined Performance Charts](PerformanceTesting/plot_subList_int_int_.png)
 ![Combined Performance Charts](PerformanceTesting/plot_toArray__.png)
 ![Combined Performance Charts](PerformanceTesting/plot_toString__.png)
-![Heatmap](PerformanceTesting/heatmap.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
