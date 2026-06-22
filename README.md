@@ -99,32 +99,32 @@ Note: all data is an average of 100 runs.
 
 | Method                       | CustomList (ns) | ArrayList (JDK) (ns) |   Winner   | Margin |
 |:-----------------------------|:----------------|:---------------------|:----------:|:------:|
-| `add(T)`                     | 129,842.3       | 134,050.4            | **Custom** | 1.03x  |
-| `add(int, T)`                | 39,987,587.3    | 39,869,189.7         |  **JDK**   |  1.0x  |
-| `addAll(Collection<T>)`      | 17,335.4        | 16,984.0             |  **JDK**   | 1.02x  |
-| `addAll(int, Collection<T>)` | 16,144.4        | 17,117.2             | **Custom** | 1.06x  |
-| `clear()`                    | 40,862.2        | 20,518.7             |  **JDK**   | 1.99x  |
-| `contains(T)`                | 20,741,947.9    | 25,823,647.9         | **Custom** | 1.24x  |
-| `containsAll(List<T>)`       | 251,168.9       | 251,035.2            |  **JDK**   |  1.0x  |
-| `get(int)`                   | 55,673.7        | 81,834.5             | **Custom** | 1.47x  |
-| `indexOf(Object)`            | 27,907,925.4    | 27,420,772.9         |  **JDK**   | 1.02x  |
-| `isEmpty()`                  | 3,591.4         | 2,943.8              |  **JDK**   | 1.22x  |
-| `iterator().next()`          | 118,878.7       | 84,016.3             |  **JDK**   | 1.41x  |
-| `listIterator().add(T)`      | 227,499.6       | 226,641.1            |  **JDK**   |  1.0x  |
-| `listIterator().set(T)`      | 195,600.3       | 168,727.7            |  **JDK**   | 1.16x  |
-| `listIterator().remove()`    | 39,658,450.5    | 39,555,930.3         |  **JDK**   |  1.0x  |
-| `lastIndexOf(Object)`        | 181,425,136.3   | 166,173,874.5        |  **JDK**   | 1.09x  |
-| `remove(int)`                | 123,813.1       | 167,557.9            | **Custom** | 1.35x  |
-| `remove(T)`                  | 40,609,898.8    | 39,832,145.4         |  **JDK**   | 1.02x  |
-| `removeAll(Collection<T>)`   | 210,603.8       | 210,612.9            | **Custom** |  1.0x  |
-| `retainAll(Collection<T>)`   | 157,239.7       | 199,319.5            | **Custom** | 1.27x  |
-| `set(int, T)`                | 176,908.0       | 183,415.4            | **Custom** | 1.04x  |
-| `size()`                     | 27.9            | 138.7                | **Custom** | 4.97x  |
-| `subList(int, int)`          | 3,151.1         | 3,797.9              | **Custom** | 1.21x  |
-| `toArray()`                  | 8,377.2         | 8,395.5              | **Custom** |  1.0x  |
-| `equals(Object)`             | 71,602.9        | 44,334.4             |  **JDK**   | 1.62x  |
-| `hashCode()`                 | 51,916.2        | 50,897.9             |  **JDK**   | 1.02x  |
-| `toString()`                 | 585,878.8       | 558,610.5            |  **JDK**   | 1.05x  |
+| `add(T)`                     | 129842          | 134050               | **Custom** | 1.03x  |
+| `add(int, T)`                | 39987587        | 39869189             |  **Tie**   |  1.0x  |
+| `addAll(Collection<T>)`      | 17335           | 16984                |  **JDK**   | 1.02x  |
+| `addAll(int, Collection<T>)` | 16144           | 17117                | **Custom** | 1.06x  |
+| `clear()`                    | 40862           | 20518                |  **JDK**   | 1.99x  |
+| `contains(T)`                | 20741947        | 25823647             | **Custom** | 1.24x  |
+| `containsAll(List<T>)`       | 251168          | 251035               |  **Tie**   |  1.0x  |
+| `get(int)`                   | 55673           | 81834                | **Custom** | 1.47x  |
+| `indexOf(Object)`            | 27907925        | 27420772             |  **JDK**   | 1.02x  |
+| `isEmpty()`                  | 3591            | 2943                 |  **JDK**   | 1.22x  |
+| `iterator().next()`          | 118878          | 84016                |  **JDK**   | 1.41x  |
+| `listIterator().add(T)`      | 227499          | 226641               |  **JDK**   |  1.0x  |
+| `listIterator().set(T)`      | 195600          | 168727               |  **JDK**   | 1.16x  |
+| `listIterator().remove()`    | 39658450        | 39555930             |  **Tie**   |  1.0x  |
+| `lastIndexOf(Object)`        | 181425136       | 166173874            |  **JDK**   | 1.09x  |
+| `remove(int)`                | 123813          | 167557               | **Custom** | 1.35x  |
+| `remove(T)`                  | 40609898        | 39832145             |  **JDK**   | 1.02x  |
+| `removeAll(Collection<T>)`   | 210603          | 210612               |  **Tie**   |  1.0x  |
+| `retainAll(Collection<T>)`   | 157239          | 199319               | **Custom** | 1.27x  |
+| `set(int, T)`                | 176908          | 183415               | **Custom** | 1.04x  |
+| `size()`                     | 27              | 138                  | **Custom** | 4.97x  |
+| `subList(int, int)`          | 3151            | 3797                 | **Custom** | 1.21x  |
+| `toArray()`                  | 8377            | 8395                 |  **Tie**   |  1.0x  |
+| `equals(Object)`             | 71602           | 44334                |  **JDK**   | 1.62x  |
+| `hashCode()`                 | 51916           | 50897                |  **JDK**   | 1.02x  |
+| `toString()`                 | 585878          | 558610               |  **JDK**   | 1.05x  |
 
 #### Note: The following performance charts are designed to be viewed in dark mode.
 ![Combined Performance Charts](PerformanceTesting/geometric_mean.png)
