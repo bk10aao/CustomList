@@ -110,7 +110,7 @@ Note: all data is an average of 100 runs.
 | `indexOf(Object)`            | 27907925        | 27420772             |  **JDK**   | 1.02x  |
 | `isEmpty()`                  | 3591            | 2943                 |  **JDK**   | 1.22x  |
 | `iterator().next()`          | 118878          | 84016                |  **JDK**   | 1.41x  |
-| `listIterator().add(T)`      | 227499          | 226641               |  **JDK**   |  1.0x  |
+| `listIterator().add(T)`      | 227499          | 226641               |  **Tie**   |  1.0x  |
 | `listIterator().set(T)`      | 195600          | 168727               |  **JDK**   | 1.16x  |
 | `listIterator().remove()`    | 39658450        | 39555930             |  **Tie**   |  1.0x  |
 | `lastIndexOf(Object)`        | 181425136       | 166173874            |  **JDK**   | 1.09x  |
