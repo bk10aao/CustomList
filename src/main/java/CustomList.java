@@ -49,6 +49,8 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @param initialCapacity  the initial capacity of the list
      **/
     public CustomList(final int initialCapacity) {
+        if(initialCapacity < 0)
+            throw new IllegalArgumentException();
         this.capacity = Math.max(initialCapacity, MINIMUM_CAPACITY);
         this.list = new Object[capacity];
     }

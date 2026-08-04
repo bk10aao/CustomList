@@ -27,6 +27,16 @@ class CustomListTest {
     }
 
     @Test
+    public void givenConstructor_withNegativeSize_throwsInvalidArguementException() {
+        assertThrows(IllegalArgumentException.class, () -> new CustomList<>(-1));
+    }
+
+    @Test
+    public void givenConstructor_withInitialCapactity_10_constructsList_withSizeOf_0() {
+        assertEquals(0, new CustomList<>(10).size());
+    }
+
+    @Test
     public void givenConstructorWithCollectionParameter_onNullCollection_throws_NullPointerException() {
         assertThrows(NullPointerException.class, () -> new CustomList<Integer>(null));
     }

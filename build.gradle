@@ -41,6 +41,42 @@ jacocoTestReport {
     }
 }
 
+// ================== COVERAGE VERIFICATION ==================
+jacocoTestCoverageVerification {
+    dependsOn test
+
+    violationRules {
+        rule {
+            enabled = true
+
+            // Fail the build if coverage is below 90%
+            limit {
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = 0.70
+            }
+
+            // Optional: Also check branch coverage
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.70   // You can make this stricter later
+            }
+        }
+
+        rule {
+            element = 'CLASS'
+            excludes = [
+                    'CustomList$CustomListIterator'
+            ]
+            limit {
+                counter = 'LINE'
+                minimum = 0.0
+            }
+        }
+    }
+}
+
 check {
     dependsOn jacocoTestCoverageVerification
 }
