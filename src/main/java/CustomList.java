@@ -433,7 +433,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
     public List<E> subList(final int fromIndex, final int toIndex) {
         if(fromIndex < 0 || toIndex > size || fromIndex > toIndex)
             throw new IndexOutOfBoundsException();
-        return new SubList(fromIndex, toIndex);
+        return (List<E>) Arrays.stream(Arrays.copyOfRange(list, fromIndex, toIndex)).toList();
     }
 
     /**
@@ -617,88 +617,6 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
             if(!canModify || lastReturned < 0 || lastReturned >= size)
                 throw new IllegalStateException();
             list[lastReturned] = e;
-        }
-    }
-
-    private class SubList extends java.util.AbstractList<E> implements java.util.RandomAccess {
-        private final int offset;
-        private int subSize;
-
-        public SubList(int fromIndex, int toIndex) {
-            this.offset = fromIndex;
-            this.subSize = toIndex - fromIndex;
-        }
-
-        @Override
-        public E get(int index) {
-            checkIndexInRange(index);
-            return CustomList.this.get(offset + index);
-        }
-
-        @Override
-        public void clear() {
-            if(subSize == 0)
-                return;
-            int tailSize = CustomList.this.size - (offset + subSize);
-            if(tailSize > 0)
-                System.arraycopy(CustomList.this.list, offset + subSize, CustomList.this.list, offset, tailSize);
-            int newParentSize = CustomList.this.size - subSize;
-            Arrays.fill(CustomList.this.list, newParentSize, CustomList.this.size, null);
-            CustomList.this.size = newParentSize;
-            subSize = 0;
-            if(CustomList.this.size < CustomList.this.capacity / 2 && CustomList.this.capacity > MINIMUM_CAPACITY)
-                CustomList.this.reduce();
-        }
-
-        @Override
-        public int size() {
-            return subSize;
-        }
-
-        @Override
-        public E set(int index, E element) {
-            checkIndexInRange(index);
-            return CustomList.this.set(offset + index, element);
-        }
-
-        @Override
-        public void add(int index, E element) {
-            checkIndexInnerRange(index);
-            CustomList.this.add(offset + index, element);
-            subSize++;
-        }
-
-        @Override
-        public boolean addAll(Collection<? extends E> c) {
-            return addAll(subSize, c);
-        }
-
-        @Override
-        public boolean addAll(int index, Collection<? extends E> c) {
-            checkIndexInnerRange(index);
-            if(c.isEmpty())
-                return false;
-            CustomList.this.addAll(offset + index, c);
-            subSize += c.size();
-            return true;
-        }
-
-        @Override
-        public E remove(int index) {
-            checkIndexInRange(index);
-            E result = CustomList.this.remove(offset + index);
-            subSize--;
-            return result;
-        }
-
-        private void checkIndexInRange(int index) {
-            if(index < 0 || index >= subSize)
-                throw new IndexOutOfBoundsException();
-        }
-
-        private void checkIndexInnerRange(int index) {
-            if(index < 0 || index > subSize)
-                throw new IndexOutOfBoundsException();
         }
     }
 }
