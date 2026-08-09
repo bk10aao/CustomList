@@ -1,11 +1,13 @@
 import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Set;
 
 import static java.util.Objects.checkIndex;
 import static java.util.Objects.requireNonNull;
@@ -180,12 +182,10 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
      */
     public boolean containsAll(Collection<?> c) {
         requireNonNull(c);
-        for(Object i : c) {
-            requireNonNull(i);
-            if(indexOf(i) == -1)
-                return false;
-        }
-        return true;
+        Set<?> values = (c instanceof Set<?> s) ? s : new HashSet<>(c);
+        for(Object e: list)
+            values.remove(e);
+        return values.isEmpty();
     }
 
     /**
