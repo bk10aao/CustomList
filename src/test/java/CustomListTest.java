@@ -27,12 +27,12 @@ class CustomListTest {
     }
 
     @Test
-    public void givenConstructor_withNegativeSize_throwsInvalidArguementException() {
+    public void givenConstructor_withNegativeSize_throwsInvalidArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> new CustomList<>(-1));
     }
 
     @Test
-    public void givenConstructor_withInitialCapactity_10_constructsList_withSizeOf_0() {
+    public void givenConstructor_withInitialCapacity_10_constructsList_withSizeOf_0() {
         assertEquals(0, new CustomList<>(10).size());
     }
 
@@ -645,10 +645,10 @@ class CustomListTest {
     }
 
     @Test
-    public void whenGettingSubList_withToFromIndexGreaterThanToIndex_throws_IndexOutOfBoundsException() {
+    public void whenGettingSubList_withToFromIndexGreaterThanToIndex_throws_IllegalArgumentException() {
         CustomList<Integer> customList = new CustomList<>();
         IntStream.range(0, 5).mapToObj(i -> i * 10).forEach(customList::add);
-        assertThrows(IndexOutOfBoundsException.class, () -> customList.subList(2, 1));
+        assertThrows(IllegalArgumentException.class, () -> customList.subList(2, 1));
     }
 
     @Test

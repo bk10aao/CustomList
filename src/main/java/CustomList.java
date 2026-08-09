@@ -1,3 +1,4 @@
+import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -5,6 +6,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+
+import static java.util.Objects.checkIndex;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Benjamin Kane
@@ -24,7 +28,7 @@ import java.util.Objects;
  * Repository - <a href="https://github.com/bk10aao/CustomList"/>
  * <E> – the type of elements in this list
  */
-public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable {
+public class CustomList<E> extends AbstractList<E> implements List<E>, java.util.RandomAccess, Cloneable {
 
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
@@ -62,7 +66,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @throws NullPointerException on null list
      */
     public CustomList(final Collection<? extends E> values) {
-        Objects.requireNonNull(values);
+        requireNonNull(values);
         this.capacity = Math.max(MINIMUM_CAPACITY, values.size());
         this.list = new Object[capacity];
         addAll(values);
@@ -76,7 +80,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @throws NullPointerException if the specified element is null
      */
     public boolean add(final E e) {
-        Objects.requireNonNull(e);
+        requireNonNull(e);
         ensureCapacity(size + 1);
         list[size++] = e;
         return true;
@@ -92,8 +96,8 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @throws NullPointerException if the specified element is null
      */
     public void add(int index, E element) {
-        Objects.requireNonNull(element);
-        checkIndexInnerRange(index);
+        requireNonNull(element);
+        checkIndex(index, size + 1);
         ensureCapacity(size + 1);
         System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = element;
@@ -109,7 +113,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @throws NullPointerException if the specified collection or any of its elements is null
      */
     public boolean addAll(final Collection<? extends E> values) {
-        Objects.requireNonNull(values);
+        requireNonNull(values);
         return insert(size, values);
     }
 
@@ -124,8 +128,8 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @throws NullPointerException if the specified collection is null
      */
     public boolean addAll(int index, Collection<? extends E> c) {
-        Objects.requireNonNull(c);
-        checkIndexInnerRange(index);
+        requireNonNull(c);
+        checkIndex(index, size + 1);
         return insert(index, c);
     }
 
@@ -163,7 +167,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @throws NullPointerException if the specified element is null
      */
     public boolean contains(final Object o) {
-        Objects.requireNonNull(o);
+        requireNonNull(o);
         return indexOf(o) != -1;
     }
 
@@ -175,9 +179,9 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @throws NullPointerException if the specified collection or any of its elements is null
      */
     public boolean containsAll(Collection<?> c) {
-        Objects.requireNonNull(c);
+        requireNonNull(c);
         for(Object i : c) {
-            Objects.requireNonNull(i);
+            requireNonNull(i);
             if(indexOf(i) == -1)
                 return false;
         }
@@ -218,7 +222,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
     public E get(final int index) {
-        checkIndexInRange(index);
+        checkIndex(index, size);
         return (E) list[index];
     }
 
@@ -237,7 +241,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * {@code Objects.equals(o, get(i))},
      */
     public int indexOf(final Object o) {
-        Objects.requireNonNull(o);
+        requireNonNull(o);
         for(int i = 0; i < size; i++)
             if(list[i].equals(o))
                 return i;
@@ -278,7 +282,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * Returns the index of the last occurrence of the specified element in this list, or -1.
      */
     public int lastIndexOf(final Object o) {
-        Objects.requireNonNull(o);
+        requireNonNull(o);
         for(int i = size - 1; i >= 0; i--)
             if(list[i].equals(o))
                 return i;
@@ -314,7 +318,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
     public E remove(final int index) {
-        checkIndexInRange(index);
+        checkIndex(index, size);
         E o = (E) list[index];
         System.arraycopy(list, index + 1, list, index, size - index - 1);
         list[--size] = null;
@@ -332,7 +336,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @throws NullPointerException {@inheritDoc}
      */
     public boolean remove(final Object object) {
-        Objects.requireNonNull(object);
+        requireNonNull(object);
         int index = indexOf(object);
         if(index != -1) {
             remove(index);
@@ -350,7 +354,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @see Collection#contains(Object)
      */
     public boolean removeAll(Collection<?> c){
-        Objects.requireNonNull(c);
+        requireNonNull(c);
         if(c.isEmpty())
             return false;
         java.util.Set<?> set = (c instanceof java.util.Set) ? (java.util.Set<?>) c : new java.util.HashSet<>(c);
@@ -378,7 +382,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @see Collection#contains(Object)
      */
     public boolean retainAll(final Collection<?> c) {
-        Objects.requireNonNull(c);
+        requireNonNull(c);
         java.util.Set<?> set = (c instanceof java.util.Set) ? (java.util.Set<?>) c : new java.util.HashSet<>(c);
         boolean changed = false;
         int index = 0;
@@ -404,8 +408,8 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      * @throws NullPointerException if the specified element is null
      */
     public E set(final int index, final E element) {
-        Objects.requireNonNull(element);
-        checkIndexInnerRange(index);
+        requireNonNull(element);
+        checkIndex(index, size);
         E replaced = (E) list[index];
         list[index] = element;
         return replaced;
@@ -418,24 +422,6 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      */
     public int size() {
         return size;
-    }
-
-    /**
-     * Returns a new list containing the portion of this list between the specified
-     * {@code fromIndex}, inclusive, and {@code toIndex}, exclusive. If
-     * {@code fromIndex} and {@code toIndex} are equal, the returned list is empty.
-     * Note: The returned list is a copy, not a view backed by the original.
-     *
-     * @param fromIndex index of the first element (inclusive)
-     * @param toIndex index after the last element (exclusive)
-     * @return a new list containing the specified range of elements
-     * @throws IndexOutOfBoundsException if {@code fromIndex < 0}, {@code toIndex > size()},
-     * or {@code fromIndex > toIndex}
-     */
-    public List<E> subList(final int fromIndex, final int toIndex) {
-        if(fromIndex < 0 || toIndex > size || fromIndex > toIndex)
-            throw new IndexOutOfBoundsException();
-        return (List<E>) Arrays.stream(Arrays.copyOfRange(list, fromIndex, toIndex)).toList();
     }
 
     /**
@@ -466,7 +452,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
      */
     @SuppressWarnings({"SuspiciousSystemArraycopy"})
     public <T> T[] toArray(T[] a) {
-        Objects.requireNonNull(a);
+        requireNonNull(a);
         if(a.length < size)
             return (T[]) Arrays.copyOf(list, size, a.getClass());
         System.arraycopy(list, 0, a, 0, size);
@@ -485,22 +471,14 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
             return "CustomList{size=0, list=[]}";
         StringBuilder sb = new StringBuilder("CustomList{size=").append(size).append(", list=[");
         for(int i = 0; i < size; i++) {
-            sb.append(list[i]);
-            if(i < size - 1)
+            if(i > 0)
                 sb.append(", ");
+            sb.append(list[i]);
         }
         return sb.append("]}").toString();
     }
 
-    private void checkIndexInnerRange(int index) {
-        if(index < 0 || index > size())
-            throw new IndexOutOfBoundsException();
-    }
 
-    private void checkIndexInRange(int index) {
-        if(index >= size || index < 0)
-            throw new IndexOutOfBoundsException();
-    }
 
     private void ensureCapacity(int minCapacity) {
         if(minCapacity - list.length > 0) {
@@ -527,7 +505,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
         Object[] a = c.toArray();
         int newSize = a.length;
         for(Object o : a)
-            Objects.requireNonNull(o);
+            requireNonNull(o);
         ensureCapacity(size + newSize);
         int numMoved = size - index;
         if(numMoved > 0)
@@ -558,7 +536,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
         }
 
         public void add(E e) {
-            Objects.requireNonNull(e);
+            requireNonNull(e);
             ensureCapacity(size + 1);
             System.arraycopy(list, index, list, index + 1, size - index);
             list[index] = e;
@@ -615,7 +593,7 @@ public class CustomList<E> implements List<E>, java.util.RandomAccess, Cloneable
         }
 
         public void set(E e) {
-            Objects.requireNonNull(e);
+            requireNonNull(e);
             if(!canModify || lastReturned < 0 || lastReturned >= size)
                 throw new IllegalStateException();
             list[lastReturned] = e;
