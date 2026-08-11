@@ -72,64 +72,38 @@ public class CustomListPerformanceTest {
         long start, end;
         int cap = Math.min(size, 10000);
 
-        // 0. add(T)
         target.clear(); start = System.nanoTime(); for (int i = 0; i < size; i++) target.add(i); end = System.nanoTime(); deltaMap[si][0][typeIdx] += (end - start);
-        // 1. add(int, T)
         target.clear(); start = System.nanoTime(); for (int i = 0; i < size; i++) target.add(0, i); end = System.nanoTime(); deltaMap[si][1][typeIdx] += (end - start);
-        // 2. addAll
         target.clear(); start = System.nanoTime(); target.addAll(sampleList); end = System.nanoTime(); deltaMap[si][2][typeIdx] += (end - start);
-        // 3. addAll(int, Collection)
         target.clear(); start = System.nanoTime(); target.addAll(0, sampleList); end = System.nanoTime(); deltaMap[si][3][typeIdx] += (end - start);
-        // 4. clear
         target.addAll(sampleList); start = System.nanoTime(); target.clear(); end = System.nanoTime(); deltaMap[si][4][typeIdx] += (end - start);
 
         target.addAll(sampleList);
-
-        // 5. contains(T)
         start = System.nanoTime(); for (int i = 0; i < cap; i++) if (target.contains(i)) blackholeToken++; end = System.nanoTime(); deltaMap[si][5][typeIdx] += (end - start);
-        // 6. containsAll
         start = System.nanoTime(); if (target.containsAll(smallList)) blackholeToken++; end = System.nanoTime(); deltaMap[si][6][typeIdx] += (end - start);
-        // 7. get(int)
         start = System.nanoTime(); for (int i = 0; i < size; i++) blackholeToken += target.get(i); end = System.nanoTime(); deltaMap[si][7][typeIdx] += (end - start);
-        // 8. indexOf
         start = System.nanoTime(); for (int i = 0; i < cap; i++) blackholeToken += target.indexOf(i); end = System.nanoTime(); deltaMap[si][8][typeIdx] += (end - start);
-        // 9. isEmpty
         start = System.nanoTime(); if (target.isEmpty()) blackholeToken++; end = System.nanoTime(); deltaMap[si][9][typeIdx] += (end - start);
-        // 10. iterator
         start = System.nanoTime(); var it = target.iterator(); while(it.hasNext()) blackholeToken += it.next(); end = System.nanoTime(); deltaMap[si][10][typeIdx] += (end - start);
-
-        // 11. listIterator().add(T)
         target.clear(); var lit = target.listIterator(); start = System.nanoTime(); for(int i=0; i<size; i++) lit.add(i); end = System.nanoTime(); deltaMap[si][11][typeIdx] += (end - start);
-
-        // 12-13. ListIterator ops
         target.clear(); target.addAll(sampleList);
         lit = target.listIterator(); start = System.nanoTime(); while(lit.hasNext()){ lit.next(); lit.set(1); } end = System.nanoTime(); deltaMap[si][12][typeIdx] += (end - start);
         lit = target.listIterator(); start = System.nanoTime(); while(lit.hasNext()){ lit.next(); lit.remove(); } end = System.nanoTime(); deltaMap[si][13][typeIdx] += (end - start);
-
-        // 14. lastIndexOf
         target.clear(); target.addAll(sampleList);
         start = System.nanoTime(); for(int i=0; i<cap; i++) blackholeToken += target.lastIndexOf(i); end = System.nanoTime(); deltaMap[si][14][typeIdx] += (end - start);
-        // 15. remove(int)
         start = System.nanoTime(); for(int i=size-1; i>=0; i--) target.remove(i); end = System.nanoTime(); deltaMap[si][15][typeIdx] += (end - start);
-        // 16. remove(T)
         if(size <= 50000) { target.addAll(sampleList); start = System.nanoTime(); for(int i=0; i<size; i++) target.remove(Integer.valueOf(i)); end = System.nanoTime(); deltaMap[si][16][typeIdx] += (end - start); }
-
-        // 17-18. RemoveAll/RetainAll
         target.clear(); target.addAll(sampleList);
         start = System.nanoTime(); target.removeAll(subMatchList); end = System.nanoTime(); deltaMap[si][17][typeIdx] += (end - start);
         start = System.nanoTime(); target.retainAll(subMatchList); end = System.nanoTime(); deltaMap[si][18][typeIdx] += (end - start);
 
-        // 19. set(int, T) - FIXED TO PREVENT DEAD CODE ELIMINATION
         target.clear(); target.addAll(sampleList);
         start = System.nanoTime();
         for(int i=0; i<target.size(); i++) {
-            // Using hashcode() on the returned object forces the compiler to run the 'set' operation
             blackholeToken += target.set(i, i).hashCode();
         }
         end = System.nanoTime();
         deltaMap[si][19][typeIdx] += (end - start);
-
-        // 20-25. Remaining
         start = System.nanoTime(); blackholeToken += target.size(); end = System.nanoTime(); deltaMap[si][20][typeIdx] += (end - start);
         start = System.nanoTime(); blackholeToken += target.subList(0, Math.min(size, 1)/2 + (size>0?0:0)).size(); end = System.nanoTime(); deltaMap[si][21][typeIdx] += (end - start);
         start = System.nanoTime(); blackholeToken += target.toArray().length; end = System.nanoTime(); deltaMap[si][22][typeIdx] += (end - start);

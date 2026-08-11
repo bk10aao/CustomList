@@ -70,49 +70,28 @@ public class ListPerformanceTest {
         int typeIdx = isCustom ? 0 : 1;
         long start, end;
 
-        // Helper to reset state cleanly
         var reset = (Runnable) () -> { target.clear(); target.addAll(sampleList); };
 
-        // 0. add(T)
         target.clear(); start = System.nanoTime(); for (int i = 0; i < size; i++) target.add(i); end = System.nanoTime(); deltaMap[si][0][typeIdx] += (end - start);
-        // 1. add(int, T)
         target.clear(); start = System.nanoTime(); for (int i = 0; i < size; i++) target.add(0, i); end = System.nanoTime(); deltaMap[si][1][typeIdx] += (end - start);
-        // 2. addAll
         target.clear(); start = System.nanoTime(); target.addAll(sampleList); end = System.nanoTime(); deltaMap[si][2][typeIdx] += (end - start);
-        // 3. addAll(int, Collection)
         target.clear(); start = System.nanoTime(); target.addAll(0, sampleList); end = System.nanoTime(); deltaMap[si][3][typeIdx] += (end - start);
-        // 4. clear
         reset.run(); start = System.nanoTime(); target.clear(); end = System.nanoTime(); deltaMap[si][4][typeIdx] += (end - start);
-        // 5. contains (Capped)
         reset.run(); start = System.nanoTime(); for (int i = 0; i < Math.min(size, 10000); i++) if (target.contains(i)) blackholeToken++; end = System.nanoTime(); deltaMap[si][5][typeIdx] += (end - start);
-        // 6. containsAll
         reset.run(); start = System.nanoTime(); if (target.containsAll(smallList)) blackholeToken++; end = System.nanoTime(); deltaMap[si][6][typeIdx] += (end - start);
-        // 7. get(int)
         reset.run(); start = System.nanoTime(); for (int i = 0; i < size; i++) blackholeToken += target.get(i); end = System.nanoTime(); deltaMap[si][7][typeIdx] += (end - start);
-        // 8. indexOf
         reset.run(); start = System.nanoTime(); for (int i = 0; i < Math.min(size, 10000); i++) blackholeToken += target.indexOf(i); end = System.nanoTime(); deltaMap[si][8][typeIdx] += (end - start);
-        // 9. isEmpty
         reset.run(); start = System.nanoTime(); if (target.isEmpty()) blackholeToken++; end = System.nanoTime(); deltaMap[si][9][typeIdx] += (end - start);
-        // 10. iterator
         reset.run(); start = System.nanoTime(); var it = target.iterator(); while(it.hasNext()) blackholeToken += it.next(); end = System.nanoTime(); deltaMap[si][10][typeIdx] += (end - start);
-        // 11. listIterator add
         target.clear(); var lit = target.listIterator(); start = System.nanoTime(); for(int i=0; i<size; i++) lit.add(i); end = System.nanoTime(); deltaMap[si][11][typeIdx] += (end - start);
-        // 12. listIterator set
         reset.run(); lit = target.listIterator(); start = System.nanoTime(); while(lit.hasNext()){ lit.next(); lit.set(1); } end = System.nanoTime(); deltaMap[si][12][typeIdx] += (end - start);
-        // 13. listIterator remove
         reset.run(); lit = target.listIterator(); start = System.nanoTime(); while(lit.hasNext()){ lit.next(); lit.remove(); } end = System.nanoTime(); deltaMap[si][13][typeIdx] += (end - start);
-        // 14. lastIndexOf
         reset.run(); start = System.nanoTime(); for(int i=0; i<Math.min(size, 10000); i++) blackholeToken += target.lastIndexOf(i); end = System.nanoTime(); deltaMap[si][14][typeIdx] += (end - start);
-        // 15. remove(int)
         reset.run(); start = System.nanoTime(); for(int i=size-1; i>=0; i--) target.remove(i); end = System.nanoTime(); deltaMap[si][15][typeIdx] += (end - start);
-        // 16. remove(T)
         if(size <= 50000) { reset.run(); start = System.nanoTime(); for(int i=0; i<size; i++) target.remove(Integer.valueOf(i)); end = System.nanoTime(); deltaMap[si][16][typeIdx] += (end - start); }
-        // 17/18. removeAll / retainAll
         reset.run(); start = System.nanoTime(); target.removeAll(subMatchList); end = System.nanoTime(); deltaMap[si][17][typeIdx] += (end - start);
         reset.run(); start = System.nanoTime(); target.retainAll(subMatchList); end = System.nanoTime(); deltaMap[si][18][typeIdx] += (end - start);
-        // 19. set(int, T)
         reset.run(); start = System.nanoTime(); for(int i=0; i<target.size(); i++) target.set(i, i); end = System.nanoTime(); deltaMap[si][19][typeIdx] += (end - start);
-        // 20-25. rest
         reset.run(); start = System.nanoTime(); blackholeToken += target.size(); end = System.nanoTime(); deltaMap[si][20][typeIdx] += (end - start);
         start = System.nanoTime(); blackholeToken += target.subList(0, size/2).size(); end = System.nanoTime(); deltaMap[si][21][typeIdx] += (end - start);
         start = System.nanoTime(); blackholeToken += target.toArray().length; end = System.nanoTime(); deltaMap[si][22][typeIdx] += (end - start);
@@ -123,7 +102,6 @@ public class ListPerformanceTest {
 
     private static void writeResultsToCsv(long[][][] results) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("list_performance.csv"))) {
-            // Write the Header as requested
             writer.write("\"Size\";\"add(T)\";\"add(int, T)\";\"addAll(Collection<T>)\";\"addAll(int, Collection<T>)\";" +
                     "\"clear()\";\"contains(T)\";\"containsAll(List<T>)\";\"get(int)\";\"indexOf(Object)\";" +
                     "\"isEmpty()\";\"iterator().next()\";\"listIterator().add(T)\";\"listIterator().set(T)\";" +
@@ -132,17 +110,10 @@ public class ListPerformanceTest {
                     "\"subList(int, int)\";\"toArray()\";\"equals(Object)\";\"hashCode()\";\"toString()\"");
             writer.newLine();
 
-            // Write the data rows
-            // Note: This logic assumes you want to compare CustomList (index 0) or
-            // you can change the index to 1 for ArrayList.
-            // To show both side-by-side, you would need to adjust the header to have
-            // duplicated column names.
             for (int i = 0; i < SIZES.length; i++) {
                 StringBuilder row = new StringBuilder();
                 row.append(SIZES[i]);
                 for (int j = 0; j < METHOD_NAMES.length; j++) {
-                    // Here we output the CustomList result (index 0)
-                    // To compare, you might want to print results[i][j][0] + "/" + results[i][j][1]
                     row.append(";").append(results[i][j][0]);
                 }
                 writer.write(row.toString());
