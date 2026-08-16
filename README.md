@@ -127,8 +127,10 @@ Note: all data is an average of 100 runs.
 | `toString()`                 | 585878          | 558610               |  **JDK**   | 1.05x  |
 
 #### Note: The following performance charts are designed to be viewed in dark mode.
-![Combined Performance Charts](PerformanceTesting/geometric_mean.png)
 ![Combined Performance Charts](PerformanceTesting/heatmap.png)
+![Combined Performance Charts](PerformanceTesting/plot_constructor__.png)
+![Combined Performance Charts](PerformanceTesting/plot_constructor_int_.png)
+![Combined Performance Charts](PerformanceTesting/plot_constructor_Collection_.png)
 ![Combined Performance Charts](PerformanceTesting/plot_add_T_.png)
 ![Combined Performance Charts](PerformanceTesting/plot_add_int_T_.png)
 ![Combined Performance Charts](PerformanceTesting/plot_addAll_CollectionT_.png)

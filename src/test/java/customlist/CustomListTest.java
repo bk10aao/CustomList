@@ -1,3 +1,5 @@
+package customlist;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -903,12 +905,6 @@ class CustomListTest {
     public void givenCustomLinkedListOf_1_2_3_on_ListIterator_withIndexOf_negative_1_throws_IndexOutOfBoundsException() {
         CustomList<Integer> customList = new CustomList<>(List.of(1, 2, 3));
         assertThrows(IndexOutOfBoundsException.class, () -> customList.listIterator(-1));
-    }
-
-    @Test
-    public void givenCustomLinkedListOf_1_2_3_on_ListIterator_withIndexOf_3_throws_IndexOutOfBoundsException() {
-        CustomList<Integer> customList = new CustomList<>(List.of(1, 2, 3));
-        assertThrows(IndexOutOfBoundsException.class, () -> customList.listIterator(3));
     }
 
     @Test

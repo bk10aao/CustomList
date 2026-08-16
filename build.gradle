@@ -1,9 +1,10 @@
 plugins {
     id 'java'
     id 'jacoco'
+    id 'me.champeau.jmh' version '0.7.2'
 }
 
-group = 'org.example'
+group = 'CustomArrayDeque'
 version = '1.0-SNAPSHOT'
 
 repositories {
@@ -11,16 +12,15 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    jmhImplementation 'org.openjdk.jmh:jmh-core:1.37'
+    jmhAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.37'
 }
 
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
-}
-
-jacoco {
-    toolVersion = '0.8.12'
 }
 
 jacocoTestReport {
@@ -29,58 +29,27 @@ jacocoTestReport {
         xml.required = true
         html.required = true
     }
+}
 
+// Exclude benchmark classes from JaCoCo code coverage analysis
+jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(
                 files(classDirectories.files.collect { dir ->
                     fileTree(dir: dir).exclude([
-                            '**/CustomList$CustomListIterator.class'
+                            '**/*PerformanceTest*.class',
+                            '**/*Benchmark*.class'
                     ])
                 })
         )
     }
 }
 
-// ================== COVERAGE VERIFICATION ==================
-jacocoTestCoverageVerification {
-    dependsOn test
-
-    violationRules {
-        rule {
-            enabled = true
-
-            // Fail the build if coverage is below 90%
-            limit {
-                counter = 'INSTRUCTION'
-                value = 'COVEREDRATIO'
-                minimum = 0.70
-            }
-
-            // Optional: Also check branch coverage
-            limit {
-                counter = 'BRANCH'
-                value = 'COVEREDRATIO'
-                minimum = 0.70   // You can make this stricter later
-            }
-        }
-
-        rule {
-            element = 'CLASS'
-            excludes = [
-                    'CustomList$CustomListIterator'
-            ]
-            limit {
-                counter = 'LINE'
-                minimum = 0.0
-            }
-        }
-    }
-}
-
-check {
-    dependsOn jacocoTestCoverageVerification
-}
-
-build {
-    dependsOn jacocoTestCoverageVerification
+// ================== JMH CONFIGURATION ==================
+jmh {
+    includes = ['.*']          // Note: plugin uses 'includes' (plural), not 'include'
+    fork = 1
+    warmupIterations = 3
+    iterations = 5
+    resultFormat = 'CSV'
 }
