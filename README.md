@@ -14,43 +14,43 @@ All methods implemented are identical to those found in the Java [List](https://
 
 # Time Complexity
 
-| Method                        |      Custom      |       JDK        | Winner |
-|:------------------------------|:----------------:|:----------------:|:------:|
-| **constructor()**             |      $O(1)$      |      $O(1)$      |  Tie   |
-| **constructor(int)**          |      $O(1)$      |      $O(1)$      |  Tie   |
-| **constructor(Collection)**   |      $O(m)$      |      $O(m)$      |  Tie   |
-| **add(E)**                    |      $O(1)$      |      $O(1)$      |  Tie   |
-| **add(int, E)**               |      $O(n)$      |      $O(n)$      |  Tie   |
-| **addAll(Collection)**        |      $O(m)$      |      $O(m)$      |  Tie   |
-| **addAll(int, Collection)**   |    $O(n + m)$    |    $O(n + m)$    |  Tie   |
-| **clear()**                   |      $O(n)$      |      $O(n)$      |  Tie   |
-| **contains(Object)**          |      $O(n)$      |      $O(n)$      |  Tie   |
-| **containsAll(Collection)**   | $O(n \times mm)$ | $O(n \times  m)$ |  Tie   |
-| **equals(Object)**            |      $O(n)$      |      $O(n)$      |  Tie   |
-| **get(int)**                  |      $O(1)$      |      $O(1)$      |  Tie   |
-| **hashCode()**                |      $O(n)$      |      $O(n)$      |  Tie   |
-| **indexOf(Object)**           |      $O(n)$      |      $O(n)$      |  Tie   |
-| **isEmpty()**                 |      $O(1)$      |      $O(1)$      |  Tie   |
-| **iterator()**                |      $O(1)$      |      $O(1)$      |  Tie   |
-| **iterator().next()**         |      $O(1)$      |      $O(1)$      |  Tie   |
-| **listIterator()**            |      $O(1)$      |      $O(1)$      |  Tie   |
-| **listIterator(int)**         |      $O(1)$      |      $O(1)$      |  Tie   |
-| **listIterator().next()**     |      $O(1)$      |      $O(1)$      |  Tie   |
-| **listIterator().previous()** |      $O(1)$      |      $O(1)$      |  Tie   |
-| **listIterator().add(E)**     |      $O(n)$      |      $O(n)$      |  Tie   |
-| **listIterator().set(E)**     |      $O(1)$      |      $O(1)$      |  Tie   |
-| **listIterator().remove()**   |      $O(n)$      |      $O(n)$      |  Tie   |
-| **lastIndexOf(Object)**       |      $O(n)$      |      $O(n)$      |  Tie   |
-| **remove(int)**               |      $O(n)$      |      $O(n)$      |  Tie   |
-| **remove(Object)**            |      $O(n)$      |      $O(n)$      |  Tie   |
-| **removeAll(Collection)**     |    $O(n + m)$    | $O(n \times m)$  | Custom |
-| **retainAll(Collection)**     |    $O(n + m)$    | $O(n \times m)$  | Custom |
-| **set(int, E)**               |      $O(1)$      |      $O(1)$      |  Tie   |
-| **size()**                    |      $O(1)$      |      $O(1)$      |  Tie   |
-| **subList(int, int)**         |      $O(1)$      |      $O(1)$      |  Tie   |
-| **toArray()**                 |      $O(n)$      |      $O(n)$      |  Tie   |
-| **toArray(T[])**              |      $O(n)$      |      $O(n)$      |  Tie   |
-| **toString()**                |      $O(n)$      |      $O(n)$      |  Tie   |
+| Method                        |     Custom      |       JDK        | Winner |
+|:------------------------------|:---------------:|:----------------:|:------:|
+| **constructor()**             |     $O(1)$      |      $O(1)$      |  Tie   |
+| **constructor(int)**          |     $O(1)$      |      $O(1)$      |  Tie   |
+| **constructor(Collection)**   |     $O(m)$      |      $O(m)$      |  Tie   |
+| **add(E)**                    |     $O(1)$      |      $O(1)$      |  Tie   |
+| **add(int, E)**               |     $O(n)$      |      $O(n)$      |  Tie   |
+| **addAll(Collection)**        |     $O(m)$      |      $O(m)$      |  Tie   |
+| **addAll(int, Collection)**   |   $O(n + m)$    |    $O(n + m)$    |  Tie   |
+| **clear()**                   |     $O(n)$      |      $O(n)$      |  Tie   |
+| **contains(Object)**          |     $O(n)$      |      $O(n)$      |  Tie   |
+| **containsAll(Collection)**   | $O(n \times m)$ | $O(n \times  m)$ |  Tie   |
+| **equals(Object)**            |     $O(n)$      |      $O(n)$      |  Tie   |
+| **get(int)**                  |     $O(1)$      |      $O(1)$      |  Tie   |
+| **hashCode()**                |     $O(n)$      |      $O(n)$      |  Tie   |
+| **indexOf(Object)**           |     $O(n)$      |      $O(n)$      |  Tie   |
+| **isEmpty()**                 |     $O(1)$      |      $O(1)$      |  Tie   |
+| **iterator()**                |     $O(1)$      |      $O(1)$      |  Tie   |
+| **iterator().next()**         |     $O(1)$      |      $O(1)$      |  Tie   |
+| **listIterator()**            |     $O(1)$      |      $O(1)$      |  Tie   |
+| **listIterator(int)**         |     $O(1)$      |      $O(1)$      |  Tie   |
+| **listIterator().next()**     |     $O(1)$      |      $O(1)$      |  Tie   |
+| **listIterator().previous()** |     $O(1)$      |      $O(1)$      |  Tie   |
+| **listIterator().add(E)**     |     $O(n)$      |      $O(n)$      |  Tie   |
+| **listIterator().set(E)**     |     $O(1)$      |      $O(1)$      |  Tie   |
+| **listIterator().remove()**   |     $O(n)$      |      $O(n)$      |  Tie   |
+| **lastIndexOf(Object)**       |     $O(n)$      |      $O(n)$      |  Tie   |
+| **remove(int)**               |     $O(n)$      |      $O(n)$      |  Tie   |
+| **remove(Object)**            |     $O(n)$      |      $O(n)$      |  Tie   |
+| **removeAll(Collection)**     |   $O(n + m)$    | $O(n \times m)$  | Custom |
+| **retainAll(Collection)**     |   $O(n + m)$    | $O(n \times m)$  | Custom |
+| **set(int, E)**               |     $O(1)$      |      $O(1)$      |  Tie   |
+| **size()**                    |     $O(1)$      |      $O(1)$      |  Tie   |
+| **subList(int, int)**         |     $O(1)$      |      $O(1)$      |  Tie   |
+| **toArray()**                 |     $O(n)$      |      $O(n)$      |  Tie   |
+| **toArray(T[])**              |     $O(n)$      |      $O(n)$      |  Tie   |
+| **toString()**                |     $O(n)$      |      $O(n)$      |  Tie   |
 
 # Space Complexity
 
