@@ -99,34 +99,37 @@ All methods implemented are identical to those found in the Java [List](https://
 
 Comparison table uses the average JMH score (ns/op) across sizes 10k–100k.
 
-| Method                       | Custom (ns) | JDK (ns)  |            Winner            | Margin |
-|:-----------------------------|:------------|:----------|:----------------------------:|:------:|
-| `add(T)`                     | 129842      | 134050    | **Statistically Equivalent** | 1.03x  |
-| `add(int, T)`                | 39987587    | 39869189  | **Statistically Equivalent** | 1.00x  |
-| `addAll(Collection<T>)`      | 17335       | 16984     | **Statistically Equivalent** | 1.02x  |
-| `addAll(int, Collection<T>)` | 16144       | 17117     | **Statistically Equivalent** | 1.06x  |
-| `clear()`                    | 40862       | 20518     |           **JDK**            | 1.99x  |
-| `contains(T)`                | 20741947    | 25823647  |          **Custom**          | 1.24x  |
-| `containsAll(List<T>)`       | 251168      | 251035    | **Statistically Equivalent** | 1.00x  |
-| `get(int)`                   | 55673       | 81834     |          **Custom**          | 1.47x  |
-| `indexOf(Object)`            | 27907925    | 27420772  | **Statistically Equivalent** | 1.02x  |
-| `isEmpty()`                  | 3591        | 2943      |           **JDK**            | 1.22x  |
-| `iterator().next()`          | 118878      | 84016     |           **JDK**            | 1.41x  |
-| `listIterator().add(T)`      | 227499      | 226641    | **Statistically Equivalent** | 1.00x  |
-| `listIterator().set(T)`      | 195600      | 168727    |           **JDK**            | 1.16x  |
-| `listIterator().remove()`    | 39658450    | 39555930  | **Statistically Equivalent** | 1.00x  |
-| `lastIndexOf(Object)`        | 181425136   | 166173874 | **Statistically Equivalent** | 1.09x  |
-| `remove(int)`                | 123813      | 167557    |          **Custom**          | 1.35x  |
-| `remove(T)`                  | 40609898    | 39832145  | **Statistically Equivalent** | 1.02x  |
-| `removeAll(Collection<T>)`   | 210603      | 210612    | **Statistically Equivalent** | 1.00x  |
-| `retainAll(Collection<T>)`   | 157239      | 199319    |          **Custom**          | 1.27x  |
-| `set(int, T)`                | 176908      | 183415    | **Statistically Equivalent** | 1.04x  |
-| `size()`                     | 27          | 138       |          **Custom**          | 4.97x  |
-| `subList(int, int)`          | 3151        | 3797      |          **Custom**          | 1.21x  |
-| `toArray()`                  | 8377        | 8395      | **Statistically Equivalent** | 1.00x  |
-| `equals(Object)`             | 71602       | 44334     |           **JDK**            | 1.62x  |
-| `hashCode()`                 | 51916       | 50897     | **Statistically Equivalent** | 1.02x  |
-| `toString()`                 | 585878      | 558610    | **Statistically Equivalent** | 1.05x  |
+| Method                       | Custom (ns/op)    | JDK (ns/op)         |            Winner            |  Margin   |
+|:-----------------------------|:------------------|:--------------------|:----------------------------:|:---------:|
+| `constructor()`              | 27                | 25                  | **Statistically Equivalent** |   1.06x   |
+| `constructor(int)`           | 2,335             | 2,282               | **Statistically Equivalent** |   1.02x   |
+| `constructor(Collection)`    | 22,692            | 6,996               |           **JDK**            |   3.24x   |
+| `add(T)`                     | 131,456           | 137,837             | **Statistically Equivalent** |   1.05x   |
+| `add(int, T)`                | 172,809,146       | 172,508,926         | **Statistically Equivalent** |   1.00x   |
+| `addAll(Collection<T>)`      | 23,294            | 15,874              |           **JDK**            |   1.47x   |
+| `addAll(int, Collection<T>)` | 23,461            | 15,844              |           **JDK**            |   1.48x   |
+| `clear()`                    | 36,572            | 20,291              |           **JDK**            |   1.80x   |
+| `contains(T)`                | 23,715,246        | 23,711,892          | **Statistically Equivalent** |   1.00x   |
+| `containsAll(List<T>)`       | 32,815            | 238,486             |          **Custom**          |   7.27x   |
+| `get(int)`                   | 28,531            | 12,505              |           **JDK**            |   2.28x   |
+| `indexOf(Object)`            | 24,840,036        | 23,116,613          | **Statistically Equivalent** |   1.07x   |
+| `isEmpty()`                  | 22,500            | 6,821               |           **JDK**            |   3.30x   |
+| `iterator().next()`          | 39,816            | 23,062              |           **JDK**            |   1.73x   |
+| `listIterator().add(T)`      | 172,918           | 173,383             | **Statistically Equivalent** |   1.00x   |
+| `listIterator().set(T)`      | 104,030           | 113,425             | **Statistically Equivalent** |   1.09x   |
+| `listIterator().remove()`    | 170,895,132       | 170,551,306         | **Statistically Equivalent** |   1.00x   |
+| `lastIndexOf(Object)`        | 235,379,712       | 218,047,877         | **Statistically Equivalent** |   1.08x   |
+| `remove(int)`                | 168,998           | 72,410              |           **JDK**            |   2.33x   |
+| `remove(T)`                  | 171,446,102       | 171,678,344         | **Statistically Equivalent** |   1.00x   |
+| `removeAll(Collection<T>)`   | 406,091           | 613,281,857         |          **Custom**          | 1,510.21x |
+| `retainAll(Collection<T>)`   | 413,416           | 621,401,017         |          **Custom**          | 1,503.09x |
+| `set(int, T)`                | 108,404           | 92,333              |           **JDK**            |   1.17x   |
+| `size()`                     | 34,391            | 6,942               |           **JDK**            |   4.95x   |
+| `subList(int, int)`          | 24,139            | 6,974               |           **JDK**            |   3.46x   |
+| `toArray()`                  | 31,907            | 14,591              |           **JDK**            |   2.19x   |
+| `equals(Object)`             | 67,753            | 36,355              |           **JDK**            |   1.86x   |
+| `hashCode()`                 | 72,009            | 56,503              |           **JDK**            |   1.27x   |
+| `toString()`                 | 786,359           | 790,315             | **Statistically Equivalent** |   1.01x   |
 
 #### Note: The following performance charts are designed to be viewed in dark mode.
 ![Combined Performance Charts](PerformanceTesting/heatmap.png)
