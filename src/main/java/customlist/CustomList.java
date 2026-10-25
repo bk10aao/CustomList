@@ -11,6 +11,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
+import static java.lang.System.arraycopy;
 import static java.util.Objects.checkIndex;
 import static java.util.Objects.requireNonNull;
 
@@ -67,12 +68,14 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
      */
     public CustomList(final Collection<? extends E> values) {
         requireNonNull(values);
+        if(values.isEmpty())
+            return;
         Object[] a = values.toArray();
         for (Object o : a)
             requireNonNull(o);
         this.size = a.length;
         this.list = new Object[Math.max(size, MINIMUM_CAPACITY)];
-        System.arraycopy(a, 0, this.list, 0, size);
+        arraycopy(a, 0, this.list, 0, size);
     }
 
     /**
@@ -98,11 +101,11 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
      * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
      * @throws NullPointerException if the specified element is null
      */
-    public void add(int index, E element) {
+    public void add(final int index, final E element) {
         requireNonNull(element);
         checkIndex(index, size + 1);
         ensureCapacity(size + 1);
-        System.arraycopy(list, index, list, index + 1, size - index);
+        arraycopy(list, index, list, index + 1, size - index);
         list[index] = element;
         size++;
     }
@@ -130,7 +133,7 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
      * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
      * @throws NullPointerException if the specified collection is null
      */
-    public boolean addAll(int index, Collection<? extends E> c) {
+    public boolean addAll(final int index, final Collection<? extends E> c) {
         requireNonNull(c);
         checkIndex(index, size + 1);
         return insert(index, c);
@@ -180,7 +183,7 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
      * @return {@code true} if this list contains all elements in collection
      * @throws NullPointerException if the specified collection or any of its elements is null
      */
-    public boolean containsAll(Collection<?> c) {
+    public boolean containsAll(final Collection<?> c) {
         requireNonNull(c);
         if (c.isEmpty())
             return true;
@@ -201,6 +204,7 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
      * @param o the object to be compared for equality with this list
      * @return {@code true} if the specified object is equal to this list
      */
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
@@ -240,6 +244,7 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         int result = 1;
         final Object[] es = list;
@@ -323,8 +328,7 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
      * @param index the index of the start of List Iterator
      */
     public ListIterator<E> listIterator(int index) {
-        if (index < 0 || index > size)
-            throw new IndexOutOfBoundsException();
+        checkIndex(index, size);
         return new CustomListIterator(index);
     }
 
@@ -341,7 +345,7 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
         E o = (E) es[index];
         int numMoved = size - index - 1;
         if (numMoved > 0)
-            System.arraycopy(es, index + 1, es, index, numMoved);
+            arraycopy(es, index + 1, es, index, numMoved);
         es[--size] = null;
         if (size < es.length / 4 && es.length > MINIMUM_CAPACITY)
             reduce();
@@ -364,7 +368,7 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
             if (es[i].equals(object)) {
                 int numMoved = s - i - 1;
                 if (numMoved > 0)
-                    System.arraycopy(es, i + 1, es, i, numMoved);
+                    arraycopy(es, i + 1, es, i, numMoved);
                 es[--size] = null;
                 if (size < es.length / 4 && es.length > MINIMUM_CAPACITY)
                     reduce();
@@ -381,7 +385,7 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
      * @throws NullPointerException if the specified collection or any of its elements is null
      * @see Collection#contains(Object)
      */
-    public boolean removeAll(Collection<?> c){
+    public boolean removeAll(final Collection<?> c){
         requireNonNull(c);
         if (c.isEmpty())
             return false;
@@ -414,6 +418,10 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
      */
     public boolean retainAll(final Collection<?> c) {
         requireNonNull(c);
+        if(c.isEmpty()) {
+            clear();
+            return true;
+        }
         java.util.Set<?> set = (c instanceof java.util.Set) ? (java.util.Set<?>) c : new java.util.HashSet<>(c);
         boolean changed = false;
         int index = 0;
@@ -426,9 +434,8 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
                 changed = true;
         Arrays.fill(es, index, s, null);
         size = index;
-        if (changed)
-            if (size < es.length / 4 && es.length > MINIMUM_CAPACITY)
-                reduce();
+        if (changed && size < es.length / 4 && es.length > MINIMUM_CAPACITY)
+            reduce();
         return changed;
     }
 
@@ -485,11 +492,11 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
      * @throws NullPointerException if the specified array is null
      */
     @SuppressWarnings({"SuspiciousSystemArraycopy"})
-    public <T> T[] toArray(T[] a) {
+    public <T> T[] toArray(final T[] a) {
         requireNonNull(a);
         if (a.length < size)
             return (T[]) Arrays.copyOf(list, size, a.getClass());
-        System.arraycopy(list, 0, a, 0, size);
+        arraycopy(list, 0, a, 0, size);
         if (a.length > size)
             a[size] = null;
         return a;
@@ -516,7 +523,7 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
 
 
 
-    private void ensureCapacity(int minCapacity) {
+    private void ensureCapacity(final int minCapacity) {
         if (minCapacity > list.length) {
             int oldCapacity = list.length;
             int newCapacity = oldCapacity + (oldCapacity >> 1);
@@ -528,13 +535,13 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
         }
     }
 
-    private static int hugeCapacity(int minCapacity) {
+    private static int hugeCapacity(final int minCapacity) {
         if (minCapacity < 0)
             throw new OutOfMemoryError();
         return (minCapacity > MAX_ARRAY_SIZE) ? Integer.MAX_VALUE : MAX_ARRAY_SIZE;
     }
 
-    private boolean insert(int index, Collection<? extends E> c) {
+    private boolean insert(final int index, final Collection<? extends E> c) {
         if (c.isEmpty())
             return false;
         Object[] a = c.toArray();
@@ -544,8 +551,8 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
         ensureCapacity(size + newSize);
         int numMoved = size - index;
         if (numMoved > 0)
-            System.arraycopy(list, index, list, index + newSize, numMoved);
-        System.arraycopy(a, 0, list, index, newSize);
+            arraycopy(list, index, list, index + newSize, numMoved);
+        arraycopy(a, 0, list, index, newSize);
         size += newSize;
         return true;
     }
@@ -565,15 +572,15 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
         private int lastReturned = -1;
         private boolean canModify = false;
 
-        CustomListIterator(int index) {
+        CustomListIterator(final int index) {
             this.index = index;
         }
 
-        public void add(E e) {
+        public void add(final E e) {
             requireNonNull(e);
             ensureCapacity(size + 1);
             final Object[] es = list;
-            System.arraycopy(es, index, es, index + 1, size - index);
+            arraycopy(es, index, es, index + 1, size - index);
             es[index] = e;
             size++;
             index++;
@@ -620,7 +627,7 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
             final Object[] es = list;
             int numMoved = size - lastReturned - 1;
             if (numMoved > 0)
-                System.arraycopy(es, lastReturned + 1, es, lastReturned, numMoved);
+                arraycopy(es, lastReturned + 1, es, lastReturned, numMoved);
             es[--size] = null;
             index = lastReturned;
             canModify = false;
@@ -628,7 +635,7 @@ public class CustomList<E> extends AbstractList<E> implements List<E>, java.util
                 reduce();
         }
 
-        public void set(E e) {
+        public void set(final E e) {
             requireNonNull(e);
             if (!canModify || lastReturned < 0 || lastReturned >= size)
                 throw new IllegalStateException();

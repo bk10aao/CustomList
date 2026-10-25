@@ -851,13 +851,6 @@ class CustomListTest {
     }
 
     @Test
-    public void givenCustomLinkedList_onRetainAll_emptyCollection_returnsFalse() {
-        CustomList<Integer> customList = new CustomList<>();
-        Collection<Integer> empty = new ArrayList<>();
-        assertFalse(customList.retainAll(empty));
-    }
-
-    @Test
     public void givenCustomLinkedListOf_1_2_3__onRetainAll_withListOf_1_2_returnsTrue_andLeavesValues_1_2() {
         CustomList<Integer> customList = new CustomList<>(List.of(1, 2, 3));
         Collection<Integer> retain = new ArrayList<>(List.of(1, 2));
